@@ -1,0 +1,113 @@
+// ESPN historical archive UI. Uses sanitized /api/espn-archive data.
+(function(){
+  const cache=new Map();
+  const seasons=[2019,2020,2021,2022,2023,2024,2025,2026];
+  const norm=v=>String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+  const htmlEsc=v=>typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const nfmt=v=>v==null?'—':Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
+
+  async function loadSeason(y){
+    y=Number(y); if(cache.has(y)) return cache.get(y);
+    const p=fetch(`/api/espn-archive?season=${y}`).then(r=>r.json()).then(d=>{if(!d.ok)throw new Error('archive unavailable');return d});
+    cache.set(y,p); return p;
+  }
+
+  function currentEspnId(fid){
+    const e=(DB?.['ESPN Teams']||[]).find(x=>x.Franchise_ID===fid)||{};
+    for(const k of ['ESPN_Team_ID','ESPN_ID','Team_ID','teamId','id','ID']){const v=Number(e[k]);if(Number.isFinite(v)&&v>0)return v;}
+    return null;
+  }
+  function franchiseTitle(fid){
+    const e=(DB?.['ESPN Teams']||[]).find(x=>x.Franchise_ID===fid)||{};
+    const f=(DB?.Franchises||[]).find(x=>x.Franchise_ID===fid)||{};
+    return e.ESPN_Team_Name||f.Franchise_Name||f.Current_Owner||fid;
+  }
+  function findTeam(data,fid){
+    const id=currentEspnId(fid); if(id!=null){const t=(data.teams||[]).find(x=>Number(x.id)===id);if(t)return t;}
+    const title=norm(franchiseTitle(fid));
+    return (data.teams||[]).find(x=>norm(x.name)===title)||null;
+  }
+  function tname(data,id){return (data.teams||[]).find(t=>Number(t.id)===Number(id))?.name||`Team ${id}`;}
+  function winnerOf(m){
+    if(!m?.home||!m?.away)return null;
+    if(m.winner==='HOME')return m.home.teamId;
+    if(m.winner==='AWAY')return m.away.teamId;
+    const hs=Number(m.home.score||0),as=Number(m.away.score||0);return hs===as?null:(hs>as?m.home.teamId:m.away.teamId);
+  }
+  function championship(data){
+    const wb=(data.playoffs||[]).filter(m=>!m.playoffTierType||m.playoffTierType==='WINNERS_BRACKET');
+    if(!wb.length)return null;
+    const max=Math.max(...wb.map(m=>Number(m.matchupPeriodId||0)));
+    const finals=wb.filter(m=>Number(m.matchupPeriodId||0)===max&&m.home&&m.away);
+    if(!finals.length)return null;
+    const m=finals[0],win=winnerOf(m); if(win==null)return {matchup:m};
+    const lose=Number(m.home.teamId)===Number(win)?m.away.teamId:m.home.teamId;
+    return {matchup:m,winnerId:win,runnerUpId:lose};
+  }
+  function matchupTable(data,items){
+    if(!items.length)return '<div class="empty">No matchup data available.</div>';
+    const weeks=[...new Set(items.map(m=>m.matchupPeriodId))].sort((a,b)=>a-b);
+    return weeks.map(w=>`<section class="card archive-week"><div class="card-pad section-title"><h2>WEEK ${w}</h2></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Away</th><th>Score</th><th>Home</th><th>Score</th><th>Winner</th></tr></thead><tbody>${items.filter(m=>m.matchupPeriodId===w).map(m=>{const wid=winnerOf(m);return `<tr><td>${htmlEsc(tname(data,m.away?.teamId))}</td><td class="num">${nfmt(m.away?.score)}</td><td>${htmlEsc(tname(data,m.home?.teamId))}</td><td class="num">${nfmt(m.home?.score)}</td><td><b>${wid==null?'Tie':htmlEsc(tname(data,wid))}</b></td></tr>`}).join('')}</tbody></table></div></section>`).join('');
+  }
+  function standingsHtml(data){
+    const rows=(data.teams||[]).slice().sort((a,b)=>(Number(a.playoffSeed)||99)-(Number(b.playoffSeed)||99));
+    const champ=championship(data);
+    return `<div class="grid"><section class="card span-8"><div class="card-pad section-title"><h2>${data.season} FINAL REGULAR-SEASON STANDINGS</h2><span>ESPN archive</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>#</th><th>Team</th><th>W-L${rows.some(x=>x.ties)?'-T':''}</th><th>Win%</th><th>PF</th><th>PA</th></tr></thead><tbody>${rows.map((t,i)=>{const games=(Number(t.wins)||0)+(Number(t.losses)||0)+(Number(t.ties)||0);const pct=games?((Number(t.wins)||0)+(Number(t.ties)||0)/2)/games:0;return `<tr><td class="rank">${t.playoffSeed||i+1}</td><td><b>${htmlEsc(t.name)}</b></td><td class="record">${t.wins??0}-${t.losses??0}${t.ties?`-${t.ties}`:''}</td><td>${pct.toFixed(3)}</td><td>${nfmt(t.pointsFor)}</td><td>${nfmt(t.pointsAgainst)}</td></tr>`}).join('')}</tbody></table></div></section><section class="card span-4"><div class="card-pad section-title"><h2>CHAMPIONSHIP</h2></div><div class="card-pad championship-card">${champ&&champ.winnerId!=null?`<b>${htmlEsc(tname(data,champ.winnerId))}</b><span>Champion</span><hr><strong>${htmlEsc(tname(data,champ.runnerUpId))}</strong><small>Runner-up</small>`:'<div class="empty">Championship result not available.</div>'}</div></section></div>`;
+  }
+
+  async function enhanceStandings(){
+    if(Number(season)>2026)return;
+    const content=document.querySelector('#app .content'); if(!content)return;
+    content.innerHTML='<div class="loading">Loading ESPN historical standings…</div>';
+    try{content.innerHTML=standingsHtml(await loadSeason(season));}catch(e){content.innerHTML='<div class="empty">Historical ESPN standings could not be loaded.</div>';}
+  }
+  async function enhanceSchedule(){
+    if(Number(season)>2026)return;
+    const content=document.querySelector('#app .content'); if(!content)return;
+    content.innerHTML='<div class="loading">Loading ESPN historical scores…</div>';
+    try{const d=await loadSeason(season);content.innerHTML=`<div class="archive-section-head"><h2>REGULAR SEASON</h2><p>Weekly ESPN matchup results. Playoff bracket games are excluded from this section.</p></div>${matchupTable(d,d.regularSeason||[])}<div class="archive-section-head playoff-head"><h2>PLAYOFFS</h2><p>Complete ESPN playoff results.</p></div>${matchupTable(d,d.playoffs||[])}`;}catch(e){content.innerHTML='<div class="empty">Historical ESPN scores could not be loaded.</div>';}
+  }
+  async function enhanceTeamRoster(fid){
+    if(Number(season)>2026)return;
+    const content=document.querySelector('#app .content'); if(!content)return;
+    const holder=document.createElement('section');holder.className='card espn-history-roster';holder.innerHTML='<div class="card-pad section-title"><h2>ESPN HISTORICAL ROSTER</h2><span>Loading…</span></div>';content.prepend(holder);
+    try{const d=await loadSeason(season),t=findTeam(d,fid);if(!t){holder.innerHTML='<div class="card-pad"><div class="empty">No ESPN roster mapping found for this franchise in this season.</div></div>';return;}holder.innerHTML=`<div class="card-pad section-title"><h2>${season} ESPN ROSTER</h2><span>${htmlEsc(t.name)} · ${t.roster.length} players</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Player</th></tr></thead><tbody>${t.roster.map(p=>`<tr><td>${htmlEsc(p.name)}</td></tr>`).join('')}</tbody></table></div>`;}catch(e){holder.innerHTML='<div class="card-pad"><div class="empty">Historical ESPN roster could not be loaded.</div></div>';}
+  }
+  async function allTimeRecord(fid){
+    const rows=[];let W=0,L=0,T=0,PF=0,PA=0;
+    for(const y of seasons){try{const d=await loadSeason(y),team=findTeam(d,fid);if(!team)continue;let w=0,l=0,t=0,pf=0,pa=0;for(const m of d.regularSeason||[]){let mine=null,opp=null;if(Number(m.home?.teamId)===Number(team.id)){mine=m.home;opp=m.away;}else if(Number(m.away?.teamId)===Number(team.id)){mine=m.away;opp=m.home;}else continue;const a=Number(mine?.score||0),b=Number(opp?.score||0);pf+=a;pa+=b;if(a>b)w++;else if(a<b)l++;else t++;}W+=w;L+=l;T+=t;PF+=pf;PA+=pa;rows.push({y,w,l,t,pf,pa});}catch(e){}}
+    return {W,L,T,PF,PA,rows};
+  }
+  async function enhanceTeamOverview(fid){
+    const content=document.querySelector('#app .content'); if(!content||content.querySelector('.alltime-regular-record'))return;
+    const holder=document.createElement('section');holder.className='card alltime-regular-record';holder.innerHTML='<div class="card-pad section-title"><h2>ALL-TIME REGULAR-SEASON RECORD</h2><span>Loading ESPN history…</span></div>';content.prepend(holder);
+    const r=await allTimeRecord(fid);const games=r.W+r.L+r.T,pct=games?(r.W+r.T/2)/games:0;
+    holder.innerHTML=`<div class="card-pad section-title"><h2>ALL-TIME REGULAR-SEASON RECORD</h2><span>ESPN · playoff bracket games excluded</span></div><div class="alltime-record-kpis"><div><b>${r.W}-${r.L}${r.T?`-${r.T}`:''}</b><span>Combined Record</span></div><div><b>${pct.toFixed(3)}</b><span>Win%</span></div><div><b>${nfmt(r.PF)}</b><span>Points For</span></div><div><b>${nfmt(r.PA)}</b><span>Points Against</span></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Season</th><th>Record</th><th>PF</th><th>PA</th></tr></thead><tbody>${r.rows.map(x=>`<tr><td>${x.y}</td><td class="record">${x.w}-${x.l}${x.t?`-${x.t}`:''}</td><td>${nfmt(x.pf)}</td><td>${nfmt(x.pa)}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+  async function enhanceHistory(){
+    if(Number(season)>2026)return;
+    const content=document.querySelector('#app .content');if(!content)return;
+    const holder=document.createElement('section');holder.className='card espn-season-summary';holder.innerHTML='<div class="card-pad section-title"><h2>ESPN SEASON ARCHIVE</h2><span>Loading…</span></div>';content.prepend(holder);
+    try{const d=await loadSeason(season),c=championship(d);holder.innerHTML=`<div class="card-pad section-title"><h2>${season} ESPN SEASON ARCHIVE</h2><span>${d.regularSeason.length} regular-season matchups · ${d.playoffs.length} playoff matchups</span></div><div class="card-pad">${c&&c.winnerId!=null?`<div class="history-champion"><span>Champion</span><b>${htmlEsc(tname(d,c.winnerId))}</b><small>Runner-up: ${htmlEsc(tname(d,c.runnerUpId))}</small></div>`:'<div class="empty">Championship result unavailable.</div>'}</div>`;}catch(e){holder.innerHTML='<div class="card-pad"><div class="empty">ESPN season archive could not be loaded.</div></div>';}
+  }
+
+  function enhance(){
+    if(typeof DB==='undefined'||!DB)return;
+    const parts=location.hash.replace(/^#/,'').split('/');const base=parts[0]||'home';
+    if(base==='standings')enhanceStandings();
+    else if(base==='schedule')enhanceSchedule();
+    else if(base==='history')enhanceHistory();
+    else if(base==='team'&&parts[1]){const tab=parts[2]||'overview';if(tab==='overview')enhanceTeamOverview(parts[1]);else if(tab==='roster')enhanceTeamRoster(parts[1]);}
+  }
+
+  if(typeof render==='function'){const originalRender=render;render=function(){originalRender();setTimeout(enhance,30);};}
+  window.addEventListener('hashchange',()=>setTimeout(enhance,50));
+  setTimeout(enhance,700);
+
+  const style=document.createElement('style');style.textContent=`
+    .archive-week{margin-bottom:16px}.archive-section-head{margin:8px 0 14px}.archive-section-head h2{margin-bottom:4px}.archive-section-head p{opacity:.72}.playoff-head{margin-top:30px}
+    .championship-card{display:flex;flex-direction:column;gap:7px}.championship-card b{font-size:26px}.championship-card span,.championship-card small{opacity:.72}.championship-card hr{width:100%;opacity:.15}
+    .alltime-regular-record{margin-bottom:18px}.alltime-record-kpis{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(255,255,255,.08)}.alltime-record-kpis div{padding:16px 18px}.alltime-record-kpis b{display:block;font-family:Oswald,sans-serif;font-size:24px}.alltime-record-kpis span{font-size:11px;text-transform:uppercase;opacity:.65}.history-champion{display:flex;flex-direction:column;gap:5px}.history-champion b{font-size:28px}.history-champion span,.history-champion small{opacity:.7}.espn-history-roster{margin-bottom:18px}
+    @media(max-width:760px){.alltime-record-kpis{grid-template-columns:repeat(2,1fr)}}
+  `;document.head.appendChild(style);
+})();
