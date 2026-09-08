@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#101820" />
+  <meta name="description" content="Dynasty NBA league history, rosters, contracts, drafts, transactions, standings and records." />
+  <link rel="canonical" href="https://dynastynba.com/" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <title>Dynasty NBA | League Reference</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="topline"><div><span class="live-dot"></span> Dynasty reference database</div><div>ESPN League 76513288</div></div>
+  <header class="site-header">
+    <button class="brand" data-route="home" aria-label="Dynasty NBA home"><img class="brand-logo" src="dynastynba-logo.jpg" alt="Dynasty NBA logo" /><span class="brand-copy"><b>DYNASTY</b><small>NBA</small></span></button>
+    <button class="menu-button" id="menuButton" aria-label="Open menu">☰</button>
+    <nav id="mainNav" aria-label="Primary navigation"></nav>
+    <div class="header-actions"><select id="seasonSelect" aria-label="Dynasty season"></select><button id="searchButton" class="search-button" aria-label="Search">⌕ <span>Search</span></button></div>
+  </header>
+  <main id="app"><div class="loading">Loading Dynasty NBA…</div></main>
+  <footer><div><b>DYNASTY NBA</b><span>Built as the permanent record of the league.</span></div><div class="footer-right"><span>dynastynba.com</span><span>League 76513288</span></div></footer>
+  <div id="searchOverlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Search Dynasty NBA"><div class="search-panel"><div class="search-head"><span>⌕</span><input id="globalSearch" placeholder="Search players, owners, teams…" /><button id="closeSearch" aria-label="Close search">×</button></div><div id="searchResults"></div></div></div>
+  <script src="app.js"></script>
+</body>
+</html>
