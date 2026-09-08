@@ -10,17 +10,40 @@
     const franchise=(typeof DB!=='undefined'&&DB?.Franchises||[]).find(x=>String(x.Franchise_ID).toUpperCase()===raw.toUpperCase());
     return espn?.ESPN_Team_Name||franchise?.Franchise_Name||franchise?.Current_Owner||raw;
   }
+
   function fixScheduleNames(){
     if(!location.hash.startsWith('#schedule')) return;
     document.querySelectorAll('.matchup-row .match-team b').forEach(el=>{
-      const next=publicTeamName(el.textContent);
-      if(next) el.textContent=next;
+      const current=el.textContent.trim();
+      const next=publicTeamName(current);
+      if(next && next!==current) el.textContent=next;
     });
   }
-  function scheduleFix(){setTimeout(fixScheduleNames,50);setTimeout(fixScheduleNames,250);}
+
+  function scheduleFix(){
+    setTimeout(fixScheduleNames,25);
+    setTimeout(fixScheduleNames,150);
+  }
+
   window.addEventListener('hashchange',scheduleFix);
-  document.addEventListener('click',e=>{if(e.target.closest('[data-route="schedule"]'))scheduleFix();});
-  const observer=new MutationObserver(()=>{if(location.hash.startsWith('#schedule'))fixScheduleNames();});
-  observer.observe(document.getElementById('app'),{childList:true,subtree:true});
+  document.addEventListener('click',e=>{
+    if(e.target.closest('[data-route="schedule"]')) scheduleFix();
+  });
+
+  // Observe app renders, but only schedule a single pass instead of mutating recursively.
+  let queued=false;
+  const app=document.getElementById('app');
+  if(app){
+    const observer=new MutationObserver(()=>{
+      if(!location.hash.startsWith('#schedule')||queued) return;
+      queued=true;
+      requestAnimationFrame(()=>{
+        queued=false;
+        fixScheduleNames();
+      });
+    });
+    observer.observe(app,{childList:true,subtree:true});
+  }
+
   scheduleFix();
 })();
