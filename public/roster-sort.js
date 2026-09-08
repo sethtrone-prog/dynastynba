@@ -1,4 +1,4 @@
-// Sort the roster shown on each team Overview page:
+// Sort the roster shown on each team page:
 // 1) Active players
 // 2) Two-way / TW players
 // 3) Any other roster status
@@ -7,7 +7,7 @@
   function statusRank(value) {
     const s = String(value || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
     if (s === 'active') return 0;
-    if (s === 'tw' || s === 'two way' || s === 'two-way' || s.includes('two way')) return 1;
+    if (s === 'tw' || s === 'two way' || s.includes('two way')) return 1;
     return 2;
   }
 
@@ -22,7 +22,7 @@
       const rows = Array.from(tbody.rows).filter(row => row.cells.length >= 3 && !row.cells[0]?.hasAttribute('colspan'));
       if (rows.length < 2) return;
 
-      rows.sort((a, b) => {
+      const sorted = rows.slice().sort((a, b) => {
         const rankDiff = statusRank(a.cells[1]?.textContent) - statusRank(b.cells[1]?.textContent);
         if (rankDiff) return rankDiff;
 
@@ -32,13 +32,29 @@
         return String(a.cells[0]?.textContent || '').trim().localeCompare(String(b.cells[0]?.textContent || '').trim());
       });
 
-      rows.forEach(row => tbody.appendChild(row));
+      // Only touch the DOM when the order actually needs to change.
+      // This prevents the MutationObserver from repeatedly triggering itself.
+      const changed = sorted.some((row, index) => row !== rows[index]);
+      if (!changed) return;
+
+      const fragment = document.createDocumentFragment();
+      sorted.forEach(row => fragment.appendChild(row));
+      tbody.appendChild(fragment);
     });
   }
 
   sortOverviewRoster();
 
-  const observer = new MutationObserver(() => sortOverviewRoster());
+  let scheduled = false;
+  const observer = new MutationObserver(() => {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      sortOverviewRoster();
+    });
+  });
+
   observer.observe(document.getElementById('app') || document.body, {
     childList: true,
     subtree: true
