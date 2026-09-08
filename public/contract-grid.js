@@ -1,8 +1,6 @@
 // Team Overview contract grid: show contract units by league year with team totals.
 // Runs after the normal team page render and does not use a MutationObserver.
 (function () {
-  const YEAR_KEY_RE = /^\s*(20\d{2})\s*[-–/]\s*(20\d{2})\s*$/;
-
   function statusRank(value) {
     const s = String(value || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
     if (s === 'active') return 0;
@@ -16,93 +14,60 @@
     return Number.isFinite(n) ? n : null;
   }
 
-  function normalizeYearLabel(value) {
-    if (value === null || value === undefined || value === '') return '';
+  function leagueYearLabel(endYear) {
+    const end = Number(endYear);
+    return `${end - 1}-${end}`;
+  }
+
+  function contractEndYear(value, selectedSeason) {
+    if (value === null || value === undefined || value === '') return Number(selectedSeason);
     const s = String(value).trim();
+
     let m = s.match(/(20\d{2})\s*[-–/]\s*(20\d{2})/);
-    if (m) return `${m[1]}-${m[2]}`;
+    if (m) return Number(m[2]);
+
     m = s.match(/(20\d{2})\s*[-–/]\s*(\d{2})(?!\d)/);
-    if (m) return `${m[1]}-20${m[2]}`;
-    if (/^20\d{2}$/.test(s)) {
-      const end = Number(s);
-      return `${end - 1}-${end}`;
-    }
-    return '';
-  }
+    if (m) return Number(`20${m[2]}`);
 
-  function yearStart(label) {
-    const m = String(label || '').match(/^(20\d{2})-/);
-    return m ? Number(m[1]) : 9999;
-  }
+    m = s.match(/20\d{2}/g);
+    if (m && m.length) return Number(m[m.length - 1]);
 
-  function embeddedYearKeys(contracts) {
-    const out = new Map();
-    contracts.forEach(c => Object.keys(c || {}).forEach(k => {
-      const m = String(k).match(YEAR_KEY_RE);
-      if (m) out.set(k, `${m[1]}-${m[2]}`);
-    }));
-    return out;
-  }
-
-  function rowYearField(contracts) {
-    const preferred = [
-      'Contract_Year', 'Contract_Season', 'Contract_Year_Label',
-      'Salary_Year', 'Salary_Season', 'League_Year', 'League_Season',
-      'Contract_Period', 'Year_Label', 'Year', 'Season'
-    ];
-    for (const key of preferred) {
-      if (contracts.some(c => normalizeYearLabel(c?.[key]))) return key;
-    }
-
-    const excluded = new Set(['Season_ID', 'Workbook_Year', 'End_Season', 'Start_Season']);
-    const keys = [...new Set(contracts.flatMap(c => Object.keys(c || {})))];
-    return keys.find(key => {
-      if (excluded.has(key) || !/(year|season|period)/i.test(key)) return false;
-      return contracts.some(c => normalizeYearLabel(c?.[key]));
-    }) || '';
+    const n = Number(String(value).replace(/[^0-9]/g, ''));
+    return Number.isFinite(n) && n >= 2000 ? n : Number(selectedSeason);
   }
 
   function buildContractMatrix(contracts, selectedSeason) {
-    const embedded = embeddedYearKeys(contracts);
     const matrix = new Map();
     const totals = new Map();
-    let years = [];
+    const currentEndYear = Number(selectedSeason);
 
-    function add(pid, year, amount) {
-      if (!pid || !year || amount === null) return;
-      if (!matrix.has(pid)) matrix.set(pid, new Map());
-      const pm = matrix.get(pid);
-      pm.set(year, (pm.get(year) || 0) + amount);
-      totals.set(year, (totals.get(year) || 0) + amount);
+    let maxEndYear = currentEndYear;
+    contracts.forEach(c => {
+      maxEndYear = Math.max(maxEndYear, contractEndYear(c.End_Season, currentEndYear));
+    });
+
+    const years = [];
+    for (let end = currentEndYear; end <= maxEndYear; end++) {
+      years.push(leagueYearLabel(end));
+      totals.set(leagueYearLabel(end), 0);
     }
 
-    if (embedded.size) {
-      years = [...new Set(embedded.values())].sort((a, b) => yearStart(a) - yearStart(b));
-      contracts.forEach(c => {
-        embedded.forEach((year, key) => add(c.Player_ID, year, numeric(c[key])));
-      });
-    } else {
-      const yearField = rowYearField(contracts);
-      if (yearField) {
-        contracts.forEach(c => {
-          const year = normalizeYearLabel(c[yearField]);
-          add(c.Player_ID, year, numeric(c.Units));
-        });
-        years = [...totals.keys()].sort((a, b) => yearStart(a) - yearStart(b));
+    contracts.forEach(c => {
+      if (!c.Player_ID) return;
+      const units = numeric(c.Units);
+      if (units === null) return;
+
+      const endYear = Math.max(currentEndYear, contractEndYear(c.End_Season, currentEndYear));
+      const pm = new Map();
+
+      for (let end = currentEndYear; end <= endYear; end++) {
+        const label = leagueYearLabel(end);
+        pm.set(label, units);
+        totals.set(label, (totals.get(label) || 0) + units);
       }
-    }
 
-    // Safe fallback for older seasons whose normalized contract records contain only
-    // a current-season Units value. This still keeps the Overview functional.
-    if (!years.length) {
-      const current = `${Number(selectedSeason) - 1}-${Number(selectedSeason)}`;
-      years = [current];
-      contracts.forEach(c => add(c.Player_ID, current, numeric(c.Units)));
-    }
-
-    const currentStart = Number(selectedSeason) - 1;
-    const futureYears = years.filter(y => yearStart(y) >= currentStart);
-    if (futureYears.length) years = futureYears;
+      matrix.set(c.Player_ID, pm);
+    });
 
     return { years, matrix, totals };
   }
@@ -151,16 +116,16 @@
     table.classList.add('contract-year-grid');
     table.innerHTML = `
       <thead><tr>
-        <th>Player</th>
-        <th>Status</th>
+        <th class="contract-player-col">Player</th>
+        <th class="contract-status-col">Status</th>
         ${years.map(y => `<th class="num contract-year-head">${esc(y)}</th>`).join('')}
       </tr></thead>
       <tbody>${sortedRoster.map(r => {
         const pm = matrix.get(r.Player_ID) || new Map();
         const name = player(r.Player_ID).Player_Name || r.Player_Name_Raw || '';
         return `<tr>
-          <td><span class="player-link" onclick="go('player/${r.Player_ID}')">${esc(name)}</span></td>
-          <td><span class="roster-status ${String(r.Roster_Status || '').toLowerCase()}">${esc(r.Roster_Status || '')}</span></td>
+          <td class="contract-player-col"><span class="player-link" onclick="go('player/${r.Player_ID}')">${esc(name)}</span></td>
+          <td class="contract-status-col"><span class="roster-status ${String(r.Roster_Status || '').toLowerCase()}">${esc(r.Roster_Status || '')}</span></td>
           ${years.map(y => `<td class="num contract-year-unit">${formatUnits(pm.has(y) ? pm.get(y) : null)}</td>`).join('')}
         </tr>`;
       }).join('')}</tbody>
@@ -170,8 +135,8 @@
       </tr></tfoot>`;
   }
 
-  // Run only after normal route rendering. No observer: avoids the crash loop that
-  // occurred with the earlier roster-sort implementation.
+  // Run after normal route rendering. No observer: avoids the crash loop from the
+  // earlier roster-sort implementation.
   document.addEventListener('click', e => {
     if (e.target.closest('[onclick*="go(\'team/"], [data-route="teams"]')) {
       setTimeout(renderContractGrid, 0);
@@ -185,9 +150,17 @@
 
   const style = document.createElement('style');
   style.textContent = `
-    .contract-year-grid .contract-year-head,.contract-year-grid .contract-year-unit{white-space:nowrap;text-align:right}
-    .contract-year-grid tfoot .contract-grid-total th{font-weight:800;border-top:2px solid currentColor}
+    .team-panel{overflow-x:auto}
+    .contract-year-grid{width:max-content;min-width:100%;table-layout:auto}
+    .contract-year-grid .contract-player-col{width:1%;max-width:220px;white-space:nowrap;padding-right:16px}
+    .contract-year-grid .contract-status-col{width:1%;white-space:nowrap;padding-right:14px}
+    .contract-year-grid .contract-year-head,.contract-year-grid .contract-year-unit{min-width:92px;white-space:nowrap;text-align:right}
+    .contract-year-grid tfoot .contract-grid-total th{font-weight:800;border-top:2px solid currentColor;white-space:nowrap}
     .contract-year-grid tfoot .contract-grid-total th:first-child{text-align:left;letter-spacing:.04em}
+    @media(max-width:760px){
+      .contract-year-grid .contract-player-col{max-width:180px}
+      .contract-year-grid .contract-year-head,.contract-year-grid .contract-year-unit{min-width:84px}
+    }
   `;
   document.head.appendChild(style);
 })();
