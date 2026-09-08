@@ -5,6 +5,10 @@
     return String(value || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
   }
 
+  function normText(value) {
+    return String(value || '').trim().toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, ' ').trim();
+  }
+
   function isTwoWay(value) {
     const s = normalizedStatus(value);
     return s === 'tw' || s === 'two way' || s.includes('two way');
@@ -119,7 +123,7 @@
       matrix.set(pid, pm);
     });
 
-    // TEAM TOTAL is the 25-unit cap total. Two-way and G-League players never count.
+    // CAP TOTAL is the 25-unit cap total. Two-way and G-League players never count.
     const totals = new Map(years.map(y => [y, 0]));
     capRoster.forEach(r => {
       const pm = matrix.get(r.Player_ID);
@@ -149,30 +153,78 @@
     return '';
   }
 
+  function ownerAliasesForFranchise(fid, sid) {
+    const aliases = new Set();
+    const fs = (DB?.['Franchise Seasons'] || []).find(r => String(r.Franchise_ID) === String(fid) && String(r.Season_ID) === String(sid));
+    const f = (DB?.Franchises || []).find(r => String(r.Franchise_ID) === String(fid));
+    [fs?.Owner_Name, f?.Current_Owner].filter(Boolean).forEach(v => aliases.add(normText(v)));
+    (DB?.['Owner Aliases'] || []).filter(r => String(r.Franchise_ID) === String(fid)).forEach(r => {
+      [r.Alias, r.Canonical_Owner].filter(Boolean).forEach(v => aliases.add(normText(v)));
+    });
+    // Current team label can also be used as a column header in some source sheets.
+    const et = (DB?.['ESPN Teams'] || []).find(r => String(r.Franchise_ID) === String(fid));
+    [et?.ESPN_Team_Name].filter(Boolean).forEach(v => aliases.add(normText(v)));
+    return [...aliases].filter(Boolean);
+  }
+
+  function looksLikePlayerName(value) {
+    const s = String(value ?? '').trim();
+    if (!s || /^[-–—]+$/.test(s)) return false;
+    if (/^\d+(?:\.\d+)?$/.test(s)) return false;
+    if (/^(gp|games? played|player|name)$/i.test(s)) return false;
+    return /[a-z]/i.test(s);
+  }
+
+  function headerMatchesOwner(header, aliases) {
+    const h = normText(header).replace(/\b(gp|games played|games)\b/g, '').trim();
+    if (!h) return false;
+    return aliases.some(a => h === a || h.startsWith(a + ' ') || a.startsWith(h + ' '));
+  }
+
   function getGLeagueRows(fid, sid, roster) {
-    const keys = Object.keys(DB || {}).filter(k => /g\s*[-_ ]?league/i.test(k));
     const rows = [];
-    keys.forEach(k => {
-      const value = DB[k];
-      if (!Array.isArray(value)) return;
+    const aliases = ownerAliasesForFranchise(fid, sid);
+
+    // G-League data can exist either as a normalized table or in the original wide
+    // Google-Sheet layout (owner/player column followed by a Games Played column).
+    Object.entries(DB || {}).forEach(([tableName, value]) => {
+      if (!Array.isArray(value) || !value.length) return;
+      const tableLooksGLeague = /g\s*[-_ ]?league|gleague|development\s*roster|reserve\s*roster/i.test(tableName);
+      if (!tableLooksGLeague) return;
+
       value.forEach(r => {
+        if (!r || typeof r !== 'object') return;
+
+        // Normalized row format.
         const rf = firstValue(r, ['Franchise_ID','Current_Franchise_ID','Team_Franchise_ID']);
         const rs = firstValue(r, ['Season_ID']);
         const ry = Number(firstValue(r, ['Workbook_Year','End_Year','Season','Year']));
         const seasonMatch = rs ? String(rs) === String(sid) : (!ry || ry === Number(season));
-        if (String(rf) === String(fid) && seasonMatch) rows.push(r);
+        if (rf && String(rf) === String(fid) && seasonMatch) {
+          rows.push(r);
+          return;
+        }
+
+        // Wide source-sheet format: owner/player column + adjacent Games Played column.
+        for (const [header, value] of Object.entries(r)) {
+          if (/gp|games?\s*played/i.test(header)) continue;
+          if (!headerMatchesOwner(header, aliases)) continue;
+          if (!looksLikePlayerName(value)) continue;
+          rows.push({ Player_Name_Raw: String(value).trim(), Source_Table: tableName });
+        }
       });
     });
 
     // Also honor roster rows explicitly marked as G-League/reserve.
-    roster.filter(r => isGLeagueStatus(r.Roster_Status)).forEach(r => rows.push(r));
+    roster.filter(r => isGLeagueStatus(r.Roster_Status) || isGLeagueStatus(r.Slot)).forEach(r => rows.push(r));
 
     const seen = new Set();
     return rows.filter(r => {
       const pid = firstValue(r, ['Player_ID']);
       const raw = firstValue(r, ['Player_Name','Player_Name_Raw','Player','Name']);
-      const key = pid ? `id:${pid}` : `name:${String(raw).toLowerCase()}`;
-      if (!key || seen.has(key)) return false;
+      const key = pid ? `id:${pid}` : `name:${normText(raw)}`;
+      if (!raw && !pid) return false;
+      if (seen.has(key)) return false;
       seen.add(key);
       return true;
     });
@@ -184,7 +236,19 @@
       const p = player(pid);
       if (p && p.Player_Name) return p.Player_Name;
     }
-    return firstValue(row, ['Player_Name','Player_Name_Raw','Player','Name']) || 'Unknown player';
+    const raw = firstValue(row, ['Player_Name','Player_Name_Raw','Player','Name']);
+    if (raw) {
+      const match = (DB?.Players || []).find(p => normText(p.Player_Name) === normText(raw));
+      return match?.Player_Name || raw;
+    }
+    return 'Unknown player';
+  }
+
+  function gLeaguePlayerId(row) {
+    const pid = firstValue(row, ['Player_ID']);
+    if (pid) return pid;
+    const raw = firstValue(row, ['Player_Name','Player_Name_Raw','Player','Name']);
+    return (DB?.Players || []).find(p => normText(p.Player_Name) === normText(raw))?.Player_ID || '';
   }
 
   function renderGLeagueReserves(panel, rows) {
@@ -196,7 +260,7 @@
       <div class="card-pad section-title"><div><div class="eyebrow">DEVELOPMENT ROSTER</div><h2>G-League Reserves</h2></div><span>Does not count toward 25-unit cap</span></div>
       <div class="table-wrap"><table class="data-table g-league-table"><thead><tr><th>Player</th></tr></thead><tbody>
         ${rows.map(r => {
-          const pid = firstValue(r, ['Player_ID']);
+          const pid = gLeaguePlayerId(r);
           const name = gLeaguePlayerName(r);
           return `<tr><td>${pid ? `<span class="player-link" onclick="go('player/${pid}')">${esc(name)}</span>` : esc(name)}</td></tr>`;
         }).join('')}
@@ -211,11 +275,11 @@
     const sid = typeof seasonId === 'function' ? seasonId(season) : `S${season}`;
     const fullRoster = (DB.Rosters || []).filter(r => r.Franchise_ID === fid && r.Season_ID === sid);
     const gLeagueRows = getGLeagueRows(fid, sid, fullRoster);
-    const gLeagueIds = new Set(gLeagueRows.map(r => firstValue(r, ['Player_ID'])).filter(Boolean).map(String));
+    const gLeagueIds = new Set(gLeagueRows.map(r => gLeaguePlayerId(r)).filter(Boolean).map(String));
 
     // Main cap table contains active + two-way players. G-League reserves are broken out below.
-    const roster = fullRoster.filter(r => !isGLeagueStatus(r.Roster_Status) && !gLeagueIds.has(String(r.Player_ID || '')));
-    const capRoster = roster.filter(r => !isTwoWay(r.Roster_Status));
+    const roster = fullRoster.filter(r => !isGLeagueStatus(r.Roster_Status) && !isGLeagueStatus(r.Slot) && !gLeagueIds.has(String(r.Player_ID || '')));
+    const capRoster = roster.filter(r => !isTwoWay(r.Roster_Status) && !isTwoWay(r.Slot));
     const contracts = (DB.Contracts || []).filter(c => c.Franchise_ID === fid && c.Season_ID === sid);
     if (!roster.length && !gLeagueRows.length) return;
     const table = document.querySelector('.team-panel .team-table');
@@ -225,7 +289,9 @@
     const { years, matrix, totals } = buildContractMatrix(contracts, capRoster, season);
     const currentYear = years[0];
     const sortedRoster = roster.slice().sort((a, b) => {
-      const sr = statusRank(a.Roster_Status) - statusRank(b.Roster_Status);
+      const aStatus = isTwoWay(a.Roster_Status) || isTwoWay(a.Slot) ? 'two way' : a.Roster_Status;
+      const bStatus = isTwoWay(b.Roster_Status) || isTwoWay(b.Slot) ? 'two way' : b.Roster_Status;
+      const sr = statusRank(aStatus) - statusRank(bStatus);
       if (sr) return sr;
       const au = matrix.get(a.Player_ID)?.get(currentYear);
       const bu = matrix.get(b.Player_ID)?.get(currentYear);
@@ -242,8 +308,8 @@
       <tbody>${sortedRoster.map(r => {
         const pm = matrix.get(r.Player_ID) || new Map();
         const name = player(r.Player_ID).Player_Name || r.Player_Name_Raw || '';
-        const status = String(r.Roster_Status || '').trim();
-        const twoWay = isTwoWay(status);
+        const status = String(r.Roster_Status || r.Slot || '').trim();
+        const twoWay = isTwoWay(r.Roster_Status) || isTwoWay(r.Slot);
         return `<tr class="contract-roster-row status-${esc(status.toLowerCase().replace(/[^a-z0-9]+/g,'-'))}${twoWay?' two-way-cap-exempt':''}">
           <td class="contract-player-col"><span class="player-link" onclick="go('player/${r.Player_ID}')">${esc(name)}</span>${twoWay ? `<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>` : (status && status.toLowerCase() !== 'active' ? `<small class="contract-status-note">${esc(status)}</small>` : '')}</td>
           ${years.map(y => `<td class="contract-year-unit">${formatUnits(pm.get(y))}</td>`).join('')}
