@@ -56,8 +56,6 @@
     return `<div class="grid"><section class="card span-8"><div class="card-pad section-title"><h2>${data.season} FINAL REGULAR-SEASON STANDINGS</h2><span>ESPN archive</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>#</th><th>Team</th><th>W-L${rows.some(x=>x.ties)?'-T':''}</th><th>Win%</th><th>PF</th><th>PA</th></tr></thead><tbody>${rows.map((t,i)=>{const games=(Number(t.wins)||0)+(Number(t.losses)||0)+(Number(t.ties)||0);const pct=games?((Number(t.wins)||0)+(Number(t.ties)||0)/2)/games:0;return `<tr><td class="rank">${t.playoffSeed||i+1}</td><td><b>${htmlEsc(t.name)}</b></td><td class="record">${t.wins??0}-${t.losses??0}${t.ties?`-${t.ties}`:''}</td><td>${pct.toFixed(3)}</td><td>${nfmt(t.pointsFor)}</td><td>${nfmt(t.pointsAgainst)}</td></tr>`}).join('')}</tbody></table></div></section><section class="card span-4"><div class="card-pad section-title"><h2>CHAMPIONSHIP</h2></div><div class="card-pad championship-card">${champ&&champ.winnerId!=null?`<b>${htmlEsc(tname(data,champ.winnerId))}</b><span>Champion</span><hr><strong>${htmlEsc(tname(data,champ.runnerUpId))}</strong><small>Runner-up</small>`:'<div class="empty">Championship result not available.</div>'}</div></section></div>`;
   }
 
-  // The primary Standings tab is always the most current completed ESPN season.
-  // Historical standings remain available through the archive/history views rather than replacing this page.
   async function enhanceStandings(){
     if(Number(season)!==CURRENT_ESPN_SEASON){
       setSeason(CURRENT_ESPN_SEASON);
@@ -82,13 +80,27 @@
   async function allTimeRecord(fid){
     const rows=[];let W=0,L=0,T=0,PF=0,PA=0;
     for(const y of seasons){try{const d=await loadSeason(y),team=findTeam(d,fid);if(!team)continue;let w=0,l=0,t=0,pf=0,pa=0;for(const m of d.regularSeason||[]){let mine=null,opp=null;if(Number(m.home?.teamId)===Number(team.id)){mine=m.home;opp=m.away;}else if(Number(m.away?.teamId)===Number(team.id)){mine=m.away;opp=m.home;}else continue;const a=Number(mine?.score||0),b=Number(opp?.score||0);pf+=a;pa+=b;if(a>b)w++;else if(a<b)l++;else t++;}W+=w;L+=l;T+=t;PF+=pf;PA+=pa;rows.push({y,w,l,t,pf,pa});}catch(e){}}
+    rows.sort((a,b)=>b.y-a.y);
     return {W,L,T,PF,PA,rows};
   }
-  async function enhanceTeamOverview(fid){
+  function allTimeRecordHtml(r){
+    const games=r.W+r.L+r.T,pct=games?(r.W+r.T/2)/games:0;
+    return `<div class="card-pad section-title"><h2>ALL-TIME REGULAR-SEASON RECORD</h2><span>ESPN · playoff bracket games excluded</span></div><div class="alltime-record-kpis"><div><b>${r.W}-${r.L}${r.T?`-${r.T}`:''}</b><span>Combined Record</span></div><div><b>${pct.toFixed(3)}</b><span>Win%</span></div><div><b>${nfmt(r.PF)}</b><span>Points For</span></div><div><b>${nfmt(r.PA)}</b><span>Points Against</span></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Season</th><th>Record</th><th>PF</th><th>PA</th></tr></thead><tbody>${r.rows.map(x=>`<tr><td>${x.y}</td><td class="record">${x.w}-${x.l}${x.t?`-${x.t}`:''}</td><td>${nfmt(x.pf)}</td><td>${nfmt(x.pa)}</td></tr>`).join('')}</tbody></table></div>`;
+  }
+  async function enhanceTeamHistory(fid){
     const content=document.querySelector('#app .content'); if(!content||content.querySelector('.alltime-regular-record'))return;
     const holder=document.createElement('section');holder.className='card alltime-regular-record';holder.innerHTML='<div class="card-pad section-title"><h2>ALL-TIME REGULAR-SEASON RECORD</h2><span>Loading ESPN history…</span></div>';content.prepend(holder);
-    const r=await allTimeRecord(fid);const games=r.W+r.L+r.T,pct=games?(r.W+r.T/2)/games:0;
-    holder.innerHTML=`<div class="card-pad section-title"><h2>ALL-TIME REGULAR-SEASON RECORD</h2><span>ESPN · playoff bracket games excluded</span></div><div class="alltime-record-kpis"><div><b>${r.W}-${r.L}${r.T?`-${r.T}`:''}</b><span>Combined Record</span></div><div><b>${pct.toFixed(3)}</b><span>Win%</span></div><div><b>${nfmt(r.PF)}</b><span>Points For</span></div><div><b>${nfmt(r.PA)}</b><span>Points Against</span></div></div><div class="table-wrap"><table class="data-table"><thead><tr><th>Season</th><th>Record</th><th>PF</th><th>PA</th></tr></thead><tbody>${r.rows.map(x=>`<tr><td>${x.y}</td><td class="record">${x.w}-${x.l}${x.t?`-${x.t}`:''}</td><td>${nfmt(x.pf)}</td><td>${nfmt(x.pa)}</td></tr>`).join('')}</tbody></table></div>`;
+    try{holder.innerHTML=allTimeRecordHtml(await allTimeRecord(fid));}catch(e){holder.innerHTML='<div class="card-pad"><div class="empty">All-time ESPN record could not be loaded.</div></div>';}
+  }
+  async function enhanceTeams(){
+    const cards=[...document.querySelectorAll('#app .team-card')];
+    await Promise.all(cards.map(async card=>{
+      const oc=card.getAttribute('onclick')||'';const m=oc.match(/team\/(F\d+)/i);if(!m)return;
+      const fid=m[1];const meta=card.querySelector('.team-meta');if(!meta)return;
+      const spans=meta.querySelectorAll('span');if(!spans.length)return;
+      spans[0].textContent='Loading all-time record…';
+      try{const r=await allTimeRecord(fid);spans[0].textContent=`${r.W}-${r.L}${r.T?`-${r.T}`:''} all-time regular season`;}catch(e){spans[0].textContent='All-time record unavailable';}
+    }));
   }
   async function enhanceHistory(){
     if(Number(season)>2026)return;
@@ -103,7 +115,8 @@
     if(base==='standings')enhanceStandings();
     else if(base==='schedule')enhanceSchedule();
     else if(base==='history')enhanceHistory();
-    else if(base==='team'&&parts[1]){const tab=parts[2]||'overview';if(tab==='overview')enhanceTeamOverview(parts[1]);else if(tab==='roster')enhanceTeamRoster(parts[1]);}
+    else if(base==='teams')enhanceTeams();
+    else if(base==='team'&&parts[1]){const tab=parts[2]||'overview';if(tab==='roster')enhanceTeamRoster(parts[1]);else if(tab==='history')enhanceTeamHistory(parts[1]);}
   }
 
   if(typeof render==='function'){const originalRender=render;render=function(){originalRender();setTimeout(enhance,30);};}
