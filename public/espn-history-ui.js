@@ -2,6 +2,7 @@
 (function(){
   const cache=new Map();
   const seasons=[2019,2020,2021,2022,2023,2024,2025,2026];
+  const CURRENT_ESPN_SEASON=2026;
   const norm=v=>String(v||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
   const htmlEsc=v=>typeof esc==='function'?esc(v):String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
   const nfmt=v=>v==null?'—':Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
@@ -55,11 +56,16 @@
     return `<div class="grid"><section class="card span-8"><div class="card-pad section-title"><h2>${data.season} FINAL REGULAR-SEASON STANDINGS</h2><span>ESPN archive</span></div><div class="table-wrap"><table class="data-table"><thead><tr><th>#</th><th>Team</th><th>W-L${rows.some(x=>x.ties)?'-T':''}</th><th>Win%</th><th>PF</th><th>PA</th></tr></thead><tbody>${rows.map((t,i)=>{const games=(Number(t.wins)||0)+(Number(t.losses)||0)+(Number(t.ties)||0);const pct=games?((Number(t.wins)||0)+(Number(t.ties)||0)/2)/games:0;return `<tr><td class="rank">${t.playoffSeed||i+1}</td><td><b>${htmlEsc(t.name)}</b></td><td class="record">${t.wins??0}-${t.losses??0}${t.ties?`-${t.ties}`:''}</td><td>${pct.toFixed(3)}</td><td>${nfmt(t.pointsFor)}</td><td>${nfmt(t.pointsAgainst)}</td></tr>`}).join('')}</tbody></table></div></section><section class="card span-4"><div class="card-pad section-title"><h2>CHAMPIONSHIP</h2></div><div class="card-pad championship-card">${champ&&champ.winnerId!=null?`<b>${htmlEsc(tname(data,champ.winnerId))}</b><span>Champion</span><hr><strong>${htmlEsc(tname(data,champ.runnerUpId))}</strong><small>Runner-up</small>`:'<div class="empty">Championship result not available.</div>'}</div></section></div>`;
   }
 
+  // The primary Standings tab is always the most current completed ESPN season.
+  // Historical standings remain available through the archive/history views rather than replacing this page.
   async function enhanceStandings(){
-    if(Number(season)>2026)return;
+    if(Number(season)!==CURRENT_ESPN_SEASON){
+      setSeason(CURRENT_ESPN_SEASON);
+      const sel=document.getElementById('seasonSelect');if(sel)sel.value=String(CURRENT_ESPN_SEASON);
+    }
     const content=document.querySelector('#app .content'); if(!content)return;
-    content.innerHTML='<div class="loading">Loading ESPN historical standings…</div>';
-    try{content.innerHTML=standingsHtml(await loadSeason(season));}catch(e){content.innerHTML='<div class="empty">Historical ESPN standings could not be loaded.</div>';}
+    content.innerHTML='<div class="loading">Loading current ESPN standings…</div>';
+    try{content.innerHTML=standingsHtml(await loadSeason(CURRENT_ESPN_SEASON));}catch(e){content.innerHTML='<div class="empty">Current ESPN standings could not be loaded.</div>';}
   }
   async function enhanceSchedule(){
     if(Number(season)>2026)return;
