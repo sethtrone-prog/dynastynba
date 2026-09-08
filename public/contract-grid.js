@@ -1,10 +1,24 @@
 // Team Overview contract grid: cap-sheet style yearly unit columns with team totals.
 // Runs after normal team-page rendering and does not use a MutationObserver.
 (function () {
+  function normalizedStatus(value) {
+    return String(value || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
+  }
+
+  function isTwoWay(value) {
+    const s = normalizedStatus(value);
+    return s === 'tw' || s === 'two way' || s.includes('two way');
+  }
+
+  function isGLeagueStatus(value) {
+    const s = normalizedStatus(value);
+    return s.includes('g league') || s.includes('gleague') || s.includes('g-league') || s.includes('reserve');
+  }
+
   function statusRank(value) {
-    const s = String(value || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
+    const s = normalizedStatus(value);
     if (s === 'active') return 0;
-    if (s === 'tw' || s === 'two way' || s.includes('two way')) return 1;
+    if (isTwoWay(s)) return 1;
     return 2;
   }
 
@@ -55,7 +69,7 @@
     return Number.isFinite(n) && n >= 2000 ? n : Number(fallback);
   }
 
-  function buildContractMatrix(contracts, roster, selectedSeason) {
+  function buildContractMatrix(contracts, capRoster, selectedSeason) {
     const currentEnd = Number(selectedSeason);
     const grouped = new Map();
     contracts.forEach(c => {
@@ -105,8 +119,9 @@
       matrix.set(pid, pm);
     });
 
+    // TEAM TOTAL is the 25-unit cap total. Two-way and G-League players never count.
     const totals = new Map(years.map(y => [y, 0]));
-    roster.forEach(r => {
+    capRoster.forEach(r => {
       const pm = matrix.get(r.Player_ID);
       if (!pm) return;
       years.forEach(y => {
@@ -127,18 +142,87 @@
     return parts[0] === 'team' && !!parts[1] && (!parts[2] || parts[2] === 'overview');
   }
 
+  function firstValue(row, keys) {
+    for (const key of keys) {
+      if (row && row[key] !== undefined && row[key] !== null && String(row[key]).trim() !== '') return row[key];
+    }
+    return '';
+  }
+
+  function getGLeagueRows(fid, sid, roster) {
+    const keys = Object.keys(DB || {}).filter(k => /g\s*[-_ ]?league/i.test(k));
+    const rows = [];
+    keys.forEach(k => {
+      const value = DB[k];
+      if (!Array.isArray(value)) return;
+      value.forEach(r => {
+        const rf = firstValue(r, ['Franchise_ID','Current_Franchise_ID','Team_Franchise_ID']);
+        const rs = firstValue(r, ['Season_ID']);
+        const ry = Number(firstValue(r, ['Workbook_Year','End_Year','Season','Year']));
+        const seasonMatch = rs ? String(rs) === String(sid) : (!ry || ry === Number(season));
+        if (String(rf) === String(fid) && seasonMatch) rows.push(r);
+      });
+    });
+
+    // Also honor roster rows explicitly marked as G-League/reserve.
+    roster.filter(r => isGLeagueStatus(r.Roster_Status)).forEach(r => rows.push(r));
+
+    const seen = new Set();
+    return rows.filter(r => {
+      const pid = firstValue(r, ['Player_ID']);
+      const raw = firstValue(r, ['Player_Name','Player_Name_Raw','Player','Name']);
+      const key = pid ? `id:${pid}` : `name:${String(raw).toLowerCase()}`;
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+
+  function gLeaguePlayerName(row) {
+    const pid = firstValue(row, ['Player_ID']);
+    if (pid) {
+      const p = player(pid);
+      if (p && p.Player_Name) return p.Player_Name;
+    }
+    return firstValue(row, ['Player_Name','Player_Name_Raw','Player','Name']) || 'Unknown player';
+  }
+
+  function renderGLeagueReserves(panel, rows) {
+    document.querySelector('.g-league-reserves-card')?.remove();
+    if (!rows.length || !panel) return;
+    const section = document.createElement('section');
+    section.className = 'card team-panel g-league-reserves-card';
+    section.innerHTML = `
+      <div class="card-pad section-title"><div><div class="eyebrow">DEVELOPMENT ROSTER</div><h2>G-League Reserves</h2></div><span>Does not count toward 25-unit cap</span></div>
+      <div class="table-wrap"><table class="data-table g-league-table"><thead><tr><th>Player</th></tr></thead><tbody>
+        ${rows.map(r => {
+          const pid = firstValue(r, ['Player_ID']);
+          const name = gLeaguePlayerName(r);
+          return `<tr><td>${pid ? `<span class="player-link" onclick="go('player/${pid}')">${esc(name)}</span>` : esc(name)}</td></tr>`;
+        }).join('')}
+      </tbody></table></div>`;
+    panel.insertAdjacentElement('afterend', section);
+  }
+
   function renderContractGrid() {
     if (!isOverviewRoute() || typeof DB === 'undefined' || !DB) return;
     const parts = location.hash.replace(/^#/, '').split('/');
     const fid = parts[1];
     const sid = typeof seasonId === 'function' ? seasonId(season) : `S${season}`;
-    const roster = (DB.Rosters || []).filter(r => r.Franchise_ID === fid && r.Season_ID === sid);
+    const fullRoster = (DB.Rosters || []).filter(r => r.Franchise_ID === fid && r.Season_ID === sid);
+    const gLeagueRows = getGLeagueRows(fid, sid, fullRoster);
+    const gLeagueIds = new Set(gLeagueRows.map(r => firstValue(r, ['Player_ID'])).filter(Boolean).map(String));
+
+    // Main cap table contains active + two-way players. G-League reserves are broken out below.
+    const roster = fullRoster.filter(r => !isGLeagueStatus(r.Roster_Status) && !gLeagueIds.has(String(r.Player_ID || '')));
+    const capRoster = roster.filter(r => !isTwoWay(r.Roster_Status));
     const contracts = (DB.Contracts || []).filter(c => c.Franchise_ID === fid && c.Season_ID === sid);
-    if (!roster.length) return;
+    if (!roster.length && !gLeagueRows.length) return;
     const table = document.querySelector('.team-panel .team-table');
     if (!table) return;
+    const panel = table.closest('.team-panel');
 
-    const { years, matrix, totals } = buildContractMatrix(contracts, roster, season);
+    const { years, matrix, totals } = buildContractMatrix(contracts, capRoster, season);
     const currentYear = years[0];
     const sortedRoster = roster.slice().sort((a, b) => {
       const sr = statusRank(a.Roster_Status) - statusRank(b.Roster_Status);
@@ -159,12 +243,15 @@
         const pm = matrix.get(r.Player_ID) || new Map();
         const name = player(r.Player_ID).Player_Name || r.Player_Name_Raw || '';
         const status = String(r.Roster_Status || '').trim();
-        return `<tr class="contract-roster-row status-${esc(status.toLowerCase().replace(/[^a-z0-9]+/g,'-'))}">
-          <td class="contract-player-col"><span class="player-link" onclick="go('player/${r.Player_ID}')">${esc(name)}</span>${status && status.toLowerCase() !== 'active' ? `<small class="contract-status-note">${esc(status)}</small>` : ''}</td>
+        const twoWay = isTwoWay(status);
+        return `<tr class="contract-roster-row status-${esc(status.toLowerCase().replace(/[^a-z0-9]+/g,'-'))}${twoWay?' two-way-cap-exempt':''}">
+          <td class="contract-player-col"><span class="player-link" onclick="go('player/${r.Player_ID}')">${esc(name)}</span>${twoWay ? `<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>` : (status && status.toLowerCase() !== 'active' ? `<small class="contract-status-note">${esc(status)}</small>` : '')}</td>
           ${years.map(y => `<td class="contract-year-unit">${formatUnits(pm.get(y))}</td>`).join('')}
         </tr>`;
       }).join('')}</tbody>
-      <tfoot><tr class="contract-grid-total"><th>TEAM TOTAL</th>${years.map(y => `<th class="contract-year-total">${formatUnits(totals.get(y) || 0)}</th>`).join('')}</tr></tfoot>`;
+      <tfoot><tr class="contract-grid-total"><th>CAP TOTAL</th>${years.map(y => `<th class="contract-year-total">${formatUnits(totals.get(y) || 0)}</th>`).join('')}</tr></tfoot>`;
+
+    renderGLeagueReserves(panel, gLeagueRows);
   }
 
   document.addEventListener('click', e => {
@@ -183,8 +270,11 @@
     .contract-year-grid td.contract-year-unit,
     .contract-year-grid th.contract-year-total{width:94px;min-width:94px;white-space:nowrap;text-align:center !important;vertical-align:middle}
     .contract-year-grid .contract-status-note{display:inline;margin-left:7px;font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.03em}
+    .contract-year-grid .two-way-cap-exempt td{opacity:.82}
     .contract-year-grid tfoot .contract-grid-total th{font-weight:800;border-top:2px solid currentColor;white-space:nowrap}
     .contract-year-grid tfoot .contract-grid-total th:first-child{text-align:left}
+    .g-league-reserves-card{margin-top:16px;overflow:hidden}
+    .g-league-reserves-card .g-league-table{width:100%}
     @media(max-width:760px){
       .contract-year-grid{min-width:680px}
       .contract-year-grid .contract-player-col{width:175px;max-width:175px}
