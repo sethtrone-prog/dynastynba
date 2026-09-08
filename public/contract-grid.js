@@ -1,5 +1,5 @@
-// Team Overview contract grid: show contract units by league year with team totals.
-// Runs after the normal team page render and does not use a MutationObserver.
+// Team Overview contract grid: cap-sheet style yearly unit columns with team totals.
+// Runs after normal team-page rendering and does not use a MutationObserver.
 (function () {
   function statusRank(value) {
     const s = String(value || '').trim().toLowerCase().replace(/[\s_-]+/g, ' ');
@@ -14,72 +14,134 @@
     return Number.isFinite(n) ? n : null;
   }
 
-  function leagueYearLabel(endYear) {
+  function yearLabel(endYear) {
     const end = Number(endYear);
     return `${end - 1}-${end}`;
   }
 
-  function contractEndYear(value, selectedSeason) {
-    if (value === null || value === undefined || value === '') return Number(selectedSeason);
+  function extractYearFromValue(value) {
+    if (value === null || value === undefined || value === '') return null;
     const s = String(value).trim();
-
     let m = s.match(/(20\d{2})\s*[-–/]\s*(20\d{2})/);
     if (m) return Number(m[2]);
-
     m = s.match(/(20\d{2})\s*[-–/]\s*(\d{2})(?!\d)/);
     if (m) return Number(`20${m[2]}`);
-
-    m = s.match(/20\d{2}/g);
-    if (m && m.length) return Number(m[m.length - 1]);
-
-    const n = Number(String(value).replace(/[^0-9]/g, ''));
-    return Number.isFinite(n) && n >= 2000 ? n : Number(selectedSeason);
+    if (/^20\d{2}$/.test(s)) return Number(s);
+    return null;
   }
 
-  function buildContractMatrix(contracts, selectedSeason) {
-    const matrix = new Map();
-    const totals = new Map();
-    const currentEndYear = Number(selectedSeason);
-
-    let maxEndYear = currentEndYear;
-    contracts.forEach(c => {
-      maxEndYear = Math.max(maxEndYear, contractEndYear(c.End_Season, currentEndYear));
-    });
-
-    const years = [];
-    for (let end = currentEndYear; end <= maxEndYear; end++) {
-      years.push(leagueYearLabel(end));
-      totals.set(leagueYearLabel(end), 0);
+  function explicitContractYear(row) {
+    const preferred = [
+      'Contract_Year','Contract_Season','Contract_Year_Label','Contract_Period',
+      'Salary_Year','Salary_Season','League_Year','League_Season','Year_Label'
+    ];
+    for (const key of preferred) {
+      const y = extractYearFromValue(row?.[key]);
+      if (y) return y;
     }
 
+    // Some normalized versions use a differently named year field. Inspect any
+    // year/season field except the snapshot season and contract end fields.
+    for (const [key, value] of Object.entries(row || {})) {
+      if (['Season_ID','Workbook_Year','End_Season','Start_Season'].includes(key)) continue;
+      if (!/(year|season|period)/i.test(key)) continue;
+      const y = extractYearFromValue(value);
+      if (y) return y;
+    }
+    return null;
+  }
+
+  function contractEndYear(value, fallback) {
+    const y = extractYearFromValue(value);
+    if (y) return y;
+    const n = Number(String(value ?? '').replace(/[^0-9]/g, ''));
+    return Number.isFinite(n) && n >= 2000 ? n : Number(fallback);
+  }
+
+  function buildContractMatrix(contracts, roster, selectedSeason) {
+    const currentEnd = Number(selectedSeason);
+    const grouped = new Map();
     contracts.forEach(c => {
       if (!c.Player_ID) return;
-      const units = numeric(c.Units);
-      if (units === null) return;
+      if (!grouped.has(c.Player_ID)) grouped.set(c.Player_ID, []);
+      grouped.get(c.Player_ID).push(c);
+    });
 
-      const endYear = Math.max(currentEndYear, contractEndYear(c.End_Season, currentEndYear));
+    const matrix = new Map();
+    let maxEnd = currentEnd + 4; // Always show a useful five-year cap horizon.
+
+    grouped.forEach(rows => {
+      rows.forEach(r => {
+        const explicit = explicitContractYear(r);
+        if (explicit) maxEnd = Math.max(maxEnd, explicit);
+        maxEnd = Math.max(maxEnd, contractEndYear(r.End_Season, currentEnd));
+      });
+    });
+
+    // Cap the display at seven seasons so unusually messy historical values cannot
+    // create an enormous table. Normal current sheets generally use five seasons.
+    maxEnd = Math.min(maxEnd, currentEnd + 6);
+    const years = [];
+    for (let end = currentEnd; end <= maxEnd; end++) years.push(yearLabel(end));
+
+    grouped.forEach((rows, pid) => {
       const pm = new Map();
+      const withYears = rows.map((row, index) => ({ row, index, year: explicitContractYear(row) }));
+      const explicitRows = withYears.filter(x => x.year);
 
-      for (let end = currentEndYear; end <= endYear; end++) {
-        const label = leagueYearLabel(end);
-        pm.set(label, units);
-        totals.set(label, (totals.get(label) || 0) + units);
+      if (explicitRows.length) {
+        // Best case: source rows identify the actual contract year.
+        explicitRows.forEach(({row, year}) => {
+          const units = numeric(row.Units);
+          if (units !== null && year >= currentEnd && year <= maxEnd) pm.set(yearLabel(year), units);
+        });
+      } else if (rows.length > 1) {
+        // The normalized archive can also store one row per contract year without
+        // retaining the original year-column heading. Preserve row order and map
+        // those rows across consecutive league years instead of repeating one value.
+        rows.forEach((row, index) => {
+          const end = currentEnd + index;
+          if (end > maxEnd) return;
+          const units = numeric(row.Units);
+          if (units !== null) pm.set(yearLabel(end), units);
+        });
+      } else if (rows.length === 1) {
+        // Single-row contracts: current units are known. Only extend the same units
+        // when the source explicitly says the contract continues through a later year.
+        const row = rows[0];
+        const units = numeric(row.Units);
+        const endYear = contractEndYear(row.End_Season, currentEnd);
+        if (units !== null) {
+          pm.set(yearLabel(currentEnd), units);
+          for (let end = currentEnd + 1; end <= Math.min(endYear, maxEnd); end++) {
+            pm.set(yearLabel(end), units);
+          }
+        }
       }
 
-      matrix.set(c.Player_ID, pm);
+      matrix.set(pid, pm);
+    });
+
+    const totals = new Map(years.map(y => [y, 0]));
+    roster.forEach(r => {
+      const pm = matrix.get(r.Player_ID);
+      if (!pm) return;
+      years.forEach(y => {
+        const u = pm.get(y);
+        if (u !== null && u !== undefined) totals.set(y, (totals.get(y) || 0) + Number(u));
+      });
     });
 
     return { years, matrix, totals };
   }
 
   function formatUnits(value) {
-    if (value === null || value === undefined) return '—';
+    if (value === null || value === undefined) return '';
     return Number(value).toLocaleString(undefined, { maximumFractionDigits: 2 });
   }
 
   function isOverviewRoute() {
-    const hash = location.hash.replace(/^#/, '');
-    const parts = hash.split('/');
+    const parts = location.hash.replace(/^#/, '').split('/');
     return parts[0] === 'team' && !!parts[1] && (!parts[2] || parts[2] === 'overview');
   }
 
@@ -96,18 +158,16 @@
     const table = document.querySelector('.team-panel .team-table');
     if (!table) return;
 
-    const { years, matrix, totals } = buildContractMatrix(contracts, season);
+    const { years, matrix, totals } = buildContractMatrix(contracts, roster, season);
     const currentYear = years[0];
 
     const sortedRoster = roster.slice().sort((a, b) => {
       const sr = statusRank(a.Roster_Status) - statusRank(b.Roster_Status);
       if (sr) return sr;
-
       const au = matrix.get(a.Player_ID)?.get(currentYear);
       const bu = matrix.get(b.Player_ID)?.get(currentYear);
-      const unitDiff = (bu ?? -Infinity) - (au ?? -Infinity);
-      if (unitDiff) return unitDiff;
-
+      const diff = (bu ?? -Infinity) - (au ?? -Infinity);
+      if (diff) return diff;
       const an = player(a.Player_ID).Player_Name || a.Player_Name_Raw || '';
       const bn = player(b.Player_ID).Player_Name || b.Player_Name_Raw || '';
       return String(an).localeCompare(String(bn));
@@ -117,49 +177,44 @@
     table.innerHTML = `
       <thead><tr>
         <th class="contract-player-col">Player</th>
-        <th class="contract-status-col">Status</th>
         ${years.map(y => `<th class="num contract-year-head">${esc(y)}</th>`).join('')}
       </tr></thead>
       <tbody>${sortedRoster.map(r => {
         const pm = matrix.get(r.Player_ID) || new Map();
         const name = player(r.Player_ID).Player_Name || r.Player_Name_Raw || '';
-        return `<tr>
-          <td class="contract-player-col"><span class="player-link" onclick="go('player/${r.Player_ID}')">${esc(name)}</span></td>
-          <td class="contract-status-col"><span class="roster-status ${String(r.Roster_Status || '').toLowerCase()}">${esc(r.Roster_Status || '')}</span></td>
-          ${years.map(y => `<td class="num contract-year-unit">${formatUnits(pm.has(y) ? pm.get(y) : null)}</td>`).join('')}
+        const status = String(r.Roster_Status || '').trim();
+        return `<tr class="contract-roster-row status-${esc(status.toLowerCase().replace(/[^a-z0-9]+/g,'-'))}">
+          <td class="contract-player-col"><span class="player-link" onclick="go('player/${r.Player_ID}')">${esc(name)}</span>${status && status.toLowerCase() !== 'active' ? `<small class="contract-status-note">${esc(status)}</small>` : ''}</td>
+          ${years.map(y => `<td class="num contract-year-unit">${formatUnits(pm.get(y))}</td>`).join('')}
         </tr>`;
       }).join('')}</tbody>
       <tfoot><tr class="contract-grid-total">
-        <th colspan="2">TEAM TOTAL</th>
+        <th>TEAM TOTAL</th>
         ${years.map(y => `<th class="num">${formatUnits(totals.get(y) || 0)}</th>`).join('')}
       </tr></tfoot>`;
   }
 
-  // Run after normal route rendering. No observer: avoids the crash loop from the
-  // earlier roster-sort implementation.
   document.addEventListener('click', e => {
-    if (e.target.closest('[onclick*="go(\'team/"], [data-route="teams"]')) {
-      setTimeout(renderContractGrid, 0);
-    }
+    if (e.target.closest('[onclick*="go(\'team/"], [data-route="teams"]')) setTimeout(renderContractGrid, 0);
   });
 
   const seasonSelect = document.getElementById('seasonSelect');
   if (seasonSelect) seasonSelect.addEventListener('change', () => setTimeout(renderContractGrid, 0));
-
   if (location.hash.startsWith('#team/')) setTimeout(renderContractGrid, 0);
 
   const style = document.createElement('style');
   style.textContent = `
     .team-panel{overflow-x:auto}
-    .contract-year-grid{width:max-content;min-width:100%;table-layout:auto}
-    .contract-year-grid .contract-player-col{width:1%;max-width:220px;white-space:nowrap;padding-right:16px}
-    .contract-year-grid .contract-status-col{width:1%;white-space:nowrap;padding-right:14px}
-    .contract-year-grid .contract-year-head,.contract-year-grid .contract-year-unit{min-width:92px;white-space:nowrap;text-align:right}
+    .contract-year-grid{width:100%;min-width:720px;table-layout:fixed}
+    .contract-year-grid .contract-player-col{width:210px;max-width:210px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:12px}
+    .contract-year-grid .contract-year-head,.contract-year-grid .contract-year-unit{width:94px;min-width:94px;white-space:nowrap;text-align:center}
+    .contract-year-grid .contract-status-note{display:inline;margin-left:7px;font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.03em}
     .contract-year-grid tfoot .contract-grid-total th{font-weight:800;border-top:2px solid currentColor;white-space:nowrap}
-    .contract-year-grid tfoot .contract-grid-total th:first-child{text-align:left;letter-spacing:.04em}
+    .contract-year-grid tfoot .contract-grid-total th:first-child{text-align:left}
     @media(max-width:760px){
-      .contract-year-grid .contract-player-col{max-width:180px}
-      .contract-year-grid .contract-year-head,.contract-year-grid .contract-year-unit{min-width:84px}
+      .contract-year-grid{min-width:680px}
+      .contract-year-grid .contract-player-col{width:175px;max-width:175px}
+      .contract-year-grid .contract-year-head,.contract-year-grid .contract-year-unit{width:88px;min-width:88px}
     }
   `;
   document.head.appendChild(style);
