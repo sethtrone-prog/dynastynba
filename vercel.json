@@ -11,6 +11,9 @@
     }
   ],
   "rewrites": [
-    { "source": "/api/espn/current", "destination": "/api/espn-current" }
+    {
+      "source": "/api/espn/current",
+      "destination": "/api/espn-current"
+    }
   ]
 }
