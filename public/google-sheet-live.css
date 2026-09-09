@@ -1,0 +1,246 @@
+/* Presentation-only polish for the live Google Sheet overlay. */
+.live-sheet-cap-grid,
+.live-sheet-g-league .g-league-table,
+.live-sheet-future-picks .future-picks-table{
+  width:100%;
+  table-layout:fixed;
+}
+
+.live-sheet-cap-grid th,
+.live-sheet-cap-grid td,
+.live-sheet-g-league th,
+.live-sheet-g-league td{
+  vertical-align:middle;
+}
+
+.live-sheet-cap-grid .contract-player-col,
+.live-sheet-g-league .contract-player-col{
+  width:34%;
+  min-width:220px;
+  text-align:left;
+}
+
+.live-sheet-cap-grid .contract-year-head,
+.live-sheet-cap-grid .contract-year-unit,
+.live-sheet-cap-grid .contract-year-total,
+.live-sheet-g-league .contract-year-head,
+.live-sheet-g-league .contract-year-unit{
+  width:13.2%;
+  text-align:center;
+}
+
+.live-sheet-cap-grid .contract-year-head,
+.live-sheet-g-league .contract-year-head{
+  font-size:9px;
+  line-height:1.2;
+  letter-spacing:.55px;
+  white-space:normal;
+  padding:11px 8px;
+}
+
+.live-sheet-cap-grid td,
+.live-sheet-g-league td{
+  padding-top:11px;
+  padding-bottom:11px;
+}
+
+.live-sheet-cap-grid .contract-player-col,
+.live-sheet-g-league .contract-player-col{
+  font-weight:700;
+  color:#eaf3fb;
+}
+
+.live-sheet-cap-grid .contract-year-unit,
+.live-sheet-g-league .contract-year-unit{
+  font-family:Oswald,Inter,system-ui,sans-serif;
+  font-weight:600;
+  font-size:13px;
+  color:#dce9f3;
+}
+
+.live-sheet-cap-grid .team-total-row{
+  background:#06182a !important;
+  border-top:2px solid #d9a93b;
+}
+
+.live-sheet-cap-grid .team-total-row td{
+  color:#f2c55d;
+  font-family:Oswald,Inter,system-ui,sans-serif;
+  font-size:14px;
+  letter-spacing:.2px;
+}
+
+.live-sheet-cap-grid .two-way-cap-exempt{
+  background:rgba(49,199,122,.065) !important;
+}
+
+.live-sheet-cap-grid .two-way-cap-exempt .contract-player-col{
+  position:relative;
+}
+
+.contract-status-note{
+  display:block;
+  width:max-content;
+  max-width:100%;
+  margin-top:5px;
+  padding:3px 6px;
+  border:1px solid rgba(49,199,122,.45);
+  border-radius:2px;
+  color:#6ee7a5;
+  background:rgba(49,199,122,.08);
+  font-size:8px;
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:.7px;
+  white-space:normal;
+}
+
+.cap-empty-slot{
+  color:#6f8ba4;
+  font-style:italic;
+  font-weight:500;
+}
+
+.corrected-overview-roster-stack{
+  display:grid;
+  gap:18px;
+  width:100%;
+}
+
+.live-sheet-g-league{
+  margin-top:0;
+}
+
+.live-sheet-g-league .section-title,
+.live-sheet-future-picks .section-title{
+  margin:0;
+  align-items:flex-end;
+  gap:20px;
+}
+
+.live-sheet-g-league .section-title h2,
+.live-sheet-future-picks .section-title h2{
+  margin-top:2px;
+}
+
+.live-sheet-g-league .section-title span,
+.live-sheet-future-picks .section-title span{
+  text-align:right;
+  line-height:1.45;
+}
+
+.live-sheet-future-picks{
+  margin-bottom:18px;
+}
+
+.live-sheet-future-picks .future-picks-years{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  padding:0 20px 20px;
+}
+
+.live-sheet-future-picks .future-pick-year{
+  border:1px solid #1d4d78;
+  background:#071d33;
+  min-width:0;
+}
+
+.live-sheet-future-picks .future-pick-year-title{
+  padding:10px 12px;
+  border-bottom:1px solid #1d4d78;
+  background:#06182a;
+  color:#f2c55d;
+  font:650 17px Oswald,Inter,system-ui,sans-serif;
+  letter-spacing:.5px;
+}
+
+.live-sheet-future-picks .future-picks-table{
+  table-layout:auto;
+}
+
+.live-sheet-future-picks .future-picks-table th:nth-child(1),
+.live-sheet-future-picks .future-picks-table td:nth-child(1){
+  width:26%;
+}
+
+.live-sheet-future-picks .future-picks-table th:nth-child(2),
+.live-sheet-future-picks .future-picks-table td:nth-child(2){
+  width:20%;
+  text-align:center;
+}
+
+.live-sheet-future-picks .future-picks-table td:nth-child(3){
+  white-space:normal;
+  line-height:1.35;
+}
+
+.live-sheet-future-picks .future-picks-table td:nth-child(2){
+  font-size:9px;
+  font-weight:850;
+  letter-spacing:.55px;
+  color:#6ee7a5;
+}
+
+.live-sheet-future-picks .future-picks-table .traded-pick td{
+  color:#7089a0;
+  text-decoration:line-through;
+  text-decoration-thickness:1px;
+  text-decoration-color:#8ca0b3;
+}
+
+.live-sheet-future-picks .future-picks-table .traded-pick td:nth-child(2){
+  color:#d7a4a4;
+}
+
+@media(max-width:980px){
+  .live-sheet-future-picks .future-picks-years{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  .live-sheet-cap-grid,
+  .live-sheet-g-league .g-league-table{
+    min-width:720px;
+    table-layout:auto;
+  }
+
+  .live-sheet-cap-grid .contract-player-col,
+  .live-sheet-g-league .contract-player-col{
+    min-width:180px;
+    width:180px;
+  }
+
+  .live-sheet-cap-grid .contract-year-head,
+  .live-sheet-cap-grid .contract-year-unit,
+  .live-sheet-cap-grid .contract-year-total,
+  .live-sheet-g-league .contract-year-head,
+  .live-sheet-g-league .contract-year-unit{
+    min-width:92px;
+    width:92px;
+  }
+
+  .live-sheet-g-league .section-title,
+  .live-sheet-future-picks .section-title{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:6px;
+  }
+
+  .live-sheet-g-league .section-title span,
+  .live-sheet-future-picks .section-title span{
+    text-align:left;
+  }
+
+  .live-sheet-future-picks .future-picks-years{
+    padding:0 12px 12px;
+    gap:12px;
+  }
+
+  .live-sheet-future-picks .future-picks-table th,
+  .live-sheet-future-picks .future-picks-table td{
+    padding-left:9px;
+    padding-right:9px;
+  }
+}
