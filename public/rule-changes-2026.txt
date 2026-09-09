@@ -20,10 +20,6 @@ DPE Rule - If an NBA team is granted a DPE for a player then that player will be
 
 We are introducing two new contract options. The first being a 4 year MAX contract. These are no longer considered SUPER MAX contracts. The eligibility for these contracts are any player with a value of 2 units or more (Tier B or Tier C with a +1 resigning penalty). Rookies coming off their first contact are eligible if they are Tier B. This will keep the RME eligibility for the next contract. These contracts cannot be traded in Year 1 of the contract and become eligible 12/15 of the second year. There is no maximum to how many 4 year contracts you have on your roster.
 
-~~You are now allowed to have two 4 year MAX contracts on the roster at one time. These are no longer considered SUPER MAX contracts. These newly signed contracts will now be eligible for trade with standard trade rules. Eligibility for this contract is any player with a yearly price of 2 units or higher.~~
-
-~~Note: If you have two 4 year contracts on your team you will not be able to trade for another player on a 4 year contract. You may only have two 4 year contracts at one time. No trade clauses in place remain in place until a new contract is signed.~~
-
 Starting next year (next offseason) a new Super Max Contract Extension in the length of 5 years will be added as an option. Only players who have been awarded All-NBA status in their career, and have a value 3 units or higher to sign are eligible. Players may not be traded within the first three years of this contract. Players may be traded anytime, within the current trade rules, in years 4 and 5 beginning 12/15 of year 4.
 
 DeMar DeRozan rule - players sent out in trades are no longer able to be acquired by the original team via a trade for a 2 year period from the initial trade date.
