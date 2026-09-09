@@ -1,0 +1,10 @@
+/* Beta preview: increase the main header logo by 75% from 72px to 126px. */
+.site-header{height:130px}
+.brand-logo{width:126px;height:126px}
+@media(max-width:980px){
+  nav{top:130px}
+}
+@media(max-width:560px){
+  .site-header{height:110px}
+  .brand-logo{width:101px;height:101px}
+}
