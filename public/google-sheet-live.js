@@ -66,7 +66,7 @@
 
   async function refresh(){
     try{
-      const response=await fetch(ENDPOINT,{cache:'no-store'});
+      const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'});
       const data=await response.json();
       if(response.ok&&data?.ok&&data?.season===2027&&data?.teams){live=data;window.DYNASTY_LIVE_SHEET=data;render();}
       else console.info('Dynasty live sheet fallback active:',data?.message||response.status);
