@@ -3,6 +3,9 @@
 .site-header{height:130px}
 .brand-logo{width:126px;height:126px}
 
+/* Hide redundant ESPN roster tables on team Roster tabs. ESPN archive data remains available for historical calculations. */
+.espn-history-roster{display:none!important}
+
 /* Make the mobile navigation easier to read and tap. */
 @media(max-width:980px){
   nav{top:130px;padding:14px 16px 18px;gap:7px}
