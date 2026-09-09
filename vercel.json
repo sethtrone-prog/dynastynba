@@ -4,6 +4,9 @@
   "env": {
     "DYNASTY_SHEET_ID": "1kIcN9JdReZ4fPobfzAjd3Oyh1ojuXqeLsHBiLt3zjbc"
   },
+  "crons": [
+    { "path": "/api/google-sheet-live", "schedule": "*/10 * * * *" }
+  ],
   "rewrites": [
     { "source": "/api/espn/current", "destination": "/api/espn-current" }
   ]
