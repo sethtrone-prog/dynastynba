@@ -10,11 +10,24 @@
     const about=nav.querySelector('[data-route="league"]');about?nav.insertBefore(b,about):nav.appendChild(b);
   }
   const e=s=>String(s||'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+  function formattedRuleLines(text){
+    return text.split('\n').map(raw=>{
+      const line=raw.trim();if(!line)return '';
+      let level=0;
+      if(/^\d+\.\s/.test(line)) level=1;
+      else if(/^[a-z]\)\s/i.test(line)) level=2;
+      else if(/^\(\d+\)\s/.test(line)) level=3;
+      else if(/^\([a-z]\)\s/i.test(line)) level=4;
+      else if(/^[A-Z]\.\s/.test(line)) level=0;
+      const cls=/^[A-Z]\.\s/.test(line)?' constitution-subhead':'';
+      return `<div class="constitution-line level-${level}${cls}">${e(line)}</div>`;
+    }).join('');
+  }
   function constitutionHtml(){
     if(!constitutionText)return '<div class="resource-loading">Loading constitution…</div>';
     const sections=constitutionText.split(/\n(?=[IVX]+\. )/);
     const intro=sections.shift()||'';
-    return `<div class="constitution-doc"><div class="constitution-cover">${e(intro).replace(/\n/g,'<br>')}</div>${sections.map(s=>{const lines=s.split('\n');const title=lines.shift();return `<section class="constitution-section"><h2>${e(title)}</h2><div class="constitution-copy">${e(lines.join('\n'))}</div></section>`}).join('')}</div>`;
+    return `<div class="constitution-doc"><div class="constitution-cover">${e(intro).replace(/\n/g,'<br>')}</div>${sections.map(s=>{const lines=s.split('\n');const title=lines.shift();return `<section class="constitution-section"><h2>${e(title)}</h2><div class="constitution-copy">${formattedRuleLines(lines.join('\n'))}</div></section>`}).join('')}</div>`;
   }
   function panel(){
     if(resourceTab==='constitution')return `<section class="card resource-panel"><div class="card-pad section-title"><div><div class="eyebrow">Official Governing Document</div><h2>League Constitution</h2></div><span>Founded 2018 · 2026 Edition</span></div>${constitutionHtml()}</section>`;
@@ -29,7 +42,7 @@
   }
   fetch('constitution-2026.txt').then(r=>r.text()).then(t=>{constitutionText=t;if(String(route||'').split('/')[0]==='resources'&&resourceTab==='constitution')draw()}).catch(()=>{constitutionText='League constitution could not be loaded.'});
   const style=document.createElement('style');
-  style.textContent=`.resource-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}.resource-tabs button{background:#0b2744;color:#f3f7fb;border:1px solid #285b85;border-radius:5px;padding:12px 16px;font-weight:800;letter-spacing:.5px}.resource-tabs button.active{background:#d9a93b;color:#061323;border-color:#d9a93b}.resource-panel{overflow:hidden}.constitution-doc{max-width:980px;margin:0 auto;padding:20px 34px 44px}.constitution-cover{text-align:center;white-space:pre-line;font-size:16px;line-height:1.7;padding:20px 20px 34px;border-bottom:1px solid rgba(255,255,255,.12)}.constitution-cover:first-line{font-family:Oswald,sans-serif;font-size:30px;font-weight:700}.constitution-section{padding:26px 0;border-bottom:1px solid rgba(255,255,255,.1)}.constitution-section:last-child{border-bottom:0}.constitution-section h2{color:#d9a93b;margin:0 0 16px;font-family:Oswald,sans-serif;font-size:23px}.constitution-copy{white-space:pre-wrap;font-family:Inter,sans-serif;font-size:15px;line-height:1.75;color:#e8eef5}.resource-placeholder,.resource-loading{padding:34px;line-height:1.6;opacity:.78}@media(max-width:760px){.resource-tabs{display:grid;grid-template-columns:1fr}.resource-tabs button{width:100%;min-height:48px}.constitution-doc{padding:8px 18px 30px}.constitution-cover{padding:18px 4px 28px;font-size:14px}.constitution-section{padding:22px 0}.constitution-section h2{font-size:20px}.constitution-copy{font-size:14px;line-height:1.7}}`;
+  style.textContent=`.resource-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}.resource-tabs button{background:#0b2744;color:#f3f7fb;border:1px solid #285b85;border-radius:5px;padding:12px 16px;font-weight:800;letter-spacing:.5px}.resource-tabs button.active{background:#d9a93b;color:#061323;border-color:#d9a93b}.resource-panel{overflow:hidden}.constitution-doc{max-width:980px;margin:0 auto;padding:20px 34px 44px}.constitution-cover{text-align:center;white-space:pre-line;font-size:16px;line-height:1.7;padding:20px 20px 34px;border-bottom:1px solid rgba(255,255,255,.12)}.constitution-cover:first-line{font-family:Oswald,sans-serif;font-size:30px;font-weight:700}.constitution-section{padding:26px 0;border-bottom:1px solid rgba(255,255,255,.1)}.constitution-section:last-child{border-bottom:0}.constitution-section h2{color:#d9a93b;margin:0 0 16px;font-family:Oswald,sans-serif;font-size:23px}.constitution-copy{font-family:Inter,sans-serif;font-size:15px;line-height:1.7;color:#e8eef5}.constitution-line{margin:6px 0}.constitution-line.level-0{margin-left:0}.constitution-line.level-1{margin-left:28px}.constitution-line.level-2{margin-left:58px}.constitution-line.level-3{margin-left:88px}.constitution-line.level-4{margin-left:118px}.constitution-subhead{font-weight:800;margin-top:18px;color:#f3f7fb}.resource-placeholder,.resource-loading{padding:34px;line-height:1.6;opacity:.78}@media(max-width:760px){.resource-tabs{display:grid;grid-template-columns:1fr}.resource-tabs button{width:100%;min-height:48px}.constitution-doc{padding:8px 18px 30px}.constitution-cover{padding:18px 4px 28px;font-size:14px}.constitution-section{padding:22px 0}.constitution-section h2{font-size:20px}.constitution-copy{font-size:14px;line-height:1.65}.constitution-line.level-1{margin-left:14px}.constitution-line.level-2{margin-left:28px}.constitution-line.level-3{margin-left:42px}.constitution-line.level-4{margin-left:56px}}`;
   document.head.appendChild(style);
   ensureNav();
   if(typeof render==='function'){const original=render;render=function(){if(String(route||'').split('/')[0]==='resources'){draw();return;}original();ensureNav();};}
