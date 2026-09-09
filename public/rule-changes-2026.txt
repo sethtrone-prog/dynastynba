@@ -45,31 +45,3 @@ G-League Expansion and Eligibility
 ● Eligibility for G League and Two Way changed to first or second year rookie contracts OR under 90 games played
 ● Players would not need to be removed once they hit 90 games played
 ● Players who average at or above 18 fantasy points per game are not eligible for G-League or Two Way and must be moved up to active roster or released during the offseason
-
-New Rules
-Mid-Level Exceptions
-● MLE’s can be used for contracts 1-3 years in length
-● Tier C players (1 unit) not on a current roster are eligible
-● Contracts do not count towards the cap in first year but do count as 1 unit in years 2 and 3 for multi year deals
-● This player cannot be traded in year 1 of the MLE
-● One MLE is available to each team starting with the Free Agency draft
-● If team chooses to resign normal extension rules will apply
-
-Luxury Tax
-● Allows teams to sign salaries above 25 units with a monetary fee
-● The first unit above 25 cost the team $20
-● Each unit more is an extra $5
-○ 26 -$20, 27-$25, 28-$30 etc.
-● This is used for free agent, off-season resigning or G-League signing only
-● A trade cannot place you over the cap
-● Fees are to be paid at time of signing and are added to the following years prize pool
-
-Repeater Tax
-● All rules apply above but penalties begin higher for each consecutive year above the cap
-● Each back to back year above the cap adds $5 to the starting value of the 26th unit
-○ Ex. Year 3 would begin at $30 for the 26th unit
-● Resets after one full season below the luxury tax
-
-Hard Cap
-● Actions that trigger a teams hard cap are being a recipient of a sign and trade or using an MLE
-● Caps team salary to 25 units for the entire season and resets during Free Agency
