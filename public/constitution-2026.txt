@@ -1,0 +1,474 @@
+Official League Constitution
+- Founded 2018 -
+
+This is a true franchise building experience designed to mimic the NBA salary structures,
+using a hard salary cap and elements of the real collective bargaining agreement to
+construct your franchise.
+
+I. League Description
+A. Scoring
+1. 10 team head-to-head style scoring system
+2. PTS (+1), REB AST (+.75), STL BLK (+1), TO (-1), FGMI FTMI (-.5)
+B. Roster Makeup
+1. 13 minimum - 15 maximum active roster spots (+2 IR spots and +3 Two Way
+spots during regular season only)
+2. G, G, F, F, C, G/F, PF/C, UTL, UTL, *IR, *IR
+a) *See IR eligibility rules section
+3. Teams must adhere to the hard salary cap (25 UNITS)
+a) Players are subject to NBA style contracts that establishes UNITs as
+currency to be allocated to players based upon player tier payscale
+b) See salary cap rules section for tier makeup
+C. Weekly Matchup Format
+1. Regular Season Weeks 1-18
+2. Matchups normally consist of 27 games
+a) Some weeks have a shortened total of games due to NBA schedule
+b) Lineups can be set weekly and/or daily with players locking at the
+beginning of each individual game
+c) Exceeding weekly maximum games results in the penalty below
+(1) Points from game over the maximum allowed is deducted PLUS
+an additional +20 pts per game played being subtracted from
+that weeks total
+(2) $5 per game over maximum deducted from $25 refundable fee
+d) Not reaching maximum weekly games played results in penalty below
+(1) $5 per game being deducted per game short of 27 game weekly
+total deducted from $25 refundable fee
+(a) All missed games result in a $5 fine - no exceptions.
+(b) Teams are urged to plan ahead accordingly
+(2) 10 games missed will result in a bump down in Rookie draft
+odds team slots
+(a) Example - finishing 9th would give you 8th place odds
+(3) 15 games missed will result in penalty for 10 games and an
+automatic switch with team behind you in draft after lottery has
+taken place
+(a) Example - finishing 9th would give you 8th place odds
+and you receive the 2nd draft slot per the lottery, team
+will be swapped with team in the 3rd draft slot
+(4) Games missed will also be used as a tie-breaker for lottery slots
+with least games missed receiving best odds
+
+II. Playoffs
+A. Playoff Format
+1. Four playoff teams (top four in standings)
+a) Seeding tiebreaker will be Head-to-Head record
+(1) If tied, will then be points scored
+b) Matchup tiebreaker will be the PTS category
+2. Rosters are locked during playoffs
+a) Disabled player exception (DPE) is allowed; see below for specific details
+b) Two way players are not eligible for playoffs
+3. Playoffs last a total of two weeks to crown 1st-4th place
+
+III. Salary Cap Rules
+A. Salary Cap
+1. All teams will adhere to a HARD CAP of 25 UNITS
+a) This cap is a threshold under which you can sign free agents, trade, or
+draft
+b) Teams at the maximum cap (25/25 units) may take part in the free agency
+draft but may only draft a G-league or Two Way eligible players if they
+have available roster slots
+2. The commissioner reserves the right to raise the cap every new season if
+deemed necessary
+B. Salary Structure Tiers
+1. Tier A (3 Unit Base Salary)
+a) Players are determined by the ~15 players listed on the All-NBA Teams
+each season
+2. Tier B (2 Unit Base Salary)
+a) These players are the next top 50 highest fantasy scoring players NOT in
+tier A or a Rookie Scale contract
+b) This is a per game basis (not total points)
+3. Tier C (1 Unit Base Salary)
+a) This is remaining player pool NOT on a drafted rookie contract or
+qualified for A or B
+4. Tier D (1 Unit Base Salary)
+a) Players on a rookie scale contract (drafted in round 1 or round 2)
+b) Players in this tier will be available for a contract equal to the length of
+their actual rookie contract (for pre-league drafted players)
+c) Most have a 2 year + 2 year team option structure
+d) Undrafted players signed to contract in the NBA are not in this Tier
+5. Tier Exceptions
+a) Injuries or other issues stopping a Tier A or Tier B player from playing
+in over 65 games will keep them on the Tier A or Tier B pay scale until
+they play in a season eclipsing 61.5 games played (Ex. Kawhi Leonard
+2017/2018 season to 2018/2019)
+b) Tier B will remain at minimum will be 50 games played
+c) This is applied on the above parameters along with the commissioner's
+discretion
+C. Contract Lengths
+1. Free Agency Contracts
+a) Players signed via free agency are eligible for contracts depending on
+the Tier level and status within the NBA
+2. Tier A and B players are eligible for contracts of 1 to 4 years
+a) If four years, player cannot be traded until December 15 of year 2
+3. Tier C players are eligible for contracts 1 to 3 years
+a) Standard trade rules apply
+D. Injured Reserve
+1. Injured Reserve Qualification
+a) Players deemed eligible for an IR slot by the ESPN system
+(1) Salary remains applied to cap
+b) Players must be removed from IR slot within 24 hours of first game back
+from injury
+c) Player may only be replaced if acquisition works under cap restrictions,
+or applying for a Disabled Player Exception
+(1) See rule for Disabled Player Exception
+
+IV. Player Re-Signings
+A. Player Extension Structure
+1. Players signed before March 1st are eligible for re-signing in the offseason
+2. The penalty applied to the base tier fee will be +1 UNIT for every time that
+player has been re-signed by current team
+a) EXAMPLE: Tier A (3 UNIT BASE) comes off 2 year contract and resigning
+for the first time with current team (+1 UNIT) will be at a contract yearly
+total of 4 UNITS for between 1-3 years at the team’s discretion
+b) EXAMPLE 2: TIER B (2 UNIT BASE) is finishing his 2nd 3-year contract
+(+2 UNITS) and current team can choose to re-sign him for 4 UNIT
+salary or choose to release him to free agency
+3. There is no maximum to the re-signing multiplier (4th time resigning 4x 1 UNIT
+= 4 UNITS + base salary tier)
+4. Players released for free agency and drafted by the same team is NOT subjected
+to the re-signed player penalty after the 1st round of the draft
+5. When trading a player, player keeps re-signed penalty as if with same team
+a) Example: Player X re-signs with Team A one time and then is traded
+before current contract has ended. Team B then re-signs Player X and is
+assessed the +2 Unit re-signing fee
+6. Re-sign player penalty only resets when player hits free agency pool whether in
+offseason or during season
+B. Rookie Scale Extensions
+1. Players coming off their rookie contract are eligible to be resigned for no
+penalty
+a) Only the base value will be charged for an extension at the length of
+teams choosing
+b) If player is Tier B in their final year they will qualify for the fourth year
+C. Super Max Rookie Extension or “RME” (Only Rookie Drafted Players Eligible)
+1. Eligibility
+a) Must fit all criteria below:
+(1) Only players controlled by one single team since rookie draft
+are eligible (List of team drafted players available on individual
+cap sheet)
+(2) Trading a player or releasing a player to free agency at any time
+makes player ineligible
+b) A full rookie scale contract extension must have been used for 2nd
+contract (career years 5 through 7 or 8 depending if they qualified)
+c) Player must have been in top 50 of league fantasy points per game
+scoring while reaching minimum games played in first 7 years of career
+2. Keeps base value for the third contract only
+a) Players are eligible for a full 4 year max or Super Max extension if they
+qualify
+b) Resign penalties apply on all subsequent contracts
+D. Super Max Extension
+1. This is an extension option for high producing players.
+2. The contract length will be for 5 years
+3. Eligibility
+a) Any player that has been issued All NBA in their career and is 3 units or
+higher.
+4. Trade Rules
+a) These players may not be traded in the first three years of this contract.
+Players become eligible on December 15 of Year 4
+5.
+
+V. Rookie Drafting and Lottery
+A. Draft Structure
+1. Annual straight draft (non-snake) two round draft
+a) This will take place offline through a doc or chat
+b) See rookie contracts terms & extension rules
+c) Total games missed, or penalized for, will also be used as a tie-breaker
+for lottery slots with least games missed receiving best odds
+d) Lower points in season picks first
+e) Coin flip
+B. Draft Order
+1. Teams finishing 1st through 4th place will pick in the following order
+a) 1st - 10th pick
+b) 2nd - 9th pick
+c) 3rd - 8th pick
+d) 4th - 7th pick
+2. Lottery order is determined using the actual NBA lottery
+a) NBA teams are allocated based on the chart below for teams not making
+the playoffs
+b) Team 1 - 10th place
+Team 2 - 9th place
+Team 3 - 8th place
+Team 4 - 7th place
+Team 5 - 6th place
+Team 6 - 5th place
+Team 7 - 10th “ “
+Team 8 - 9th “ “
+Team 9 - 8th “ “
+Team 10 - 7th “ “
+Team 11 - 6th “ “
+Team 12 - 5th “ “
+Team 13 - 10th “ “
+Team 14 - 9th “ “
+3. Chances of getting first pick in draft
+a) 10th - 22.5%
+9th - 20.5%
+8th - 18.5%
+7th - 15.5%
+6th - 12.5%
+5th - 10.5%
+4. Draft Sanctions
+a) *See not reaching games played maximum in “Weekly Matchup Format”
+
+VI. Free Agency
+A. In-Season Free Agency
+1. Players can be added from free agency for any length of contract as long as it
+adheres to the tier system and the salary cap
+a) This is on a first come first serve basis (after initial rosters are set for
+the season)
+b) All roster moves should be cleared with commissioner before making
+the move within the ESPN system to ensure it follows cap rules
+2. Players released to free agency cannot be reclaimed until after 30 calendar days
+by same team
+a) Original contract is still valid; this does not cost you additional units
+when reclaimed in the same season
+B. Off-Season Free Agency
+1. Player selection will take place in a straight draft (non-snake) format
+2. The first year order will be randomly selected
+3. The second season order (and on) will be set by using a “NBA Win Pool” contest
+system
+a) In reverse order from the free agency draft order, teams will select
+which slot they want to pick their NBA teams for that season
+(1) 10th picks slot first, 9th next etc.
+4. NBA Win Pool Slots
+a) Slot 1 - Pick 1, 20, 30
+Slot 2 - Pick 2, 19, 29
+Slot 3 - Pick 3, 16, 28
+Slot 4 - Pick 4, 17, 27
+Slot 5 - Pick 5, 15, 26
+Slot 6 - Pick 6, 13, 24
+Slot 7 - Pick 7, 11, 25
+Slot 8 - Pick 8, 18, 21
+Slot 9 - Pick 9, 14, 23
+Slot 10 - Pick 10, 12, 22
+5. Highest total in the wins pool will pick first in the free agency draft
+6. Tie Breakers will be as follows:
+a) Least amount of games missed during season picks first
+b) Worse record picks first
+c) Lower points in season picks first
+d) Coin flip
+7. The deadline to decide whether or not to re-sign a player AND their contract
+terms are due August 4th
+a) This established how many open roster slots + G-league slots you will
+have for picks
+b) Rosters lock 3 days before the free agency draft
+c) No players may be released during the actual draft
+8. Draft will take place September 15th
+
+VII. Trading
+A. Trading Fundamentals
+1. All trades must work within the roster and salary cap restrictions
+a) Draft picks, dead cap, and cap holds can all be included when trading
+B. Trade Dates
+1. Trade deadline February 11th 8:00 PM*
+a) *Sunday following the NBA Trade Deadline at 8pm
+2. Free Agent players signed in the offseason draft are eligible for trade as of
+December 15
+a) This stops teams as signing players for strictly trade fodder
+b) Resigned players are immediately eligible for trade
+3. Any players added after the start of the season cannot be traded for 30 calendar
+days
+C. Trade Processing
+1. All trades must be sent to the commissioner for approval with full terms and an
+agreeable time in which trade would like to be processed
+2. Trades that are to be processed immediately can be day of up until the deadline
+of 3pm - full terms must be complete at this time
+3. Any trade that is sent in after 3pm will be processed next calendar day before
+games begin
+D. Wiggins/Love Rule
+1. Drafted rookies may be traded at any time. This is an exclusion to the December
+15 rule
+2. Excludes players signed in free agency draft
+E. 1 for 1 Rule
+1. Players traded for can only be traded again in a 1-for-1 type format until after 30
+calendar days
+2. After 30 days, players may be traded within cap rules without restrictions
+F. Draft Pick Trading
+1. All teams are gifted 2 rookie draft picks for 6 years, (current and the 5
+subsequent years)
+2. Stepien Rule Applies
+a) no team may trade away its first-round pick in back-to-back future
+drafts. A team must always have at least one first-round pick in either
+the current draft or the next one. A pick received does count towards
+having a first in a draft.
+3. Draft picks may have following stipulations attached to them
+a) Protections - Picks may be traded with protections attached to them
+Team A trades 2016 1st round pick to Team B (top 3 protected).
+This means if the pick ends up being in the top 3 of the draft, it is not
+conveyed. It would become unprotected in the following year.
+b) Pick Swaps - Teams may trade the right to swap picks in the same
+rounds
+G. DeMar DeRozan Rule
+1. Players sent out in trades are no longer able to be acquired by the original team
+via trade for a 2 year period from the initial trade date.
+
+VIII. Salary Cap Provisions & Exclusions
+A. Stretch Provision
+1. One time, per team, over the span of 2 years
+2. If a team waives a player, you have the capability of spreading the remaining
+UNITS over twice the remaining length of the contract (at least 1 UNIT per year
+a) Example: Waiving a player with a 2 yr/ 8 UNIT contract will stretch his
+cap hit to your team over 4 years (2x2) at 2 UNITS (8/4) per year
+Stretched player is immediately released to the free agency pool
+3. Players may be stretched any time from opening day to the start of playoffs
+B. Contractual Buyouts
+1. A team can buyout a player if they are able to fit the entirety of the contractual
+units within the salary cap of the current year
+2. The total units of the remaining contract have to adhere to the salary cap of that
+current year
+a) Example A: Player A has 2 years remaining 1 unit per year. Current team
+cap is 23/25. Both units get applied to the current year cap making it
+24/25 and player is released.
+b) Example B: Player B has 3 years remaining at 2 unit per year. Current
+team has a cap of 23/25. A buyout would result in 27/25 making this
+illegal. Team would have to clear space or wait until the following year.
+3. Players can be bought out anytime up until the start of the playoffs.
+4. Reverse standings will act as waiver priority for player after buyout is finalized.
+a) See buyout market contract rules if after the trade deadline.
+C. Disabled Player Exception
+1. This exception allows a team to replace a disabled player who will be out for the
+remainder of that fantasy season
+2. These will only be granted if the NBA has issued a DPE and must be used before
+the fantasy playoffs begin.
+3. The team can acquire one player via free agent signing or waiver claim, to
+replace the disabled player that is less than or equal to the UNIT salary of the
+DPE’d player
+a) (EXAMPLE: 2 UNIT player with DPE granted - Team can acquire an
+active player that has a UNIT price of 2 or less.)
+4. Teams can apply for a disabled player exception only if they are at 100% (25/25
+UNITS) of the salary cap.
+5. This exception is granted on a season-by-season basis
+a) If the player will also be out the following season, the team needs to
+apply for this exception again the following season.
+6. Players approved for the DPE and placed on the IR cannot be traded that year,
+they also cannot be removed from the IR for any reason that season.
+7. The disabled player’s salary still applies to the cap.
+D. Salary Exclusion Injury Exemption
+1. There is one injury exception whereby a salary is excluded from team salary due
+to either death or retirement.
+2. If approved, the player’s remaining contract will be removed from the cap
+immediately.
+E. Long Term Injury Salary Relief
+1. Designed for players injured in the offseason or that suffered an injury in the
+season prior that will cause the player to miss the entirety of the upcoming
+season.
+2. A qualifying injury will be at the commissioner's discretion and must be
+presented with undeniable evidence that the player in question will miss the
+entirety of the fantasy regular season.
+a) Injured player is required to be placed into an IR reserve spot
+b) Injured player will not be eligible for the entirety of the fantasy season
+once approved.
+3. Salary relief will equate to one half the players current salary rounded up to the
+next full number with the maximum relief being 2 units.
+a) Injured Player salary 3: (3 / .5) = 1.5 rounded to 2 units
+b) Injured Player salary 2: (2 / .5) = 1 unit
+c) Injured Player salary 5: (5 / .5) = 2.5 rounded DOWN 2 units max
+4. There is no maximum to that number of players that can qualify from one single
+team.
+
+IX. 10-Day Contracts & Buyout Market
+A. 10-Day Contracts
+1. Each team will be granted two 10-Day contracts to be used beginning Jan 1st
+a) This comes at a NO Unit cost, but team must have open roster spot
+b) Only Tier C and Rookie Contract players are eligible (No Tier A or Tier B
+is eligible)
+2. Contract expires and player must be released, resigned, or granted 2nd 10-Day
+contract at midnight of 10th day
+3. 24 hour waiver claim period by reverse standing priority will take place starting
+Jan 1st
+a) If no claims made during this 24 hour period it becomes first come first
+serve basis
+4. Players on 10-day contracts are not eligible for the playoffs
+
+X. G-League & Two Way Players
+A. G-League Format
+1. Each team will be given 5 spots to use for G-league eligible players
+a) Rosters are viewable on the “Dynasty Document” under the G-League
+tab
+b) Players may never be relegated to the G-League from the active roster
+during the season
+2. G-League players salaries are not counted towards cap until they are added to
+an active roster
+a) This keeps G-League players in the ESPN Free Agency Pool
+3. G-League contracts do not count against the main roster salary cap until
+recalled, if released when hitting the 90 games played team will not be charged
+the contract salary (even if multiple years remain)
+a) Players added during the season who are demoted to the G-League in
+the offseason have their salary removed from the cap until they are
+permanently recalled again.
+B. Eligibility
+1. Eligibility for G League and Two Way will be any first or second year rookie
+players OR under 90 games played
+a) Players may remain in G-League or Two Way roster until following
+season when surpassing 90 game mark
+2. Rookie drafted players are automatically eligible for a G-League roster spot
+a) Free Agency drafted players may be placed in G-League if they fit the
+games played or year requirement
+3. Any player may be placed in a G-League spot from the end of the Rookie Draft
+to the beginning of the season
+4. A player can remain in the G-League indefinitely, unless they eclipse the
+G-League qualified status
+C. Two Way Players
+1. Each team is allotted (3) Two-Way Player slots
+2. Two-Way contracts make players active on roster for the entire regular season.
+3. A Two-Way contract signed in season enables player to be on an active NBA
+roster for days remaining for G-League slot
+a) Two-Way players are not eligible for playoff games
+D. Eligibility
+1. Eligibility for G League and Two Way will be any first or second year rookie
+players OR under 90 games played
+a) Players may exceed 90 games played while in a Two-Way slot
+b) Two-Way Contracts can be turned into active NBA contracts and
+expanded to any length allowed under current salary and roster rules at
+anytime
+c) Another player can then be signed to a TWC if they fall under guidelines
+for service days
+d) Two-Way Contracts can be outright waived for no penalty at any time
+e) Two-Way Players ARE NOT eligible for the playoffs unless added to the
+active NBA roster before playoffs begin
+
+XI. Keepers
+A. Keeper System
+1. Every offseason, all CONTRACTED players will carry over
+2. Players whose contracts expire, and are not re-signed by a specific date will be
+added to free agency draft pool
+a) Players released to free agency and reclaimed will not be subjected to
+the signing multiplier and can be signed at base salary
+3. League activity is locked during the real NBA playoffs
+a) The offseason officially begins once the NBA playoffs are over and the
+ESPN system rolls over.
+4. You may NOT carry more than 15 active players on your roster at any time.
+a) 13 min active players - 25 max total players including 5 G-League
+players, 3 Two Way and 2 IR spots.
+
+XII. League Fees & Payouts
+A. League Fees
+1. Cost is $100 entry fee + $25 refundable fee at the beginning of each season
+a) $75 due by Rookie Draft
+b) $50 due by Free Agency Draft
+2. Teams that miss 5+ games will need to replenish their refundable fee back to the
+full $25
+a) This is due before the Sunday of the following matchup
+b) Failure to pay by Sunday 12pm will result in a loss for the following week
+matchup
+3. All fees are subject to change at the commissioner's discretion or league vote.
+4. Commissioner reserves the right to make teams that trade 1st Round Picks pay
+50% of league fee for every year they trade a pick in
+a) (IE. player A trades 2020 first and 2022 first they owe 2x half of league
+fee at that year = $100 to commissioner before trade is processed)
+B. Payouts
+1. First Place - $500
+2. 2nd Place - $250
+3. 3rd Place - $150
+4. 4th Place - $100
+a) All money from penalties will be added to each spot evenly.
+
+XIII. Final Comments
+A. ROSTER MANAGEMENT REGULATION: Since this is a keeper dynasty league, teams are
+encouraged to strategize around what's best for their team. Teams that are in danger of
+missing the playoffs may choose to trade productive older players with contracts they
+no longer want to subsidize, in order to acquire future draft picks and younger cheaper
+keepers to build for future years, much like a real-life sports scenario, (as long as it
+works within our salary cap rules). However, there is a line that can be crossed between
+planning for future seasons and tanking completely. Instances such as teams not filling
+their daily lineup in order to acquire a higher draft pick or dropping superstars for
+whatever reason will not be tolerated. Situations such as that will be monitored by me,
+and addressed if need be. A league poll may be instituted if such mishaps arise, or
+simply ruled on at my own discretion. My main priority is maintaining a fair and fun
+environment for everyone.
