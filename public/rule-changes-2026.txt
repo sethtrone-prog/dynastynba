@@ -1,0 +1,79 @@
+2025-2026 Changes
+Schedule changed to an 18 week regular season.
+
+Lineup format changed to G, G, F, F, C, G/F, PF/C, UTL, UTL
+
+Change stepien rule to read that you only need to have a pick in every
+
+Changes to Tier Levels:
+-A player must now play at least 50 games to qualify for Tier B.
+-If a player earns All-NBA honors, they will retain that status for three seasons, unless they later play 62 or more games in a season without receiving All-NBA recognition. After the three-season window expires, the player’s tier will revert to their most recent assigned value, based on a season where they played over 50 games.
+
+Buyout market removed from League Rules.
+
+TRADE DEADLINE: The trade deadline is now moved to the Monday at 1pm following the NBA trade deadline.
+
+A new Super Max Contract Extension in the length of 5 years will be added as an option. Only players who have been awarded All-NBA status in their career, and have a value 3 units or higher to sign are eligible. Players may not be traded within the first three years of this contract. Players may be traded anytime, within the current trade rules, in years 4 and 5 beginning 12/15 of year 4.
+
+2024-2025 Changes
+DPE Rule - If an NBA team is granted a DPE for a player then that player will be eligible in our league for a DPE. No other players will be eligible. You must use your DPE before the start of the Fantasy league playoffs.
+
+We are introducing two new contract options. The first being a 4 year MAX contract. These are no longer considered SUPER MAX contracts. The eligibility for these contracts are any player with a value of 2 units or more (Tier B or Tier C with a +1 resigning penalty). Rookies coming off their first contact are eligible if they are Tier B. This will keep the RME eligibility for the next contract. These contracts cannot be traded in Year 1 of the contract and become eligible 12/15 of the second year. There is no maximum to how many 4 year contracts you have on your roster.
+
+~~You are now allowed to have two 4 year MAX contracts on the roster at one time. These are no longer considered SUPER MAX contracts. These newly signed contracts will now be eligible for trade with standard trade rules. Eligibility for this contract is any player with a yearly price of 2 units or higher.~~
+
+~~Note: If you have two 4 year contracts on your team you will not be able to trade for another player on a 4 year contract. You may only have two 4 year contracts at one time. No trade clauses in place remain in place until a new contract is signed.~~
+
+Starting next year (next offseason) a new Super Max Contract Extension in the length of 5 years will be added as an option. Only players who have been awarded All-NBA status in their career, and have a value 3 units or higher to sign are eligible. Players may not be traded within the first three years of this contract. Players may be traded anytime, within the current trade rules, in years 4 and 5 beginning 12/15 of year 4.
+
+DeMar DeRozan rule - players sent out in trades are no longer able to be acquired by the original team via a trade for a 2 year period from the initial trade date.
+
+Clarification for trading in the offseason is as follows. Rosters will be locked for me to complete off season work until 7 days before the rookie draft. You may negotiate trades at any time but they will not be approved until that date. That date is 7/22 this year.
+
+I am open to allowing people to submit their free agency decisions at any time after 7/22 until the deadline, but once communicated they will be final.
+
+2023 - 2024
+“Tweaks”
+New Tier level/All-NBA minimum games has been decreased due to new precedent for All-NBA criteria. This number is changed from 62 games to 65 games per new CBA. For Tier level B remain at 62 games played.
+
+Teams may not trade first round picks in back to back years. Only 5 years of draft picks are eligible to be traded.
+
+Buy in for next season will be $100 + $25 refundable.
+
+All missed games are penalties. No exceptions. Each game is a $5 fine and counts towards draft penalties. The rules below help with management of players.
+
+Roster size is changed to 18 for the regular season. The 3 additional spots can be used for Two Way Players only. Two Way Players may now be on the roster throughout the entire regular season and are eligible for an unlimited amount of regular season games. Playoff rosters are still 15 players. Two way players are not eligible for the playoffs.
+
+G-League Expansion and Eligibility
+● 5 G-League Slots and 3 Two Way Slots per team
+● Eligibility for G League and Two Way changed to first or second year rookie contracts OR under 90 games played
+● Players would not need to be removed once they hit 90 games played
+● Players who average at or above 18 fantasy points per game are not eligible for G-League or Two Way and must be moved up to active roster or released during the offseason
+
+New Rules
+Mid-Level Exceptions
+● MLE’s can be used for contracts 1-3 years in length
+● Tier C players (1 unit) not on a current roster are eligible
+● Contracts do not count towards the cap in first year but do count as 1 unit in years 2 and 3 for multi year deals
+● This player cannot be traded in year 1 of the MLE
+● One MLE is available to each team starting with the Free Agency draft
+● If team chooses to resign normal extension rules will apply
+
+Luxury Tax
+● Allows teams to sign salaries above 25 units with a monetary fee
+● The first unit above 25 cost the team $20
+● Each unit more is an extra $5
+○ 26 -$20, 27-$25, 28-$30 etc.
+● This is used for free agent, off-season resigning or G-League signing only
+● A trade cannot place you over the cap
+● Fees are to be paid at time of signing and are added to the following years prize pool
+
+Repeater Tax
+● All rules apply above but penalties begin higher for each consecutive year above the cap
+● Each back to back year above the cap adds $5 to the starting value of the 26th unit
+○ Ex. Year 3 would begin at $30 for the 26th unit
+● Resets after one full season below the luxury tax
+
+Hard Cap
+● Actions that trigger a teams hard cap are being a recipient of a sign and trade or using an MLE
+● Caps team salary to 25 units for the entire season and resets during Free Agency
