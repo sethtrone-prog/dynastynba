@@ -44,10 +44,13 @@
   padding-bottom:11px;
 }
 
-.live-sheet-cap-grid .contract-player-col,
-.live-sheet-g-league .contract-player-col{
-  font-weight:700;
-  color:#eaf3fb;
+/* Match the original roster treatment: Inter player names + the site's light blue. */
+.live-sheet-cap-grid tbody .contract-player-col,
+.live-sheet-g-league tbody .contract-player-col{
+  font-family:Inter,system-ui,sans-serif;
+  font-size:12px;
+  font-weight:750;
+  color:#7fc0ff;
 }
 
 .live-sheet-cap-grid .contract-year-unit,
