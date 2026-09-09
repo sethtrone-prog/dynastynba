@@ -1,6 +1,9 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "env": {
+    "DYNASTY_SHEET_ID": "1kIcN9JdReZ4fPobfzAjd3Oyh1ojuXqeLsHBiLt3zjbc"
+  },
   "rewrites": [
     { "source": "/api/espn/current", "destination": "/api/espn-current" }
   ]
