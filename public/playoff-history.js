@@ -3,7 +3,7 @@
 (function(){
   const PLAYOFF_HISTORY=[
     {season:2019,champion:'Jacob Thompson',championTeam:'Longer Than Most',runner:'Jordan Winters',runnerTeam:'Team Winters',third:'Seth Trone',thirdTeam:'Bug on muh Putta',fourth:'Andrew Thompson',fourthTeam:'Tiger Isn’t Scratch'},
-    {season:2020,champion:'Seth Trone',championTeam:'Seventy Suxers',runner:'Jacob Thompson',runnerTeam:'Longer Than Most',third:'Brandon Caiola',thirdTeam:'Team Caiola',fourth:'Kyle Van Duyne',fourthTeam:'Team Linsane In The Membrane',note:'ESPN final standings are preserved; archived playoff matchup scores are recorded as 0.'},
+    {season:2020,champion:'Seth Trone',championTeam:'Seventy Suxers',runner:'Jacob Thompson',runnerTeam:'Longer Than Most',third:'Brandon Caiola',thirdTeam:'Team Caiola',fourth:'Kyle Van Duyne',fourthTeam:'Team Linsane In The Membrane',note:'Covid shortened season'},
     {season:2021,champion:'Seth Trone',championTeam:'Seventy Suxers',runner:'Kyle Van Duyne',runnerTeam:'Team Linsane In The Membrane',third:'Nate Artz',thirdTeam:"Nartz N' Crafts",fourth:'Kyle Smith',fourthTeam:'The Replacements'},
     {season:2022,champion:'Seth Trone',championTeam:'Seventy Suxers',runner:'Brandon Caiola',runnerTeam:'A Tale of Two Bridges',third:'Nate Artz',thirdTeam:"Nartz N' Crafts",fourth:'Davis Jensen',fourthTeam:'Team Jensen'},
     {season:2023,champion:'Nate Artz',championTeam:"Nartz N' Crafts",runner:'Jacob Thompson',runnerTeam:'Longer Than Most',third:'Seth Trone',thirdTeam:'Seventy Suxers',fourth:'Justin Stanley & Jared Peterman',fourthTeam:'Big Face Coffee'},
