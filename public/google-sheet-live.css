@@ -72,12 +72,6 @@
   line-height:1;
 }
 
-.roster-count-badge.two-way-badge{
-  color:#6ee7a5;
-  font-size:10px;
-  letter-spacing:.35px;
-}
-
 .roster-player-name{
   min-width:0;
   color:#7fc0ff;
@@ -112,11 +106,11 @@
 }
 
 .contract-status-note{
-  display:block;
+  display:inline-block;
+  flex:0 0 auto;
   width:max-content;
   max-width:100%;
-  margin-top:5px;
-  margin-left:34px;
+  margin:0;
   padding:3px 6px;
   border:1px solid rgba(49,199,122,.45);
   border-radius:2px;
@@ -126,7 +120,7 @@
   font-weight:800;
   line-height:1.15;
   letter-spacing:.7px;
-  white-space:normal;
+  white-space:nowrap;
 }
 
 .cap-empty-slot{
