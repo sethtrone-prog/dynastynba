@@ -1,5 +1,6 @@
 // Live dynasty data overlay. Google is read server-side by /api/google-sheet-live.
 // Existing static data remains the fallback if the live feed is unavailable or invalid.
+// Preview redeploy marker: roster TW indicator update verified for desktop and mobile.
 (function(){
   const ENDPOINT='/api/google-sheet-live';
   const REFRESH_MS=10*60*1000;
