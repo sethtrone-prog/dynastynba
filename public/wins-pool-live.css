@@ -1,0 +1,111 @@
+/* Visual polish for live Wins Pool surfaces. */
+.wins-pool-live-page .card{overflow:hidden;}
+
+.wins-pool-standings-card .section-title,
+.owner-selections-card .section-title{
+  border-bottom:1px solid rgba(127,192,255,.15);
+}
+
+.wins-pool-standings-table thead th,
+.owner-selections-table thead th{
+  background:#06182a;
+  color:#9fb8ce;
+  font-size:10px;
+  letter-spacing:.65px;
+  text-transform:uppercase;
+}
+
+.wins-pool-standings-table tbody tr{
+  transition:background .15s ease;
+}
+.wins-pool-standings-table tbody tr:hover,
+.owner-selections-table tbody tr:hover{
+  background:rgba(127,192,255,.05);
+}
+
+.wins-pool-standings-table .rank-badge{
+  display:inline-grid;
+  place-items:center;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid #315878;
+  background:#0a2238;
+  color:#dce9f3;
+  font-family:Oswald,Inter,system-ui,sans-serif;
+  font-weight:700;
+}
+.wins-pool-standings-table .standing-1 .rank-badge{
+  border-color:#f2c55d;
+  background:rgba(242,197,93,.14);
+  color:#f2c55d;
+  box-shadow:0 0 0 1px rgba(242,197,93,.08) inset;
+}
+.wins-pool-standings-table .standing-2 .rank-badge{
+  border-color:#9fb8ce;
+  background:rgba(159,184,206,.10);
+  color:#dce9f3;
+}
+.wins-pool-standings-table .standing-3 .rank-badge{
+  border-color:#b57b46;
+  background:rgba(181,123,70,.10);
+  color:#d49a63;
+}
+.wins-pool-standings-table .pool-total{
+  color:#f2c55d;
+  font-family:Oswald,Inter,system-ui,sans-serif;
+  font-size:17px;
+  font-weight:700;
+}
+
+.performance{
+  font-weight:800;
+  font-family:Oswald,Inter,system-ui,sans-serif;
+}
+.performance.positive{color:#6ee7a5;}
+.performance.negative{color:#e49a9a;}
+.performance.neutral{color:#8ca3b7;}
+
+.owner-selections-table tbody .owner-group-start td{
+  border-top:2px solid #1d4d78;
+}
+.owner-selections-table .owner-summary{
+  min-width:120px;
+  vertical-align:middle;
+  background:rgba(6,24,42,.65);
+  border-right:1px solid #1d4d78;
+}
+.owner-selections-table .owner-summary b{
+  display:block;
+  color:#7fc0ff;
+  font-family:Oswald,Inter,system-ui,sans-serif;
+  font-size:16px;
+  letter-spacing:.2px;
+}
+.owner-selections-table .owner-summary small{
+  display:block;
+  margin-top:4px;
+  color:#f2c55d;
+  font-weight:700;
+  white-space:nowrap;
+}
+.owner-selections-table .selection-pick span{
+  display:inline-grid;
+  place-items:center;
+  min-width:28px;
+  height:24px;
+  padding:0 6px;
+  border:1px solid #315878;
+  border-radius:3px;
+  background:#0a2238;
+  color:#dce9f3;
+  font-family:Oswald,Inter,system-ui,sans-serif;
+  font-weight:700;
+}
+.owner-selections-table .selection-team b{color:#dce9f3;}
+.owner-selections-table .record{color:#9fb8ce;}
+
+@media(max-width:760px){
+  .wins-pool-standings-table,
+  .owner-selections-table{min-width:780px;}
+}
