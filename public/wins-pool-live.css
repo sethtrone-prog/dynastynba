@@ -77,7 +77,7 @@
 }
 .owner-selections-table .owner-summary b{
   display:block;
-  color:#7fc0ff;
+  color:#f2c55d;
   font-family:Oswald,Inter,system-ui,sans-serif;
   font-size:16px;
   letter-spacing:.2px;
@@ -102,7 +102,7 @@
   font-family:Oswald,Inter,system-ui,sans-serif;
   font-weight:700;
 }
-.owner-selections-table .selection-team b{color:#dce9f3;}
+.owner-selections-table .selection-team b{color:#7fc0ff;}
 .owner-selections-table .record{color:#9fb8ce;}
 
 @media(max-width:760px){
