@@ -1,0 +1,8 @@
+/* Teams overview card theme accents */
+.team-grid .team-card h3{
+  color:#7fc0ff;
+}
+.team-grid .team-card .owner{
+  color:#f2c55d;
+  font-weight:700;
+}
