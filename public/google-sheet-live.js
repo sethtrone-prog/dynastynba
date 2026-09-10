@@ -16,7 +16,8 @@
     const twoWay=row.slot==='TW';
     const badge=marker?`<span class="roster-count-badge">${esc(marker)}</span>`:'';
     const name=row.display?`<span class="roster-player-name">${esc(row.display)}</span>`:'<span class="cap-empty-slot">Open slot</span>';
-    return `<span class="roster-player-line">${badge}${name}</span>${twoWay?'<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>':''}`;
+    const status=twoWay?'<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>':'';
+    return `<span class="roster-player-line">${badge}${name}${status}</span>`;
   }
 
   function renderCap(){
