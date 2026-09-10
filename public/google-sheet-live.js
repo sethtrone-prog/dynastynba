@@ -12,10 +12,15 @@
   }
   function seasonIs2027(){return String(document.getElementById('seasonSelect')?.value||'2027')==='2027';}
   function unitCells(units,years){return years.map((_,i)=>`<td class="contract-year-unit">${units?.[i]??''}</td>`).join('');}
+  function linkedPlayerName(name){
+    if(!name)return '<span class="cap-empty-slot">Open slot</span>';
+    if(typeof playerLink==='function')return playerLink(name,'player-link roster-player-name');
+    return `<span class="roster-player-name">${esc(name)}</span>`;
+  }
   function playerCell(row,marker){
     const twoWay=row.slot==='TW';
     const badge=marker?`<span class="roster-count-badge">${esc(marker)}</span>`:'';
-    const name=row.display?`<span class="roster-player-name">${esc(row.display)}</span>`:'<span class="cap-empty-slot">Open slot</span>';
+    const name=row.display?linkedPlayerName(row.display):'<span class="cap-empty-slot">Open slot</span>';
     const status=twoWay?'<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>':'';
     return `<span class="roster-player-line">${badge}${name}${status}</span>`;
   }
@@ -49,7 +54,7 @@
     section.className='card team-panel g-league-reserves-card corrected-g-league live-sheet-g-league';
     section.innerHTML=`<div class="card-pad section-title"><div><div class="eyebrow">DEVELOPMENT ROSTER</div><h2>G-League</h2></div><span>5 roster slots · does not count toward cap</span></div>
       <div class="table-wrap"><table class="data-table contract-year-grid g-league-table"><thead><tr><th class="contract-player-col">Player</th>${years.map(y=>`<th class="contract-year-head">${esc(y)}</th>`).join('')}</tr></thead>
-      <tbody>${(data.gLeague||[]).slice(0,5).map(row=>`<tr><td class="contract-player-col">${row.display?esc(row.display):'<span class="cap-empty-slot">Open slot</span>'}</td>${unitCells(row.units,years)}</tr>`).join('')}</tbody></table></div>`;
+      <tbody>${(data.gLeague||[]).slice(0,5).map(row=>`<tr><td class="contract-player-col">${row.display?linkedPlayerName(row.display):'<span class="cap-empty-slot">Open slot</span>'}</td>${unitCells(row.units,years)}</tr>`).join('')}</tbody></table></div>`;
     let stack=panel.closest('.corrected-overview-roster-stack');
     if(!stack){stack=document.createElement('div');stack.className='corrected-overview-roster-stack';panel.parentNode.insertBefore(stack,panel);stack.appendChild(panel);}
     stack.appendChild(section);
