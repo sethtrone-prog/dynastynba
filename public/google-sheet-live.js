@@ -12,9 +12,11 @@
   }
   function seasonIs2027(){return String(document.getElementById('seasonSelect')?.value||'2027')==='2027';}
   function unitCells(units,years){return years.map((_,i)=>`<td class="contract-year-unit">${units?.[i]??''}</td>`).join('');}
-  function playerCell(row){
+  function playerCell(row,marker){
     const twoWay=row.slot==='TW';
-    return `${row.display?esc(row.display):'<span class="cap-empty-slot">Open slot</span>'}${twoWay?'<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>':''}`;
+    const badge=marker?`<span class="roster-count-badge ${twoWay?'two-way-badge':''}">${esc(marker)}</span>`:'';
+    const name=row.display?`<span class="roster-player-name">${esc(row.display)}</span>`:'<span class="cap-empty-slot">Open slot</span>';
+    return `<span class="roster-player-line">${badge}${name}</span>${twoWay?'<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>':''}`;
   }
 
   function renderCap(){
@@ -28,9 +30,18 @@
     const panel=table.closest('.team-panel');
     if(!panel)return;
     const years=live.years||[];
+    let activeNumber=0;
+    const numberedRows=data.main.map(row=>{
+      let marker='';
+      if(row.slot==='TW')marker='TW';
+      else if(row.display)marker=String(++activeNumber);
+      return {row,marker};
+    });
+    const sectionMeta=panel.querySelector('.section-title span');
+    if(sectionMeta)sectionMeta.textContent=`${activeNumber} active player${activeNumber===1?'':'s'} · Two-Way excluded`;
     table.classList.add('contract-year-grid','corrected-cap-grid','live-sheet-cap-grid');
     table.innerHTML=`<thead><tr><th class="contract-player-col">Player</th>${years.map(y=>`<th class="contract-year-head">${esc(y)}</th>`).join('')}</tr></thead>
-      <tbody>${data.main.map(row=>`<tr class="${row.slot==='TW'?'two-way-cap-exempt':''}"><td class="contract-player-col">${playerCell(row)}</td>${unitCells(row.units,years)}</tr>`).join('')}
+      <tbody>${numberedRows.map(({row,marker})=>`<tr class="${row.slot==='TW'?'two-way-cap-exempt':''}"><td class="contract-player-col">${playerCell(row,marker)}</td>${unitCells(row.units,years)}</tr>`).join('')}
       <tr class="team-total-row"><td class="contract-player-col"><strong>TEAM TOTAL</strong></td>${(data.totals||[]).map(v=>`<td class="contract-year-total"><strong>${v??0}</strong></td>`).join('')}</tr></tbody>`;
 
     document.querySelector('.corrected-g-league')?.remove();
