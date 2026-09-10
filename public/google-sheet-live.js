@@ -14,7 +14,7 @@
   function unitCells(units,years){return years.map((_,i)=>`<td class="contract-year-unit">${units?.[i]??''}</td>`).join('');}
   function playerCell(row,marker){
     const twoWay=row.slot==='TW';
-    const badge=marker?`<span class="roster-count-badge ${twoWay?'two-way-badge':''}">${esc(marker)}</span>`:'';
+    const badge=marker?`<span class="roster-count-badge">${esc(marker)}</span>`:'';
     const name=row.display?`<span class="roster-player-name">${esc(row.display)}</span>`:'<span class="cap-empty-slot">Open slot</span>';
     return `<span class="roster-player-line">${badge}${name}</span>${twoWay?'<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>':''}`;
   }
@@ -33,8 +33,7 @@
     let activeNumber=0;
     const numberedRows=data.main.map(row=>{
       let marker='';
-      if(row.slot==='TW')marker='TW';
-      else if(row.display)marker=String(++activeNumber);
+      if(row.slot!=='TW'&&row.display)marker=String(++activeNumber);
       return {row,marker};
     });
     const sectionMeta=panel.querySelector('.section-title span');
