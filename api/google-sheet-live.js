@@ -98,31 +98,44 @@ function parseFuturePicks(rows) {
   if (start < 0) return [];
   const out = [];
   let currentYear = null;
+  let parsedAny = false;
 
   for (let r = start + 1; r < rows.length; r++) {
     const cells = (rows[r] || []).map(cell => clean(cell?.formattedValue));
     const line = flat(rows[r]);
-    if (!line) continue;
 
-    const yearCell = cells.find(v => /^20(2[6-9]|3[0-1])(?:\s+DRAFT)?$/i.test(v));
+    // The pick table is contiguous. Once we've parsed at least one pick,
+    // the first blank row marks the end of the table.
+    if (!line) {
+      if (parsedAny) break;
+      continue;
+    }
+
+    const yearCell = cells.find(v => /^20(2[7-9]|3[0-1])(?:\s+DRAFT)?$/i.test(v));
     if (yearCell) currentYear = Number(yearCell.match(/20\d{2}/)?.[0]);
 
     let roundCol = -1;
     for (let c = 0; c < cells.length; c++) {
       const u = cells[c].toUpperCase();
-      if (/\b(1ST|2ND|FIRST|SECOND)\b.*\bROUND\b|^ROUND\s*[12]$|^[12](?:\.0)?$/.test(u)) { roundCol = c; break; }
+      // Only accept dedicated round cells from the table, not free-form notes
+      // such as "2028 2nd Round Pick to ..." below the table.
+      if (/^(1ST|2ND|FIRST|SECOND)\s+ROUND$|^ROUND\s*[12]$/.test(u)) {
+        roundCol = c;
+        break;
+      }
     }
-    if (!currentYear || roundCol < 0) continue;
+    if (!currentYear || currentYear < 2027 || currentYear > 2031 || roundCol < 0) continue;
 
     const roundText = cells[roundCol];
     const u = roundText.toUpperCase();
-    const round = /1ST|FIRST|ROUND\s*1|^1(?:\.0)?$/.test(u) ? 1 : (/2ND|SECOND|ROUND\s*2|^2(?:\.0)?$/.test(u) ? 2 : null);
+    const round = /1ST|FIRST|ROUND\s*1/.test(u) ? 1 : (/2ND|SECOND|ROUND\s*2/.test(u) ? 2 : null);
     if (!round) continue;
 
     const detailCandidates = cells.filter(v => v && v !== roundText && !/^20\d{2}(?:\s+DRAFT)?$/i.test(v) && !/^OWNED$|^TRADED$|^STATUS$|^ROUND$/i.test(v));
     const note = detailCandidates.length ? detailCandidates[detailCandidates.length - 1] : '';
     const traded = struck(rows[r], roundCol) || /\bOUTGOING\b|\bTRADED\b|\bSENT\s+TO\b/i.test(line);
     out.push({ year: currentYear, round, label: round === 1 ? '1ST ROUND' : '2ND ROUND', traded, note });
+    parsedAny = true;
   }
 
   return out;
