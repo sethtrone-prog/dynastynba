@@ -72,6 +72,10 @@
   line-height:1;
 }
 
+.roster-count-badge.roster-two-way-badge{
+  color:#6ee7a5;
+}
+
 .roster-player-name{
   min-width:0;
   color:#7fc0ff;
@@ -99,28 +103,6 @@
 
 .live-sheet-cap-grid .two-way-cap-exempt{
   background:rgba(49,199,122,.065) !important;
-}
-
-.live-sheet-cap-grid .two-way-cap-exempt .contract-player-col{
-  position:relative;
-}
-
-.contract-status-note{
-  display:inline-block;
-  flex:0 0 auto;
-  width:max-content;
-  max-width:100%;
-  margin:0;
-  padding:3px 6px;
-  border:1px solid rgba(49,199,122,.45);
-  border-radius:2px;
-  color:#6ee7a5;
-  background:rgba(49,199,122,.08);
-  font-size:8px;
-  font-weight:800;
-  line-height:1.15;
-  letter-spacing:.7px;
-  white-space:nowrap;
 }
 
 .cap-empty-slot{
