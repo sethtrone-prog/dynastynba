@@ -24,7 +24,7 @@
     const playerName=String(match.Player_Name),start=lower.indexOf(playerName.toLowerCase()),before=raw.slice(0,start),shown=raw.slice(start,start+playerName.length),after=raw.slice(start+playerName.length);
     return `${esc(before)}<span class="player-link roster-player-name" role="link" tabindex="0" onclick="event.stopPropagation();go('player/${esc(match.Player_ID)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();go('player/${esc(match.Player_ID)}')}">${esc(shown)}</span>${esc(after)}`;
   }
-  function playerCell(row,marker){const twoWay=row.slot==='TW',badge=marker?`<span class="roster-count-badge">${esc(marker)}</span>`:'',name=row.display?linkedPlayerName(row.display):'<span class="cap-empty-slot">Open slot</span>',status=twoWay?'<small class="contract-status-note">TWO WAY · CAP EXEMPT</small>':'';return `<span class="roster-player-line">${badge}${name}${status}</span>`;}
+  function playerCell(row,marker){const badge=marker?`<span class="roster-count-badge${marker==='TW'?' roster-two-way-badge':''}">${esc(marker)}</span>`:'',name=row.display?linkedPlayerName(row.display):'<span class="cap-empty-slot">Open slot</span>';return `<span class="roster-player-line">${badge}${name}</span>`;}
 
   function renderCap(){
     if(!live?.ok||!seasonIsLive())return;
@@ -32,7 +32,7 @@
     const data=live.teams?.[fid];if(!data?.main?.length)return;
     const table=document.querySelector('.team-panel .team-table');if(!table)return;const panel=table.closest('.team-panel');if(!panel)return;
     const years=live.years||[];let activeNumber=0;
-    const numberedRows=data.main.map(row=>{let marker='';if(row.slot!=='TW'&&row.display)marker=String(++activeNumber);return {row,marker};});
+    const numberedRows=data.main.map(row=>{let marker='';if(row.slot==='TW'&&row.display)marker='TW';else if(row.display)marker=String(++activeNumber);return {row,marker};});
     const sectionMeta=panel.querySelector('.section-title span');if(sectionMeta)sectionMeta.textContent=`${activeNumber} active player${activeNumber===1?'':'s'} · Two-Way excluded`;
     table.classList.add('contract-year-grid','corrected-cap-grid','live-sheet-cap-grid');
     table.innerHTML=`<thead><tr><th class="contract-player-col">Player</th>${years.map(y=>`<th class="contract-year-head">${esc(y)}</th>`).join('')}</tr></thead><tbody>${numberedRows.map(({row,marker})=>`<tr class="${row.slot==='TW'?'two-way-cap-exempt':''}"><td class="contract-player-col">${playerCell(row,marker)}</td>${unitCells(row.units,years)}</tr>`).join('')}<tr class="team-total-row"><td class="contract-player-col"><strong>TEAM TOTAL</strong></td>${(data.totals||[]).map(v=>`<td class="contract-year-total"><strong>${v??0}</strong></td>`).join('')}</tr></tbody>`;
