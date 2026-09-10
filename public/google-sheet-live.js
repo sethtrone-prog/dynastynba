@@ -12,10 +12,19 @@
   }
   function seasonIs2027(){return String(document.getElementById('seasonSelect')?.value||'2027')==='2027';}
   function unitCells(units,years){return years.map((_,i)=>`<td class="contract-year-unit">${units?.[i]??''}</td>`).join('');}
-  function linkedPlayerName(name){
-    if(!name)return '<span class="cap-empty-slot">Open slot</span>';
-    if(typeof playerLink==='function')return playerLink(name,'player-link roster-player-name');
-    return `<span class="roster-player-name">${esc(name)}</span>`;
+  function linkedPlayerName(text){
+    if(!text)return '<span class="cap-empty-slot">Open slot</span>';
+    const raw=String(text);
+    const players=(window.DB?.Players||[]).filter(p=>p?.Player_ID&&p?.Player_Name).slice().sort((a,b)=>String(b.Player_Name).length-String(a.Player_Name).length);
+    const lower=raw.toLowerCase();
+    const match=players.find(p=>lower.includes(String(p.Player_Name).toLowerCase()));
+    if(!match)return `<span class="roster-player-name">${esc(raw)}</span>`;
+    const playerName=String(match.Player_Name);
+    const start=lower.indexOf(playerName.toLowerCase());
+    const before=raw.slice(0,start);
+    const shown=raw.slice(start,start+playerName.length);
+    const after=raw.slice(start+playerName.length);
+    return `${esc(before)}<button class="player-link roster-player-name" onclick="event.stopPropagation();go('player/${esc(match.Player_ID)}')">${esc(shown)}</button>${esc(after)}`;
   }
   function playerCell(row,marker){
     const twoWay=row.slot==='TW';
