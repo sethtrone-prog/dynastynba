@@ -3,7 +3,7 @@
 .transactions-live-table thead th{background:#06182a;color:#9fb8ce;font-size:10px;letter-spacing:.65px;text-transform:uppercase;}
 .transactions-live-table tbody tr:hover{background:rgba(127,192,255,.05);}
 .transactions-live-table .tx-date{color:#f2c55d;font-weight:800;}
-.transactions-live-table .tx-team b{color:#fff;font-family:Inter,system-ui,sans-serif;font-size:14px;font-weight:400;}
+.transactions-live-table .tx-team b{color:#fff;font-family:Inter,system-ui,sans-serif;font-size:14px;font-weight:700;}
 .transactions-live-table .tx-asset{color:#7fc0ff;font-weight:700;white-space:normal;min-width:210px;line-height:1.45;}
 .transactions-live-table .tx-details{color:#b9cad8;white-space:normal;min-width:340px;max-width:560px;line-height:1.5;}
 .tx-pill{display:inline-block;border-radius:3px;padding:4px 8px;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.5px;border:1px solid #315878;background:#0a2238;color:#dce9f3;}
