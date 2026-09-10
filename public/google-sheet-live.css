@@ -53,6 +53,7 @@
   color:#7fc0ff;
 }
 
+/* The same marker layout is used on desktop and mobile. */
 .roster-player-line{
   display:flex;
   align-items:center;
