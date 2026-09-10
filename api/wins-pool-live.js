@@ -12,6 +12,10 @@ function num(v) {
   return Number.isFinite(n) ? n : null;
 }
 function value(row, col) { return row?.[col]?.formattedValue ?? ''; }
+function numberValue(row, col) {
+  const n = row?.[col]?.effectiveValue?.numberValue;
+  return Number.isFinite(n) ? n : num(value(row, col));
+}
 function b64url(input) {
   return Buffer.from(input).toString('base64').replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 }
@@ -49,7 +53,7 @@ async function getAccessToken() {
 }
 
 async function fetchRows(sheetId, token) {
-  const fields = 'sheets(data(rowData(values(formattedValue))))';
+  const fields = 'sheets(data(rowData(values(formattedValue,effectiveValue))))';
   const url = new URL(`https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(sheetId)}`);
   url.searchParams.append('ranges', RANGE);
   url.searchParams.set('includeGridData', 'true');
@@ -68,21 +72,21 @@ function parse(rows) {
   for (let r = 1; r <= 30; r += 3) {
     const owner = clean(value(rows[r], 0));
     if (!owner) continue;
-    const total = num(value(rows[r], 1));
-    const pickPosition = num(value(rows[r], 2));
+    const total = numberValue(rows[r], 1);
+    const pickPosition = numberValue(rows[r], 2);
     const teams = [];
     for (let j = 0; j < 3; j++) {
       const row = rows[r + j] || [];
       const team = clean(value(row, 3));
       if (!team) continue;
       teams.push({
-        pick: num(value(row, 2)),
+        pick: numberValue(row, 2),
         team,
-        wins: num(value(row, 4)),
-        losses: num(value(row, 5)),
-        remaining: num(value(row, 6)),
-        projected: num(value(row, 7)),
-        diff: num(value(row, 8))
+        wins: numberValue(row, 4),
+        losses: numberValue(row, 5),
+        remaining: numberValue(row, 6),
+        projected: numberValue(row, 7),
+        diff: numberValue(row, 8)
       });
     }
     owners.push({ owner, total, pickPosition, teams });
@@ -94,12 +98,12 @@ function parse(rows) {
   const slotOrder = [];
   for (let r = 33; r <= 62; r++) {
     const owner = clean(value(rows[r], 0));
-    const preTotal = num(value(rows[r], 1));
+    const preTotal = numberValue(rows[r], 1);
     if (owner && preTotal != null) preseasonByOwner.set(owner, preTotal);
-    const pick = num(value(rows[r], 2));
-    const ou = num(value(rows[r], 4));
+    const pick = numberValue(rows[r], 2);
+    const ou = numberValue(rows[r], 4);
     if (pick != null && ou != null) ouByPick.set(pick, ou);
-    const slot = num(value(rows[r], 10));
+    const slot = numberValue(rows[r], 10);
     const slotOwner = clean(value(rows[r], 11));
     if (slot != null && slotOwner) slotOrder.push({ position: slot, owner: slotOwner });
   }
