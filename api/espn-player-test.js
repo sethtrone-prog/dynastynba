@@ -16,3 +16,4 @@ export default async function handler(req, res) {
     res.setHeader('content-type','application/json; charset=utf-8');res.status(200).send(body);
   } catch(error){res.status(500).json({ok:false,error:String(error?.message||error)});}
 }
+// preview refresh 2026-09-20
