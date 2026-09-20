@@ -38,9 +38,19 @@ export default async function handler(req, res) {
           seasonId: stat?.seasonId ?? null
         };
       });
+      const validRows = rows.filter(r => r.regularSeasonGamesPlayed !== null);
+      if (String(req.query.format || '') === 'tsv') {
+        const offset = Math.max(0, Number(req.query.offset || 0));
+        const limit = Math.min(250, Math.max(1, Number(req.query.limit || 200)));
+        const page = validRows.slice(offset, offset + limit);
+        const lines = page.map(r => [r.player, r.espnId, r.regularSeasonGamesPlayed, r.regularSeasonFantasyPoints, r.regularSeasonFantasyPPG].join('\t'));
+        res.setHeader('content-type', 'text/plain; charset=utf-8');
+        res.setHeader('cache-control', 'no-store');
+        return res.status(200).send(['COUNT\t' + validRows.length, ...lines].join('\n'));
+      }
       res.setHeader('content-type', 'application/json; charset=utf-8');
       res.setHeader('cache-control', 'no-store');
-      return res.status(200).json({season:Number(season),count:rows.length,players:rows});
+      return res.status(200).json({season:Number(season),count:rows.length,validCount:validRows.length,players:rows});
     }
 
     res.setHeader('content-type', 'application/json; charset=utf-8');
