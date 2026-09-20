@@ -12,9 +12,40 @@ export default async function handler(req, res) {
       }
     });
     const body = await upstream.text();
+    if (!upstream.ok) {
+      res.setHeader('content-type', 'application/json; charset=utf-8');
+      return res.status(502).send(body);
+    }
+
+    if (String(req.query.compact || '') === '1') {
+      const data = JSON.parse(body);
+      const rows = (data.players || []).map((entry) => {
+        const p = entry.player || {};
+        const stat = (p.stats || []).find((s) =>
+          Number(s.seasonId) === Number(season) &&
+          Number(s.statSourceId) === 0 &&
+          Number(s.statSplitTypeId) === 0
+        );
+        const games = stat?.stats?.['42'] ?? null;
+        return {
+          player: p.fullName || null,
+          espnId: p.id ?? entry.id ?? null,
+          regularSeasonGamesPlayed: games,
+          regularSeasonFantasyPoints: stat?.appliedTotal ?? null,
+          regularSeasonFantasyPPG: stat?.appliedAverage ?? null,
+          statSplitTypeId: stat?.statSplitTypeId ?? null,
+          statSourceId: stat?.statSourceId ?? null,
+          seasonId: stat?.seasonId ?? null
+        };
+      });
+      res.setHeader('content-type', 'application/json; charset=utf-8');
+      res.setHeader('cache-control', 'no-store');
+      return res.status(200).json({season:Number(season),count:rows.length,players:rows});
+    }
+
     res.setHeader('content-type', 'application/json; charset=utf-8');
     res.setHeader('cache-control', 'no-store');
-    res.status(upstream.ok ? 200 : 502).send(body);
+    res.status(200).send(body);
   } catch (error) {
     res.status(500).json({ok:false,error:String(error?.message || error)});
   }
