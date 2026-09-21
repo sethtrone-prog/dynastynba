@@ -22,7 +22,8 @@ const franchiseLink=(fid,label)=>fid?`<button class="record-link team-record-lin
 const navItems=[['home','HOME'],['teams','TEAMS'],['players','PLAYERS'],['standings','STANDINGS'],['schedule','SCHEDULE'],['drafts','DRAFTS'],['transactions','TRANSACTIONS'],['history','HISTORY'],['league','ABOUT']];
 function initNav(){let n=$('#mainNav');n.innerHTML=navItems.map(([r,t])=>`<button data-route="${r}">${t}</button>`).join('');document.addEventListener('click',e=>{let r=e.target.closest('[data-route]');if(r){go(r.dataset.route);$('#mainNav').classList.remove('open')}});$('#menuButton').onclick=()=>n.classList.toggle('open');$('#searchButton').onclick=openSearch;$('#closeSearch').onclick=closeSearch;$('#searchOverlay').onclick=e=>{if(e.target.id==='searchOverlay')closeSearch()};$('#globalSearch').oninput=renderSearch;}
 function initSeasons(){let years=seasonYears();if(!years.includes(season))season=years[0]||season;$('#seasonSelect').innerHTML=years.map(y=>`<option ${y==season?'selected':''}>${y}</option>`).join('');$('#seasonSelect').onchange=e=>{setSeason(e.target.value);render()}}
-function go(r){route=r;location.hash=r;render();scrollTo(0,0)}
+function go(r){route=r;if(location.hash.slice(1)!==r)location.hash=r;else render();scrollTo(0,0)}
+window.addEventListener('hashchange',()=>{route=(location.hash||'#home').slice(1);render();scrollTo(0,0)});
 function layout(head,sub,body){$('#app').innerHTML=`<section class="page-head"><div class="eyebrow">Dynasty NBA · ${season}</div><h1>${head}</h1><p>${sub||''}</p></section><div class="content">${body}</div>`;setActive()}
 function setActive(){document.querySelectorAll('#mainNav button').forEach(b=>b.classList.toggle('active',b.dataset.route===route.split('/')[0]))}
 function standings(){return DB['ESPN Teams'].slice().sort((a,b)=>(a.Playoff_Seed||99)-(b.Playoff_Seed||99));}
