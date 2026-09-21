@@ -50,7 +50,7 @@
   }
   function liveContractUnitsForPlayer(playerName){
     if(!live?.ok||!playerName)return null;const n=String(playerName).trim().toLowerCase();
-    for(const team of Object.values(live.teams||{})){for(const row of team.main||[]){const display=String(row.display||'').trim().toLowerCase();if(display===n||display.includes(n)){const u=row.units?.[0];if(u!==null&&u!==undefined&&u!=='')return Number(u);}}}return null;
+    for(const team of Object.values(live.teams||{})){for(const row of team.main||[]){const display=String(row.display||'').trim().toLowerCase();if(display===n||display.includes(n)){const idx=Math.max(0,(live.years||[]).findIndex(y=>String(y).startsWith(String(live.season))));const u=row.units?.[idx];if(u!==null&&u!==undefined&&u!=='')return Number(u);}}}return null;
   }
   function renderPlayerHeader(){
     if(!live?.ok||!seasonIsLive())return;
