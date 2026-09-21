@@ -1,0 +1,31 @@
+name: Salary Data Test
+on:
+  push:
+    branches: [salary-engine-test]
+    paths: ['.github/workflows/salary-data-test.yml']
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch ESPN full 2025-26 player pool
+        run: |
+          python - <<'PY'
+          import json, urllib.request
+          url="https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2026/segments/0/leagues/76513288?view=kona_player_info&view=kona_playercard"
+          filt={"players":{"limit":2000,"sortPercOwned":{"sortPriority":1,"sortAsc":False}}}
+          req=urllib.request.Request(url,headers={"User-Agent":"dynastynba salary test","x-fantasy-filter":json.dumps(filt)})
+          with urllib.request.urlopen(req,timeout=60) as r: data=json.load(r)
+          rows=[]
+          for e in data.get("players",[]):
+              p=e.get("player",{})
+              stat=next((s for s in p.get("stats",[]) if int(s.get("seasonId",0))==2026 and int(s.get("statSourceId",-1))==0 and int(s.get("statSplitTypeId",-1))==0),None)
+              if stat:
+                  rows.append({"player":p.get("fullName"),"espnId":p.get("id",e.get("id")),"gp":stat.get("stats",{}).get("42"),"fp":stat.get("appliedTotal"),"ppg":stat.get("appliedAverage")})
+          rows.sort(key=lambda x: x.get("ppg") if x.get("ppg") is not None else -999, reverse=True)
+          with open("espn-2026-full-player-pool.json","w") as f: json.dump({"count":len(rows),"players":rows},f)
+          print("COUNT",len(rows))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: espn-2026-full-player-pool
+          path: espn-2026-full-player-pool.json
