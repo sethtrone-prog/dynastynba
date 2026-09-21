@@ -53,11 +53,12 @@
     for(const team of Object.values(live.teams||{})){for(const row of team.main||[]){const display=String(row.display||'').trim().toLowerCase();if(display===n||display.includes(n)){const u=row.units?.[0];if(u!==null&&u!==undefined&&u!=='')return Number(u);}}}return null;
   }
   function renderPlayerHeader(){
-    if(!live?.ok||!seasonIsLive())return;const {fid,tab}=route();if(fid||tab!=='overview')return;
+    if(!live?.ok||!seasonIsLive())return;
     const parts=location.hash.replace(/^#/,'').split('/');if(parts[0]!=='player'||!parts[1])return;
     const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>x.Player_ID===parts[1]);if(!p)return;
     const units=liveContractUnitsForPlayer(p.Player_Name);if(units==null)return;
     const badge=document.querySelector('.player-command .base-salary-badge');if(badge)badge.textContent=units+' Unit'+(units===1?'':'s');
+    const contract=document.getElementById('playerContractUnits');if(contract)contract.textContent=String(units);
   }
   function render(){setTimeout(()=>{renderCap();renderPicks();renderPlayerHeader();},80);}
   async function refresh(){try{const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'}),data=await response.json();if(response.ok&&data?.ok&&data?.season&&data?.teams){live=data;window.DYNASTY_LIVE_SHEET=data;ensureSeasonOption();render();}else console.info('Dynasty live sheet fallback active:',data?.message||response.status);}catch(err){console.info('Dynasty live sheet fallback active:',err?.message||err);}}
