@@ -48,7 +48,18 @@
     const pickCards=document.querySelector('.pick-cards');if(!pickCards)return;document.querySelector('.future-draft-picks-card')?.remove();const years=[...new Set(rows.map(r=>r.year))].sort((a,b)=>a-b),section=document.createElement('section');section.className='card future-draft-picks-card live-sheet-future-picks';
     section.innerHTML=`<div class="card-pad section-title"><div><div class="eyebrow">CURRENT DRAFT CAPITAL</div><h2>Future Draft Picks</h2></div><span>Live master sheet · 10-minute refresh</span></div><div class="future-picks-years">${years.map(year=>`<div class="future-pick-year"><div class="future-pick-year-title">${year}</div><div class="table-wrap"><table class="data-table future-picks-table"><thead><tr><th>Round</th><th>Status</th><th>Details</th></tr></thead><tbody>${rows.filter(r=>r.year===year).map(r=>`<tr class="${r.traded?'traded-pick':''}"><td>${esc(r.label)}</td><td>${r.traded?'TRADED':'OWNED'}</td><td>${esc(r.note||'')}</td></tr>`).join('')}</tbody></table></div></div>`).join('')}</div>`;pickCards.parentNode.insertBefore(section,pickCards);
   }
-  function render(){setTimeout(()=>{renderCap();renderPicks();},80);}
+  function liveContractUnitsForPlayer(playerName){
+    if(!live?.ok||!playerName)return null;const n=String(playerName).trim().toLowerCase();
+    for(const team of Object.values(live.teams||{})){for(const row of team.main||[]){const display=String(row.display||'').trim().toLowerCase();if(display===n||display.includes(n)){const u=row.units?.[0];if(u!==null&&u!==undefined&&u!=='')return Number(u);}}}return null;
+  }
+  function renderPlayerHeader(){
+    if(!live?.ok||!seasonIsLive())return;const {fid,tab}=route();if(fid||tab!=='overview')return;
+    const parts=location.hash.replace(/^#/,'').split('/');if(parts[0]!=='player'||!parts[1])return;
+    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>x.Player_ID===parts[1]);if(!p)return;
+    const units=liveContractUnitsForPlayer(p.Player_Name);if(units==null)return;
+    const badge=document.querySelector('.player-command .base-salary-badge');if(badge)badge.textContent=units+' Unit'+(units===1?'':'s');
+  }
+  function render(){setTimeout(()=>{renderCap();renderPicks();renderPlayerHeader();},80);}
   async function refresh(){try{const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'}),data=await response.json();if(response.ok&&data?.ok&&data?.season&&data?.teams){live=data;window.DYNASTY_LIVE_SHEET=data;ensureSeasonOption();render();}else console.info('Dynasty live sheet fallback active:',data?.message||response.status);}catch(err){console.info('Dynasty live sheet fallback active:',err?.message||err);}}
   window.addEventListener('hashchange',render);document.getElementById('seasonSelect')?.addEventListener('change',render);refresh();setInterval(refresh,REFRESH_MS);
 })();
