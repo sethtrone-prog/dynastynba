@@ -49,8 +49,20 @@
     section.innerHTML=`<div class="card-pad section-title"><div><div class="eyebrow">CURRENT DRAFT CAPITAL</div><h2>Future Draft Picks</h2></div><span>Live master sheet · 10-minute refresh</span></div><div class="future-picks-years">${years.map(year=>`<div class="future-pick-year"><div class="future-pick-year-title">${year}</div><div class="table-wrap"><table class="data-table future-picks-table"><thead><tr><th>Round</th><th>Status</th><th>Details</th></tr></thead><tbody>${rows.filter(r=>r.year===year).map(r=>`<tr class="${r.traded?'traded-pick':''}"><td>${esc(r.label)}</td><td>${r.traded?'TRADED':'OWNED'}</td><td>${esc(r.note||'')}</td></tr>`).join('')}</tbody></table></div></div>`).join('')}</div>`;pickCards.parentNode.insertBefore(section,pickCards);
   }
   function liveContractUnitsForPlayer(playerName){
-    if(!live?.ok||!playerName)return null;const n=String(playerName).trim().toLowerCase();
-    for(const team of Object.values(live.teams||{})){for(const row of team.main||[]){const display=String(row.display||'').trim().toLowerCase();if(display===n||display.includes(n)){const idx=Math.max(0,(live.years||[]).findIndex(y=>String(y).startsWith(String(live.season))));const u=row.units?.[idx];if(u!==null&&u!==undefined&&u!=='')return Number(u);}}}return null;
+    if(!live?.ok||!playerName)return null;
+    const n=String(playerName).trim().toLowerCase();
+    const yearIndex=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').startsWith(String(live.season)));
+    if(yearIndex<0)return null;
+    for(const team of Object.values(live.teams||{})){
+      for(const row of team.main||[]){
+        const display=String(row.display||'').trim().toLowerCase();
+        if(display===n||display.includes(n)){
+          const u=row.units?.[yearIndex];
+          if(u!==null&&u!==undefined&&u!=='')return Number(u);
+        }
+      }
+    }
+    return null;
   }
   function renderPlayerHeader(){
     if(!live?.ok||!seasonIsLive())return;
