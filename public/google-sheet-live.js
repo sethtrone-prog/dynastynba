@@ -46,7 +46,7 @@
   function renderOverviewKpis(){
     if(!live?.ok||!seasonIsLive())return;const {fid,tab}=route();if(tab!=='overview'||!fid)return;const data=live.teams?.[fid];if(!data)return;
     const row=document.getElementById('teamOverviewKpis');if(!row)return;
-    const yi=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').startsWith(String(live.season)));
+    const yi=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-')===`${Number(live.season)-1}-${live.season}`);
     const totalUnits=yi>=0?Number(data.totals?.[yi]||0):0;
     const active=(data.main||[]).filter(r=>r?.display&&r.slot!=='TW').length;
     const gLeague=(data.gLeague||[]).filter(r=>r?.display).length;
@@ -63,7 +63,7 @@
   function liveContractUnitsForPlayer(playerName){
     if(!live?.ok||!playerName)return null;
     const n=String(playerName).trim().toLowerCase();
-    const yearIndex=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').startsWith(String(live.season)));
+    const yearIndex=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-')===`${Number(live.season)-1}-${live.season}`);
     if(yearIndex<0)return null;
     for(const team of Object.values(live.teams||{})){
       for(const row of team.main||[]){
