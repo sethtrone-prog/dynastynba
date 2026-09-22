@@ -107,7 +107,10 @@
     const badge=document.querySelector('.player-command .base-salary-badge');if(badge)badge.textContent=units+' Unit'+(units===1?'':'s');
     const contract=document.getElementById('playerContractUnits');if(contract)contract.textContent=String(units);
   }
-  function render(){setTimeout(()=>{renderCap();renderOverviewKpis();renderPicks();renderPlayerHeader();renderFreeAgencyOwnership();},80);}
+  function render(){
+    const apply=()=>{renderCap();renderOverviewKpis();renderPicks();renderPlayerHeader();renderFreeAgencyOwnership();};
+    setTimeout(apply,80);setTimeout(apply,250);setTimeout(apply,700);
+  }
   async function refresh(){try{const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'}),data=await response.json();if(response.ok&&data?.ok&&data?.season&&data?.teams){live=data;window.DYNASTY_LIVE_SHEET=data;ensureSeasonOption();render();}else console.info('Dynasty live sheet fallback active:',data?.message||response.status);}catch(err){console.info('Dynasty live sheet fallback active:',err?.message||err);}}
   window.addEventListener('hashchange',render);document.getElementById('seasonSelect')?.addEventListener('change',render);refresh();setInterval(refresh,REFRESH_MS);
 })();
