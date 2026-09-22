@@ -7,7 +7,7 @@
     P0436:'P0047', P0277:'P0054', P0419:'P0054', P0333:'P0055',
     P0069:'P0199', P0071:'P0188', P0086:'P0307', P0112:'P0194',
     P0477:'P0129', P0269:'P0136', P0226:'P0160', P0292:'P0363',
-    P0514:'P0470'
+    P0514:'P0470', P0255:'P0303'
   };
   const NAMES = {
     P0165:'Marcus Morris Sr', P0490:'Jimmy Butler III', P0103:'Elfrid Payton',
@@ -17,7 +17,7 @@
     P0054:'Bogdan Bogdanovic', P0055:'Spencer Dinwiddie', P0199:'Nicolas Batum',
     P0188:'Paul Millsap', P0307:'Malcolm Brogdon', P0194:'Victor Oladipo',
     P0129:'Giannis Antetokounmpo', P0136:'Bojan Bogdanovic', P0160:'Markelle Fultz',
-    P0363:'Nic Claxton', P0470:'Kasparas Jakucionis'
+    P0363:'Nic Claxton', P0470:'Kasparas Jakucionis', P0303:'Bones Hyland'
   };
   const canonical = id => MERGE[id] || id;
   const mergeDb = db => {
