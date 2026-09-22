@@ -102,6 +102,16 @@
   letter-spacing:.2px;
 }
 
+/* Keep TEAM TOTAL gold and align each total directly under its season values. */
+.live-sheet-cap-grid .team-total-row .contract-player-col{
+  color:#f2c55d;
+}
+.live-sheet-cap-grid .team-total-row .contract-year-total{
+  text-align:center;
+  padding-left:8px;
+  padding-right:8px;
+}
+
 .live-sheet-cap-grid .two-way-cap-exempt{
   background:rgba(49,199,122,.065) !important;
 }
