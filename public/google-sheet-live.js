@@ -68,8 +68,10 @@
   function renderOverviewKpis(){
     if(!live?.ok||!seasonIsLive())return;const {fid,tab}=route();if(tab!=='overview'||!fid)return;const data=live.teams?.[fid];if(!data)return;
     const row=document.getElementById('teamOverviewKpis');if(!row)return;
-    const yi=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-')===`${Number(live.season)-1}-${live.season}`);
-    const totalUnits=yi>=0?Number(data.totals?.[yi]||0):0;
+    const currentYear=`${Number(live.season)-1}-${Number(live.season)}`;
+    let yi=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').replace(/\s+/g,'')===currentYear);
+    if(yi<0)yi=0;
+    const totalUnits=(data.main||[]).reduce((sum,r)=>r?.slot==='TW'?sum:sum+(Number(r?.units?.[yi])||0),0);
     const active=(data.main||[]).filter(r=>r?.display&&r.slot!=='TW').length;
     const gLeague=(data.gLeague||[]).filter(r=>r?.display).length;
     let transactions=0;
