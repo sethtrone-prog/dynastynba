@@ -53,3 +53,9 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
 .corrected-cap-grid tbody tr.two-way-cap-exempt>td{background:rgba(45,145,92,.16) !important}
 .live-sheet-cap-grid tbody tr.two-way-cap-exempt:hover>td,
 .corrected-cap-grid tbody tr.two-way-cap-exempt:hover>td{background:rgba(45,145,92,.22) !important}
+
+/* Overview roster hover — lighten the row while preserving its existing table color */
+.team-panel .corrected-cap-grid tbody tr:not(.two-way-cap-exempt):hover>td,
+.team-panel .live-sheet-cap-grid tbody tr:not(.two-way-cap-exempt):hover>td{
+  background:rgba(255,255,255,.055)!important;
+}
