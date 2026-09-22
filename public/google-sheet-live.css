@@ -225,6 +225,25 @@
     width:180px;
   }
 
+  /* Mobile roster entries stay on one line; JS scales only rows that need extra room. */
+  .live-sheet-cap-grid .roster-player-line{
+    flex-wrap:nowrap;
+    gap:7px;
+    white-space:nowrap;
+  }
+
+  .live-sheet-cap-grid .roster-player-name{
+    white-space:nowrap;
+  }
+
+  .live-sheet-cap-grid .roster-mobile-fit-content{
+    flex:1 1 auto;
+    min-width:0;
+    display:block;
+    white-space:nowrap;
+    overflow:hidden;
+  }
+
   .live-sheet-cap-grid .contract-year-head,
   .live-sheet-cap-grid .contract-year-unit,
   .live-sheet-cap-grid .contract-year-total,
