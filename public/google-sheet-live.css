@@ -263,3 +263,7 @@
 .live-sheet-g-league .g-league-table tbody tr:hover>td{
   background:rgba(127,192,255,.05);
 }
+
+/* Overview roster hover: apply to the live contract table cells with sufficient contrast. */
+.corrected-overview-roster-stack .live-sheet-cap-grid tbody tr:not(.team-total-row):not(.two-way-cap-exempt):hover > td{background:rgba(127,192,255,.10) !important;transition:background .12s ease}
+.corrected-overview-roster-stack .live-sheet-g-league .g-league-table tbody tr:hover > td{background:rgba(127,192,255,.10) !important;transition:background .12s ease}
