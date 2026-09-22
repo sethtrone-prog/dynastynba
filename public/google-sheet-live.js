@@ -21,16 +21,16 @@
     const raw=String(text),dbPlayers=(typeof DB!=='undefined'&&DB?.Players)?DB.Players:[];
     const clean=v=>String(v||'').toLowerCase().normalize('NFKD').replace(/[’'`]/g,'').replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
     const aliases={
-      'dereck lively':'dereck lively ii',
-      'derik queen':'derik queen',
-      'jaime jaquez':'jaime jaquez jr',
-      'daniss jenkins':'daniss jenkins',
-      'rasheer fleming':'rasheer fleming'
+      'dereck lively':{name:'dereck lively ii',id:'P0540'},
+      'derik queen':{name:'derik queen'},
+      'jaime jaquez':{name:'jaime jaquez jr',id:'P0381'},
+      'daniss jenkins':{name:'daniss jenkins'},
+      'rasheer fleming':{name:'rasheer fleming'}
     };
     const rawClean=clean(raw);
     const aliasKey=Object.keys(aliases).find(key=>rawClean.includes(key));
     let match=null;
-    if(aliasKey)match=dbPlayers.find(p=>clean(p?.Player_Name)===aliases[aliasKey]);
+    if(aliasKey){const a=aliases[aliasKey];match=(a.id&&dbPlayers.find(p=>p?.Player_ID===a.id))||dbPlayers.find(p=>clean(p?.Player_Name)===a.name);}
     if(!match){
       const players=dbPlayers.filter(p=>p?.Player_ID&&p?.Player_Name).slice().sort((x,y)=>String(y.Player_Name).length-String(x.Player_Name).length);
       match=players.find(p=>rawClean.includes(clean(p.Player_Name)));
