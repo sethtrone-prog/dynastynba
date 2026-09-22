@@ -26,6 +26,17 @@
     return `${esc(before)}<span class="player-link roster-player-name" role="link" tabindex="0" onclick="event.stopPropagation();go('player/${esc(match.Player_ID)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();go('player/${esc(match.Player_ID)}')}">${esc(shown)}</span>${esc(after)}`;
   }
   function playerCell(row,marker){const badge=marker?`<span class="roster-count-badge${marker==='TW'?' roster-two-way-badge':''}">${esc(marker)}</span>`:'',name=row.display?linkedPlayerName(row.display):'<span class="cap-empty-slot">Open slot</span>';return `<span class="roster-player-line">${badge}${name}</span>`;}
+  function fitMobileRosterNames(){
+    if(!matchMedia('(max-width:700px)').matches)return;
+    document.querySelectorAll('.live-sheet-cap-grid .roster-player-line').forEach(line=>{
+      line.style.fontSize='';
+      const badge=line.querySelector('.roster-count-badge'),available=line.clientWidth-(badge?badge.offsetWidth+7:0);
+      if(available<=0)return;
+      let size=12;
+      line.style.fontSize=size+'px';
+      while(line.scrollWidth>line.clientWidth&&size>8.5){size-=.5;line.style.fontSize=size+'px';}
+    });
+  }
 
   function renderCap(){
     if(!live?.ok||!seasonIsLive())return;
@@ -41,6 +52,7 @@
     const section=document.createElement('section');section.className='card team-panel g-league-reserves-card corrected-g-league live-sheet-g-league';
     section.innerHTML=`<div class="card-pad section-title"><div><div class="eyebrow">DEVELOPMENT ROSTER</div><h2>G-League</h2></div><span>5 roster slots · does not count toward cap</span></div><div class="table-wrap"><table class="data-table contract-year-grid g-league-table"><thead><tr><th class="contract-player-col">Player</th>${years.map(y=>`<th class="contract-year-head">${esc(y)}</th>`).join('')}</tr></thead><tbody>${(data.gLeague||[]).slice(0,5).map(row=>`<tr><td class="contract-player-col">${row.display?linkedPlayerName(row.display):'<span class="cap-empty-slot">Open slot</span>'}</td>${unitCells(row.units,years)}</tr>`).join('')}</tbody></table></div>`;
     let stack=panel.closest('.corrected-overview-roster-stack');if(!stack){stack=document.createElement('div');stack.className='corrected-overview-roster-stack';panel.parentNode.insertBefore(stack,panel);stack.appendChild(panel);}stack.appendChild(section);
+    requestAnimationFrame(fitMobileRosterNames);
   }
 
   function renderPicks(){
