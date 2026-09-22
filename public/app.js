@@ -43,7 +43,7 @@ function teamPage(fid,tab){
   let ownerHist=DB['Franchise Seasons'].filter(x=>x.Franchise_ID===fid).slice().sort((a,b)=>Number(b.Workbook_Year)-Number(a.Workbook_Year));
   let txAll=DB.Transactions.filter(x=>x.Franchise_ID===fid).slice().sort((a,b)=>String(txDate(b)).localeCompare(String(txDate(a))));
   let tx=txAll.filter(x=>x.Season_ID===sid);
-  let picks=(DB['Rookie Draft Picks']||[]).filter(x=>x.Current_Franchise_ID===fid||x.Original_Franchise_ID===fid||x.Franchise_ID===fid||x.Current_Owner_ID===f.Current_Owner_ID);
+  let picks=(DB['Rookie Draft Picks']||[]).filter(x=>x.Franchise_ID===fid||x.Current_Franchise_ID===fid);
   let title=e.ESPN_Team_Name||f.Franchise_Name||fid;
   let tabs=[['overview','Overview'],['roster','Roster'],['contracts','Contracts'],['picks','Picks'],['transactions','Transactions'],['history','History']];
   let tabbar=`<div class="team-tabs">${tabs.map(([k,l])=>`<button class="${tab===k?'active':''}" onclick="go('team/${fid}/${k}')">${l}</button>`).join('')}</div>`;
