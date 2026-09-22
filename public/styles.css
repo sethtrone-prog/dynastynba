@@ -40,3 +40,23 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
 
 /* Live ESPN fantasy-team logos replace initials while preserving existing avatar geometry. */
 .team-logo-mark{overflow:hidden;display:inline-flex;align-items:center;justify-content:center}.team-logo-mark img{width:100%;height:100%;object-fit:contain;display:block}
+
+/* Teams index: compact crest aligned to the left of the team text, matching the individual team banner treatment. */
+.team-card{display:grid;grid-template-columns:58px minmax(0,1fr);column-gap:14px;align-items:center}
+.team-card .team-card-logo{grid-column:1;grid-row:1 / span 4;width:52px;height:52px;min-width:52px;align-self:center}
+.team-card>.eyebrow,.team-card>h3,.team-card>.owner,.team-card>.team-meta{grid-column:2}
+.team-card>.eyebrow{grid-row:1}
+.team-card>h3{grid-row:2}
+.team-card>.owner{grid-row:3}
+.team-card>.team-meta{grid-row:4}
+
+/* Teams index crests: use the same gold circular frame as individual team banners. */
+.team-card .team-card-logo{border-radius:50%;border:2px solid #d9a93b;background:radial-gradient(circle,#173e62,#06182b);box-shadow:inset 0 0 0 4px rgba(255,255,255,.035);display:grid;place-items:center;overflow:hidden}
+
+/* Overview roster rows: mirror the table-row hover/highlight interaction used elsewhere. */
+.team-panel .live-sheet-cap-grid tbody tr:not(.team-total-row):hover>td,
+.team-panel .corrected-cap-grid tbody tr:not(.team-total-row):hover>td,
+.team-panel .team-table tbody tr:not(.team-total-row):hover>td{
+  background:rgba(255,255,255,.055);
+  transition:background-color .14s ease;
+}
