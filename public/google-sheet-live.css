@@ -233,8 +233,15 @@
   }
 
   .live-sheet-cap-grid .roster-player-name{
-    min-width:0;
     white-space:nowrap;
+  }
+
+  .live-sheet-cap-grid .roster-mobile-fit-content{
+    flex:1 1 auto;
+    min-width:0;
+    display:block;
+    white-space:nowrap;
+    overflow:hidden;
   }
 
   .live-sheet-cap-grid .contract-year-head,
