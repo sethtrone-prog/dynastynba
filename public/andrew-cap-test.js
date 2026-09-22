@@ -52,13 +52,16 @@
     const panel=table.closest('.team-panel');
     if(!panel)return;
 
+    let activeNumber=0;
+    const numberedRows=data.main.map(row=>{
+      const tw=String(row.slot||'').trim().toUpperCase()==='TW';
+      const marker=!tw&&row.display?String(++activeNumber):'';
+      return {row,tw,marker};
+    });
     table.classList.add('contract-year-grid','corrected-cap-grid');
     table.innerHTML=`<thead><tr><th class="contract-player-col">Player</th>${YEARS.map(y=>`<th class="contract-year-head">${y}</th>`).join('')}</tr></thead>
-      <tbody>${data.main.map(row=>{
-        const tw=String(row.slot||'').trim().toUpperCase()==='TW';
-        return `<tr class="contract-roster-row${tw?' two-way-cap-exempt':''}"><td class="contract-player-col">${playerCell(row,tw)}</td>${unitCells(row.units)}</tr>`;
-      }).join('')}</tbody>
-      <tfoot><tr class="contract-grid-total"><th>CAP TOTAL</th>${data.totals.map(v=>`<th class="contract-year-total">${v ?? 0}</th>`).join('')}</tr></tfoot>`;
+      <tbody>${numberedRows.map(({row,tw,marker})=>`<tr class="contract-roster-row${tw?' two-way-cap-exempt':''}"><td class="contract-player-col"><span class="roster-player-line">${marker?`<span class="roster-count-badge">${marker}</span>`:''}${playerCell(row,tw)}</span></td>${unitCells(row.units)}</tr>`).join('')}
+      <tr class="team-total-row"><td class="contract-player-col"><strong>TEAM TOTAL</strong></td>${data.totals.map(v=>`<td class="contract-year-total"><strong>${v ?? 0}</strong></td>`).join('')}</tr></tbody>`;
 
     document.querySelector('.g-league-reserves-card')?.remove();
     const section=document.createElement('section');
