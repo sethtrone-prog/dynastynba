@@ -48,15 +48,8 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
 .team-card .team-card-logo~.eyebrow,.team-card .team-card-logo~h3,.team-card .team-card-logo~.owner,.team-card .team-card-logo~.team-meta{margin-left:68px}
 @media(max-width:700px){.team-card .team-card-logo{left:14px;width:46px;height:46px}.team-card .team-card-logo~.eyebrow,.team-card .team-card-logo~h3,.team-card .team-card-logo~.owner,.team-card .team-card-logo~.team-meta{margin-left:58px}}
 
-/* Restore Two-Way roster row shading */
-.live-sheet-cap-grid tbody tr.two-way-cap-exempt,
+/* Two-Way roster row shading — subtle green */
 .live-sheet-cap-grid tbody tr.two-way-cap-exempt>td,
-.corrected-cap-grid tbody tr.two-way-cap-exempt>td{
-  background-color:#173f2d !important;
-  box-shadow:inset 0 0 0 9999px rgba(38,166,91,.12) !important
-}
+.corrected-cap-grid tbody tr.two-way-cap-exempt>td{background:rgba(45,145,92,.16) !important}
 .live-sheet-cap-grid tbody tr.two-way-cap-exempt:hover>td,
-.corrected-cap-grid tbody tr.two-way-cap-exempt:hover>td{
-  background-color:#1b4a35 !important;
-  box-shadow:inset 0 0 0 9999px rgba(38,166,91,.16) !important
-}
+.corrected-cap-grid tbody tr.two-way-cap-exempt:hover>td{background:rgba(45,145,92,.22) !important}
