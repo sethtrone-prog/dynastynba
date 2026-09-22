@@ -257,3 +257,9 @@
     padding-right:9px;
   }
 }
+
+/* Match transaction-log row hover highlighting on Overview rosters */
+.live-sheet-cap-grid tbody tr:not(.team-total-row):hover>td,
+.live-sheet-g-league .g-league-table tbody tr:hover>td{
+  background:rgba(127,192,255,.05);
+}
