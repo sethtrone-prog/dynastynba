@@ -92,15 +92,15 @@ function playerPage(pid){
   let cs=DB.Contracts.filter(x=>x.Player_ID===pid).slice().sort((a,b)=>yearOf(b)-yearOf(a));
   let name=String(p.Player_Name||'').trim().toLowerCase();
   let tx=DB.Transactions.filter(x=>name&&[txAsset(x),x.Details].some(v=>String(v||'').toLowerCase().includes(name))).slice().sort((a,b)=>String(txDate(b)).localeCompare(String(txDate(a))));
-  let current=rs.find(x=>x.Season_ID===sid)||rs[0];
-  let currentContract=cs.find(x=>x.Season_ID===sid)||cs[0];
+  let current=rs.find(x=>x.Season_ID===sid)||null;
+  let currentContract=current?cs.find(x=>x.Season_ID===sid&&x.Franchise_ID===current.Franchise_ID):null;
   let draft=(DB['Rookie Draft Picks']||[]).find(x=>String(x.Selection||'').trim().toLowerCase()===name);
   let espn=(DB['ESPN Rosters']||[]).find(x=>x.Player_ID===pid)||{};
   let years=[...new Set(rs.map(yearOf).filter(Boolean))].sort((a,b)=>b-a);
   let currentTeam=current?franchiseLabel(current.Franchise_ID):'Free agent / no roster record';
   let currentOwner=current?ownerForSeason(current.Franchise_ID,yearOf(current))||franchise(current.Franchise_ID).Current_Owner:'';
   let draftText=draft?`${draft.Workbook_Year||String(draft.Season_ID||'').replace('S','')} · Pick ${draft.Overall_Pick||'—'}`:'Not found in rookie draft archive';
-  let headerUnits=currentContract?.Units??baseSalary(p.Player_Name||pid);let hero=`<section class="player-command"><div><h1>${esc(p.Player_Name||pid)} <span class="base-salary-badge">${esc(headerUnits)} Unit${Number(headerUnits)===1?'':'s'}</span></h1><p id="playerNbaTeam">${esc(nbaTeamName(p))}</p></div><div class="player-status-panel"><b>${current?esc(current.Roster_Status||'Rostered'):'Unrostered'}</b><span>${esc(currentTeam)}</span>${currentOwner?`<small>${esc(currentOwner)}</small>`:''}</div></section>`;
+  let headerUnits=current?(currentContract?.Units??baseSalary(p.Player_Name||pid)):baseSalary(p.Player_Name||pid);let hero=`<section class="player-command"><div><h1>${esc(p.Player_Name||pid)} <span class="base-salary-badge">${esc(headerUnits)} Unit${Number(headerUnits)===1?'':'s'}</span></h1><p id="playerNbaTeam">${esc(nbaTeamName(p))}</p></div><div class="player-status-panel"><b>${current?esc(current.Roster_Status||'Rostered'):'Unrostered'}</b><span>${esc(currentTeam)}</span>${currentOwner?`<small>${esc(currentOwner)}</small>`:''}</div></section>`;
   let rosterHistory=rs.map(r=>`<tr><td>${yearOf(r)||'—'}</td><td><button class="inline-link" onclick="go('team/${r.Franchise_ID}/roster')">${esc(franchiseLabel(r.Franchise_ID))}</button></td><td>${esc(ownerForSeason(r.Franchise_ID,yearOf(r))||'—')}</td><td><span class="roster-status ${String(r.Roster_Status||'').toLowerCase()}">${esc(r.Roster_Status||'')}</span></td><td>${esc(r.Slot||'—')}</td></tr>`).join('');
   let contractHistory=cs.map(c=>`<tr><td>${yearOf(c)||'—'}</td><td>${esc(c.Units??'—')}</td><td>${esc(c.Contract_Type||'—')}</td><td>${esc(c.Option_Info||'—')}</td><td>${esc(c.End_Season||'—')}</td><td><button class="inline-link" onclick="go('team/${c.Franchise_ID}/contracts')">${esc(franchiseLabel(c.Franchise_ID))}</button></td></tr>`).join('');
   let txRows=tx.map(x=>`<div class="transaction-row"><time>${esc(txDate(x))}</time><span class="move-badge">${esc(txMove(x))}</span><div><b>${esc(txAsset(x)||'League move')}</b><p>${esc(x.Details||'')}</p>${x.Franchise_ID?`<button class="inline-link" onclick="go('team/${x.Franchise_ID}/transactions')">${esc(franchiseLabel(x.Franchise_ID))}</button>`:''}</div></div>`).join('');
