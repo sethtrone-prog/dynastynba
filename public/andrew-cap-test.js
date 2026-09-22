@@ -82,6 +82,11 @@
     const gLeagueCount=Math.min(5,data.gLeague.filter(row=>String(row.display||'').trim()).length);
     const gLeagueKpi=document.getElementById('overviewGLeaguePlayers');
     if(gLeagueKpi)gLeagueKpi.textContent=String(gLeagueCount);
+
+    // Active Players counts standard active-roster players only; Two-Way players are excluded.
+    const activeCount=data.main.filter(row=>String(row.display||'').trim() && String(row.slot||'').trim().toUpperCase()!=='TW').length;
+    const activeKpi=document.getElementById('overviewActivePlayers');
+    if(activeKpi)activeKpi.textContent=String(activeCount);
   }
 
   function schedule() { setTimeout(renderCorrectedCapSheet,25); }
