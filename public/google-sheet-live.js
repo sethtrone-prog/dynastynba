@@ -19,10 +19,26 @@
   function linkedPlayerName(text){
     if(!text)return '<span class="cap-empty-slot">Open slot</span>';
     const raw=String(text),dbPlayers=(typeof DB!=='undefined'&&DB?.Players)?DB.Players:[];
+    const aliases={'dereck lively':'Dereck Lively II','derik queen':'Derik Queen','jaime jaquez':'Jaime Jaquez Jr.','daniss jenkins':'Daniss Jenkins','rasheer fleming':'Rasheer Fleming'};
+    const clean=v=>String(v||'').toLowerCase().normalize('NFKD').replace(/[’'\`]/g,'').replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim();
+    const rawClean=clean(raw),aliasKey=Object.keys(aliases).find(a=>rawClean.includes(a)),target=aliasKey?aliases[aliasKey]:null;
+    const players=dbPlayers.filter(p=>p?.Player_ID&&p?.Player_Name).slice().sort((a,b)=>String(b.Player_Name).length-String(a.Player_Name).length);
+    let match=target?players.find(p=>clean(p.Player_Name)===clean(target)):null;
+    if(!match)match=players.find(p=>rawClean.includes(clean(p.Player_Name)));
+    if(!match)return `<span class="roster-player-name">${esc(raw)}</span>`;
+    const displayKey=aliasKey||clean(match.Player_Name),startClean=rawClean.indexOf(displayKey);
+    const shownName=aliasKey?raw.match(new RegExp(aliasKey.replace(/[.*+?^$()|[\]\\]/g,'\\  function linkedPlayerName(text){
+    if(!text)return '<span class="cap-empty-slot">Open slot</span>';
+    const raw=String(text),dbPlayers=(typeof DB!=='undefined'&&DB?.Players)?DB.Players:[];
     const players=dbPlayers.filter(p=>p?.Player_ID&&p?.Player_Name).slice().sort((a,b)=>String(b.Player_Name).length-String(a.Player_Name).length);
     const lower=raw.toLowerCase(),match=players.find(p=>lower.includes(String(p.Player_Name).toLowerCase()));
     if(!match)return `<span class="roster-player-name">${esc(raw)}</span>`;
     const playerName=String(match.Player_Name),start=lower.indexOf(playerName.toLowerCase()),before=raw.slice(0,start),shown=raw.slice(start,start+playerName.length),after=raw.slice(start+playerName.length);
+    return `${esc(before)}<span class="player-link roster-player-name" role="link" tabindex="0" onclick="event.stopPropagation();go('player/${esc(match.Player_ID)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();go('player/${esc(match.Player_ID)}')}">${esc(shown)}</span>${esc(after)}`;
+  }'),'i'))?.[0]:match.Player_Name;
+    const shown=shownName||match.Player_Name,start=raw.toLowerCase().indexOf(String(shown).toLowerCase());
+    if(start<0)return `<span class="player-link roster-player-name" role="link" tabindex="0" onclick="event.stopPropagation();go('player/${esc(match.Player_ID)}')">${esc(raw)}</span>`;
+    const before=raw.slice(0,start),after=raw.slice(start+shown.length);
     return `${esc(before)}<span class="player-link roster-player-name" role="link" tabindex="0" onclick="event.stopPropagation();go('player/${esc(match.Player_ID)}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();event.stopPropagation();go('player/${esc(match.Player_ID)}')}">${esc(shown)}</span>${esc(after)}`;
   }
   function playerCell(row,marker){const badge=marker?`<span class="roster-count-badge${marker==='TW'?' roster-two-way-badge':''}">${esc(marker)}</span>`:'',name=row.display?linkedPlayerName(row.display):'<span class="cap-empty-slot">Open slot</span>';return `<span class="roster-player-line">${badge}${name}</span>`;}
