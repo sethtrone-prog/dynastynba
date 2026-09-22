@@ -29,12 +29,16 @@
   function fitMobileRosterNames(){
     if(!matchMedia('(max-width:700px)').matches)return;
     document.querySelectorAll('.live-sheet-cap-grid .roster-player-line').forEach(line=>{
-      line.style.fontSize='';
-      const badge=line.querySelector('.roster-count-badge'),available=line.clientWidth-(badge?badge.offsetWidth+7:0);
-      if(available<=0)return;
+      const badge=line.querySelector('.roster-count-badge');
+      const pieces=[...line.childNodes].filter(node=>node!==badge);
+      let content=document.createElement('span');
+      content.className='roster-mobile-fit-content';
+      pieces.forEach(node=>content.appendChild(node));
+      if(!line.querySelector('.roster-mobile-fit-content'))line.appendChild(content);
+      else content=line.querySelector('.roster-mobile-fit-content');
+      content.style.fontSize='12px';
       let size=12;
-      line.style.fontSize=size+'px';
-      while(line.scrollWidth>line.clientWidth&&size>8.5){size-=.5;line.style.fontSize=size+'px';}
+      while(content.scrollWidth>content.clientWidth&&size>8){size-=.5;content.style.fontSize=size+'px';}
     });
   }
 
