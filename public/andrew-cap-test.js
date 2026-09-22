@@ -77,6 +77,11 @@
       stack.appendChild(panel);
     }
     stack.appendChild(section);
+
+    // Keep the Overview KPI in sync with the rendered G-League roster.
+    const gLeagueCount=Math.min(5,data.gLeague.filter(row=>String(row.display||'').trim()).length);
+    const gLeagueKpi=document.getElementById('overviewGLeaguePlayers');
+    if(gLeagueKpi)gLeagueKpi.textContent=String(gLeagueCount);
   }
 
   function schedule() { setTimeout(renderCorrectedCapSheet,25); }
