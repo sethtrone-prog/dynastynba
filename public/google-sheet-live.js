@@ -45,14 +45,15 @@
 
   function renderOverviewKpis(){
     if(!live?.ok||!seasonIsLive())return;const {fid,tab}=route();if(tab!=='overview'||!fid)return;const data=live.teams?.[fid];if(!data)return;
-    const row=document.querySelector('.team-kpi-row');if(!row)return;
+    const row=document.getElementById('teamOverviewKpis');if(!row)return;
     const yi=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').startsWith(String(live.season)));
     const totalUnits=yi>=0?Number(data.totals?.[yi]||0):0;
     const active=(data.main||[]).filter(r=>r?.display&&r.slot!=='TW').length;
     const gLeague=(data.gLeague||[]).filter(r=>r?.display).length;
     let transactions=0;
     if(typeof DB!=='undefined'&&DB?.Transactions){const sid='S'+live.season;transactions=DB.Transactions.filter(x=>x.Franchise_ID===fid&&x.Season_ID===sid).length;}
-    row.innerHTML=\`<div><b>\${totalUnits}</b><span>Total Units</span></div><div><b>\${active}</b><span>Active Players</span></div><div><b>\${transactions}</b><span>Transactions</span></div><div><b>\${gLeague}</b><span>G-League Players</span></div>\`;
+    const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=String(value);};
+    set('overviewTotalUnits',totalUnits);set('overviewActivePlayers',active);set('overviewTransactions',transactions);set('overviewGLeaguePlayers',gLeague);
   }
   function renderPicks(){
     if(!live?.ok||!seasonIsLive())return;const {fid,tab}=route();if(tab!=='picks'||!fid)return;const rows=live.teams?.[fid]?.futurePicks;if(!rows?.length)return;
