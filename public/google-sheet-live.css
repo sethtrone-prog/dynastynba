@@ -221,8 +221,25 @@
 
   .live-sheet-cap-grid .contract-player-col,
   .live-sheet-g-league .contract-player-col{
-    min-width:180px;
-    width:180px;
+    min-width:220px;
+    width:220px;
+  }
+
+  /* Keep long player names and contract annotations inside the player cell on phones. */
+  .live-sheet-cap-grid .roster-player-line{
+    flex-wrap:wrap;
+    column-gap:7px;
+    row-gap:3px;
+    white-space:normal;
+    overflow-wrap:break-word;
+  }
+
+  .live-sheet-cap-grid .roster-player-name{
+    min-width:0;
+    max-width:100%;
+    white-space:normal;
+    overflow-wrap:break-word;
+    line-height:1.25;
   }
 
   .live-sheet-cap-grid .contract-year-head,
