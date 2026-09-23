@@ -5,20 +5,23 @@ const CONSTITUTION_DOC_ID='1CIp8vhs0seaLvyr3_Nni3bmJIs4CbYBSleMKR2rbv7g';
 function esc(s){return String(s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
 function cssColor(c){return c?.color?.rgbColor?Object.values(c.color.rgbColor).map(v=>Math.round((v||0)*255)):null}
 function renderParagraph(p){
-  const style=p.paragraphStyle||{},named=style.namedStyleType||'',align=style.alignment||'START';
+  const style=p.paragraphStyle||{},named=style.namedStyleType||'',align=style.alignment||'START',bullet=p.bullet||null;
+  const pt=v=>v?.magnitude?`${v.magnitude}pt`:'';
+  const pstyles=[`text-align:${align.toLowerCase()}`];if(style.indentStart?.magnitude)pstyles.push(`margin-left:${style.indentStart.magnitude}pt`);if(style.indentFirstLine?.magnitude)pstyles.push(`text-indent:${style.indentFirstLine.magnitude-style.indentStart?.magnitude||style.indentFirstLine.magnitude}pt`);if(style.lineSpacing)pstyles.push(`line-height:${style.lineSpacing/100}`);if(style.spaceAbove?.magnitude)pstyles.push(`margin-top:${style.spaceAbove.magnitude}pt`);if(style.spaceBelow?.magnitude)pstyles.push(`margin-bottom:${style.spaceBelow.magnitude}pt`);
   let html='';
   for(const pe of p.elements||[]){
     const tr=pe.textRun;if(!tr)continue;
     const s=tr.textStyle||{};let t=esc(tr.content||'').replace(/\n/g,'<br>');
     if(s.bold)t='<strong>'+t+'</strong>';if(s.italic)t='<em>'+t+'</em>';if(s.underline)t='<u>'+t+'</u>';
-    const spans=[];if(s.fontSize?.magnitude)spans.push('font-size:'+s.fontSize.magnitude+s.fontSize.unit.toLowerCase());
+    const spans=[];if(s.fontSize?.magnitude)spans.push('font-size:'+s.fontSize.magnitude+s.fontSize.unit.toLowerCase());if(s.weightedFontFamily?.fontFamily)spans.push('font-family:'+JSON.stringify(s.weightedFontFamily.fontFamily));
     const col=cssColor(s.foregroundColor);if(col)spans.push('color:rgb('+col.join(',')+')');
     if(spans.length)t='<span style="'+spans.join(';')+'">'+t+'</span>';html+=t;
   }
   if(!html.replace(/<br>/g,'').trim())return '<div class="gdoc-space"></div>';
   const tag=/TITLE|SUBTITLE|HEADING_1/.test(named)?'h2':/HEADING_[23]/.test(named)?'h3':'div';
-  const cls='gdoc-paragraph '+named.toLowerCase().replace(/_/g,'-');
-  return '<'+tag+' class="'+cls+'" style="text-align:'+align.toLowerCase()+'">'+html+'</'+tag+'>';
+  const cls='gdoc-paragraph '+named.toLowerCase().replace(/_/g,'-')+(bullet?' gdoc-bullet level-'+(bullet.nestingLevel||0):'');
+  const marker=bullet?'<span class="gdoc-marker">•</span>':'';
+  return '<'+tag+' class="'+cls+'" style="'+pstyles.join(';')+'">'+marker+html+'</'+tag+'>';
 }
 function renderElements(elements){
   let out='';
