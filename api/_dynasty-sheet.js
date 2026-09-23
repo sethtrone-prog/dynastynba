@@ -10,7 +10,7 @@ export async function getGoogleToken(){
   const header=b64url(JSON.stringify({alg:'RS256',typ:'JWT'}));
   const payload=b64url(JSON.stringify({
     iss:email,
-    scope:'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/drive.metadata.readonly',
+    scope:'https://www.googleapis.com/auth/spreadsheets.readonly https://www.googleapis.com/auth/documents.readonly https://www.googleapis.com/auth/drive.metadata.readonly',
     aud:'https://oauth2.googleapis.com/token',iat:now,exp:now+3600
   }));
   const unsigned=`${header}.${payload}`;
