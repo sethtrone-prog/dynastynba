@@ -8,7 +8,7 @@ export default async function handler(req,res){
   try{
     const token=await getGoogleToken();
     const workbook=await resolveDynastyWorkbook(token);
-    const range="'List of Events'!A1:B100";
+    const range="'Calendar'!A1:B100";
     const url=new URL(`https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(workbook.sheetId)}/values/${encodeURIComponent(range)}`);
     url.searchParams.set('majorDimension','ROWS');
     const response=await fetch(url,{headers:{authorization:`Bearer ${token}`}});
