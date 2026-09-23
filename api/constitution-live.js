@@ -28,7 +28,7 @@ function extractDocumentText(doc){
 
 export default async function handler(req,res){
   res.setHeader('Content-Type','application/json; charset=utf-8');
-  res.setHeader('Cache-Control','public, s-maxage=300, stale-while-revalidate=60');
+  res.setHeader('Cache-Control','public, s-maxage=900, stale-while-revalidate=60');
   try{
     const token=await getGoogleToken();
     const url=new URL(`https://docs.googleapis.com/v1/documents/${CONSTITUTION_DOC_ID}`);
@@ -38,8 +38,8 @@ export default async function handler(req,res){
     const doc=await response.json();
     const text=extractDocumentText(doc);
     if(!text) throw new Error('Constitution document returned no readable text');
-    return res.status(200).json({ok:true,title:doc.title||'Fantasy Constitution',revisionId:doc.revisionId||null,refreshSeconds:300,generatedAt:new Date().toISOString(),text});
+    return res.status(200).json({ok:true,title:doc.title||'Fantasy Constitution',revisionId:doc.revisionId||null,refreshSeconds:900,generatedAt:new Date().toISOString(),text});
   }catch(error){
-    return res.status(502).json({ok:false,refreshSeconds:300,message:error?.message||'Google Doc sync failed'});
+    return res.status(502).json({ok:false,refreshSeconds:900,message:error?.message||'Google Doc sync failed'});
   }
 }
