@@ -1,7 +1,7 @@
 /* Beta preview changes. */
 /* Increase the main header logo by 75% from 72px to 126px. */
 .site-header{height:130px}
-.brand-logo{width:126px;height:126px}
+.brand-logo{width:118px;height:118px;border:4px solid var(--orange2);border-radius:50%;padding:4px;box-sizing:border-box;object-fit:contain}
 
 /* Hide redundant ESPN roster tables on team Roster tabs. ESPN archive data remains available for historical calculations. */
 .espn-history-roster{display:none!important}
@@ -25,7 +25,7 @@
 }
 @media(max-width:560px){
   .site-header{height:110px}
-  .brand-logo{width:101px;height:101px}
+  .brand-logo{width:94px;height:94px;border-width:3px;padding:3px}
   nav{top:110px;padding:12px 14px 16px;gap:8px}
   nav button{min-height:54px;padding:15px 16px;font-size:16px}
 }
