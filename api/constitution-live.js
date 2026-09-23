@@ -34,7 +34,7 @@ export default async function handler(req,res){
     const url=new URL(`https://docs.googleapis.com/v1/documents/${CONSTITUTION_DOC_ID}`);
     url.searchParams.set('includeTabsContent','true');
     const response=await fetch(url,{headers:{authorization:`Bearer ${token}`}});
-    if(!response.ok) throw new Error(`Google Docs API returned ${response.status}`);
+    if(!response.ok){const detail=await response.text().catch(()=> '');throw new Error(`Google Docs API returned ${response.status}: ${detail.slice(0,500)}`);}
     const doc=await response.json();
     const text=extractDocumentText(doc);
     if(!text) throw new Error('Constitution document returned no readable text');
