@@ -297,3 +297,13 @@
   .live-sheet-cap-grid tbody .team-total-row > td.contract-player-col{min-width:180px;width:180px !important}
   .live-sheet-cap-grid tbody .team-total-row > td.contract-year-total{min-width:92px;width:92px !important}
 }
+
+
+/* Dead Cap roster rows: mirror the Two-Way highlight treatment in red. */
+.live-sheet-cap-grid .dead-cap-row{
+  background:rgba(220,65,65,.085) !important;
+}
+.corrected-overview-roster-stack .live-sheet-cap-grid tbody tr.dead-cap-row:hover > td{
+  background:rgba(220,65,65,.14) !important;
+  transition:background .12s ease;
+}
