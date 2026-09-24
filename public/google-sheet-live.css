@@ -276,3 +276,13 @@
     padding-right:9px;
   }
 }
+
+
+/* Dead Cap roster rows: same treatment as Two-Way, using red. */
+.live-sheet-cap-grid .dead-cap-row{
+  background:rgba(220,65,65,.085) !important;
+}
+.corrected-overview-roster-stack .live-sheet-cap-grid tbody tr.dead-cap-row:hover > td{
+  background:rgba(220,65,65,.14) !important;
+  transition:background .12s ease;
+}
