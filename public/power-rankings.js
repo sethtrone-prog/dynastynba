@@ -11,12 +11,12 @@ const rankings=[
 {rank:9,fid:'F09-NATE',owner:'Nate',text:`Seems like the white flag has been waived by this beer slugger. Still some good pieces remain, but between a few of the most injury prone players and the lack of depth, I would like to think this team is also chasing the top pick in the 2027 draft.`},
 {rank:10,fid:'F03',owner:'Jake',text:`By far and away the least scary team week to week. Very few legitimate starters, some injury prone players, and guys who will have to play each week no team dreams of having to play. Could (will be) a long season of paying for a good lottery pick.`}
 ];
-// Nate is F07/F09 depending on historical source mappings; resolve by current owner name when available.
 const resolveFid=r=>{if(r.owner!=='Nate')return r.fid;let f=(DB?.Franchises||[]).find(x=>String(x.Current_Owner||'').toLowerCase().includes('nate'));return f?.Franchise_ID||'F09'};
 const powerRankings=()=>{
  const cards=rankings.map(r=>{let fid=resolveFid(r),name=franchiseLabel(fid);return `<article class="power-rank-card" onclick="go('team/${fid}')"><div class="power-rank-number">${r.rank}</div><div class="power-rank-team">${teamMark(fid,name,'power-rank-logo')}<div><div class="power-rank-owner">${esc(r.owner)}</div><h2>${esc(name)}</h2></div></div><p>${esc(r.text)}</p></article>`}).join('');
  layout('Power Rankings','2026–27 Pre-Season Rankings · Published before Week 1',`<div class="power-rankings-intro"><span>PRE-SEASON</span><b>THE FIRST PECKING ORDER OF 2026–27</b><small>Rankings and commentary reflect the author’s preseason view of the league.</small></div><div class="power-rankings-list">${cards}</div>`);
 };
+const oldHome=home;home=function(){oldHome();let primary=document.querySelector('.home-actions .hero-btn.primary');if(primary){primary.setAttribute('onclick',"go('power-rankings')");primary.textContent='VIEW POWER RANKINGS →'}};
 const oldRender=window.render||render;
 render=function(){let base=route.split('/')[0];if(base==='power-rankings')return powerRankings();return oldRender()};window.render=render;
 const oldInitNav=initNav;initNav=function(){if(!navItems.some(x=>x[0]==='power-rankings')){let i=navItems.findIndex(x=>x[0]==='history');navItems.splice(i<0?navItems.length:i,0,['power-rankings','POWER RANKINGS'])}oldInitNav()};
