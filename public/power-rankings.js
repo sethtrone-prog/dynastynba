@@ -16,7 +16,7 @@ const powerRankings=()=>{
  const cards=rankings.map(r=>{let fid=resolveFid(r),name=franchiseLabel(fid);return `<article class="power-rank-card" onclick="go('team/${fid}')"><div class="power-rank-number">${r.rank}</div><div class="power-rank-team">${teamMark(fid,name,'power-rank-logo')}<div><div class="power-rank-owner">${esc(r.owner)}</div><h2>${esc(name)}</h2></div></div><p>${esc(r.text)}</p></article>`}).join('');
  layout('Power Rankings','2026–27 Pre-Season Rankings · Published before Week 1',`<div class="power-rankings-intro"><span>PRE-SEASON</span><b>THE FIRST PECKING ORDER OF 2026–27</b><small>Rankings and commentary reflect the author’s preseason view of the league.</small></div><div class="power-rankings-list">${cards}</div>`);
 };
-const oldHome=home;home=function(){oldHome();let primary=document.querySelector('.home-actions .hero-btn.primary');if(primary){primary.setAttribute('onclick',"go('power-rankings')");primary.textContent='VIEW POWER RANKINGS →'}};
+const oldHome=home;home=function(){oldHome();let buttons=document.querySelectorAll('.home-actions .hero-btn');let primary=buttons[0],secondary=buttons[1];if(primary){primary.setAttribute('onclick',"go('power-rankings')");primary.textContent='VIEW POWER RANKINGS →'}if(secondary){secondary.setAttribute('onclick',"go('wins-pool')");secondary.textContent='WINS POOL STANDINGS'}};
 const oldRender=window.render||render;
 render=function(){let base=route.split('/')[0];if(base==='power-rankings')return powerRankings();return oldRender()};window.render=render;
 const oldInitNav=initNav;initNav=function(){if(!navItems.some(x=>x[0]==='power-rankings')){let i=navItems.findIndex(x=>x[0]==='history');navItems.splice(i<0?navItems.length:i,0,['power-rankings','POWER RANKINGS'])}oldInitNav()};
