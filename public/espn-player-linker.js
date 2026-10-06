@@ -39,7 +39,9 @@
     });
     window.__ESPN_PLAYER_LINK_AUDIT__={feed:feed.length,added,validExisting,unresolved,ambiguous,linked:added+validExisting};
     console.info('ESPN player link audit',window.__ESPN_PLAYER_LINK_AUDIT__);
-    if((location.hash||'').startsWith('#players') && typeof render==='function') render();
+    // Re-render both the Players index and individual player cards after IDs are attached.
+    const hash=location.hash||'';
+    if((hash.startsWith('#players') || hash.startsWith('#player/')) && typeof render==='function') render();
     return true;
   }
 
