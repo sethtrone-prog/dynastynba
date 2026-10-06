@@ -2,13 +2,13 @@
 // Only unique normalized-name matches are auto-linked; ambiguous names remain unresolved.
 (function(){
   const normalize = v => String(v||'').toLowerCase().normalize('NFKD').replace(/[’'`]/g,'').replace(/\b(jr|sr|ii|iii|iv)\b\.?/g,'').replace(/[^a-z0-9]+/g,' ').trim();
-  // The compact ESPN endpoint returns player names in `player` (not `fullName`).
-  // Keep the fallbacks so this linker also works with raw/alternate ESPN payloads.
   const espnName = p => p.player || p.fullName || p.name || p.playerName || p.displayName || p.athleteName || '';
   const espnId = p => p.espnId || p.id || p.playerId || p.athleteId || '';
 
   async function reconcile(){
-    if(!window.DB || !Array.isArray(DB.Players)) return false;
+    // app.js declares DB with top-level `let`, so it is a global lexical binding but NOT window.DB.
+    // Access the shared DB identifier directly instead of checking window.DB.
+    if(typeof DB === 'undefined' || !DB || !Array.isArray(DB.Players)) return false;
     let payload=null;
     try{
       const r=await fetch('/api/espn-player-test?compact=1&season=2026');
@@ -39,7 +39,6 @@
     });
     window.__ESPN_PLAYER_LINK_AUDIT__={feed:feed.length,added,validExisting,unresolved,ambiguous,linked:added+validExisting};
     console.info('ESPN player link audit',window.__ESPN_PLAYER_LINK_AUDIT__);
-    // Re-render both the Players index and individual player cards after IDs are attached.
     const hash=location.hash||'';
     if((hash.startsWith('#players') || hash.startsWith('#player/')) && typeof render==='function') render();
     return true;
@@ -48,6 +47,6 @@
   let tries=0;
   const timer=setInterval(async()=>{
     tries++;
-    if(await reconcile() || tries>20) clearInterval(timer);
+    if(await reconcile() || tries>40) clearInterval(timer);
   },250);
 })();
