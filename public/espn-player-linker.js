@@ -2,7 +2,9 @@
 // Only unique normalized-name matches are auto-linked; ambiguous names remain unresolved.
 (function(){
   const normalize = v => String(v||'').toLowerCase().normalize('NFKD').replace(/[’'`]/g,'').replace(/\b(jr|sr|ii|iii|iv)\b\.?/g,'').replace(/[^a-z0-9]+/g,' ').trim();
-  const espnName = p => p.fullName || p.name || p.playerName || p.displayName || p.athleteName || '';
+  // The compact ESPN endpoint returns player names in `player` (not `fullName`).
+  // Keep the fallbacks so this linker also works with raw/alternate ESPN payloads.
+  const espnName = p => p.player || p.fullName || p.name || p.playerName || p.displayName || p.athleteName || '';
   const espnId = p => p.espnId || p.id || p.playerId || p.athleteId || '';
 
   async function reconcile(){
@@ -16,9 +18,12 @@
     if(!feed.length) return false;
 
     const byName=new Map();
+    const validIds=new Set();
     feed.forEach(p=>{
       const n=normalize(espnName(p)), id=espnId(p);
-      if(!n||!id) return;
+      if(!id) return;
+      validIds.add(String(id));
+      if(!n) return;
       if(!byName.has(n)) byName.set(n,[]);
       byName.get(n).push({id:String(id),player:p});
     });
@@ -26,7 +31,7 @@
     let added=0, validExisting=0, unresolved=0, ambiguous=0;
     DB.Players.forEach(p=>{
       const existing=String(p.ESPN_Player_ID||'').trim();
-      if(existing && feed.some(e=>String(espnId(e))===existing)){ validExisting++; return; }
+      if(existing && validIds.has(existing)){ validExisting++; return; }
       const matches=byName.get(normalize(p.Player_Name))||[];
       if(matches.length===1){ p.ESPN_Player_ID=matches[0].id; added++; }
       else if(matches.length>1) ambiguous++;
