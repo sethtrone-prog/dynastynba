@@ -46,7 +46,7 @@ P0044,"Kevin Huerter",4066372,exact-name-2027,
 P0045,"Cedi Osman",3893016,exact-name-2026,
 P0046,"Dwight Powell",2531367,exact-name-2027,
 P0047,"Dejounte Murray",3907497,existing-verified-2027,3907497
-P0048,"Robert Williams",,unresolved,
+P0048,"Robert Williams",4066211,verified-name-alias-2027,
 P0049,"Kawhi Leonard",6450,existing-verified-2027,6450
 P0050,"Gordon Hayward",4249,exact-name-2026,
 P0051,"Jusuf Nurkic",3102530,exact-name-2027,
@@ -55,7 +55,7 @@ P0053,"DeMarcus Cousins",,unresolved,
 P0054,"Bogdan Bogdanovic",3037789,exact-name-2027,
 P0055,"Spencer Dinwiddie",2580782,exact-name-2027,
 P0056,"Danilo Gallinari",3428,exact-name-2026,
-P0057,"Larry Nance",,unresolved,
+P0057,"Larry Nance",2580365,verified-name-alias-2027,
 P0058,"Ben Simmons",3907387,exact-name-2027,
 P0059,"Jamal Murray",3936299,existing-verified-2027,3936299
 P0060,"Dario Saric",3032978,exact-name-2027,
@@ -104,8 +104,8 @@ P0106,"Willie Cauley Stein",,unresolved,
 P0107,"Jonathan Isaac",4065654,exact-name-2027,
 P0108,"Trae Young",4277905,existing-verified-2027,4277905
 P0109,"Shai Gilgeous-Alexander",4278073,existing-verified-2027,4278073
-P0110,"Victor Olidipo (DPE)",,unresolved,
-P0111,"Mo Wagner",,unresolved,
+P0110,"Victor Olidipo (DPE)",2527963,verified-name-alias-2025,
+P0111,"Mo Wagner",3150844,verified-name-alias-2027,
 P0113,"Joel Embiid",3059318,existing-verified-2027,3059318
 P0114,"Paul George",4251,existing-verified-2027,4251
 P0115,"Bradley Beal",6580,exact-name-2027,
@@ -120,14 +120,14 @@ P0123,"Taurean Prince",2990962,exact-name-2027,
 P0124,"Josh Jackson",,unresolved,
 P0125,"Jayson Tatum",4065648,existing-verified-2027,4065648
 P0126,"Jaren Jackson Jr.",4277961,existing-verified-2027,4277961
-P0127,"Mohammed Bamba",,unresolved,
+P0127,"Mohammed Bamba",4277919,verified-name-alias-2027,
 P0128,"Zhaire Smith",,unresolved,
 P0129,"Giannis Antetokounmpo",3032977,existing-verified-2027,3032977
 P0130,"Otto Porter Jr.",,unresolved,
 P0131,"Andre Drummond",6585,exact-name-2027,
 P0132,"Goran Dragic",,unresolved,
 P0133,"Gary Harris",2999547,exact-name-2027,
-P0134,"TJ Warren",,unresolved,
+P0134,"TJ Warren",2982334,verified-name-alias-2026,
 P0135,"Rodney Hood",,unresolved,
 P0137,"Brook Lopez",3448,exact-name-2027,
 P0138,"Jeremy Lamb",,unresolved,
@@ -135,7 +135,7 @@ P0139,"Justise Winslow",,unresolved,
 P0140,"Domantas Sabonis",3155942,existing-verified-2027,3155942
 P0141,"Lauri Markkanen",4066336,existing-verified-2027,4066336
 P0142,"Dennis Smith Jr",4065697,exact-name-2026,
-P0143,"Kevin Knox",,unresolved,
+P0143,"Kevin Knox",4278075,verified-name-alias-2027,
 P0144,"Kyrie Irving",6442,existing-verified-2027,6442
 P0145,"Clint Capela",3102529,exact-name-2027,
 P0146,"Jonas Valanciunas",6477,existing-verified-2027,6477
@@ -157,7 +157,7 @@ P0163,"Chris Boucher",3948153,exact-name-2027,
 P0164,"Markelle Fultz",4066636,exact-name-2027,
 P0166,"Tristan Thompson",6474,exact-name-2027,
 P0167,"Devonte Graham",3133601,exact-name-2026,
-P0168,"Elfrid Payton (2/2)",,unresolved,
+P0168,"Elfrid Payton (2/2)",2583639,verified-name-alias-2027,
 P0169,"Jarrett Culver",,unresolved,
 P0170,"Carsen Edwards",,unresolved,
 P0171,"Eric Paschall",,unresolved,
@@ -165,7 +165,7 @@ P0172,"Fred VanVleet",2991230,exact-name-2027,
 P0173,"Nassir Little",4395652,exact-name-2026,
 P0174,"Christian Wood",3058254,exact-name-2027,
 P0175,"Rui Hachimura",4066648,exact-name-2027,
-P0176,"Brandon Clarke",,unresolved,
+P0176,"Brandon Clarke",3906665,verified-name-alias-2025,
 P0177,"Grant Williams",4066218,exact-name-2027,
 P0178,"Terence Davis",3919454,exact-name-2027,
 P0179,"Ricky Rubio",,unresolved,
@@ -174,7 +174,7 @@ P0181,"Cody Zeller",2579258,exact-name-2026,
 P0182,"Nickeil Alexander-Walker",4278039,existing-verified-2027,4278039
 P0183,"De'Andre Hunter",4065732,existing-verified-2027,4065732
 P0184,"Joe Harris",2528794,exact-name-2026,
-P0185,"OG Anunonoby",,unresolved,
+P0185,"OG Anunonoby",3934719,verified-name-alias-2027,
 P0186,"Tyler Herro",4395725,existing-verified-2027,4395725
 P0187,"Coby White",4395651,existing-verified-2027,4395651
 P0188,"Paul Millsap",,unresolved,
@@ -183,7 +183,7 @@ P0190,"Kendrick Nunn",3056247,exact-name-2027,
 P0191,"Nemanja Bjelica (1/2)",,unresolved,
 P0192,"Cameron Johnson",3138196,existing-verified-2027,3138196
 P0193,"Duncan Robinson",3157465,exact-name-2027,
-P0194,"Victor Oladipo",,unresolved,
+P0194,"Victor Oladipo",2527963,verified-name-alias-2025,
 P0195,"Zion Williamson",4395628,existing-verified-2027,4395628
 P0196,"Anfernee Simons",4351851,existing-verified-2027,4351851
 P0197,"Goga Bitadze",4348700,exact-name-2027,
@@ -198,7 +198,7 @@ P0205,"Jaxson Hayes",4397077,exact-name-2027,
 P0206,"Kevin Porter Jr",4397140,existing-verified-2027,4397140
 P0207,"Robert Covington",2490620,exact-name-2027,
 P0208,"Mitchell Robinson",4351852,exact-name-2027,
-P0209,"Thad Young (1/2)",,unresolved,
+P0209,"Thad Young (1/2)",3244,verified-name-alias-2026,
 P0211,"Darius Garland",4396907,existing-verified-2027,4396907
 P0212,"Romeo Langford",,unresolved,
 P0213,"KZ Okpala",,unresolved,
@@ -207,7 +207,7 @@ P0215,"Killian Hayes",4683024,exact-name-2027,
 P0216,"Devin Vassell",4395630,existing-verified-2027,4395630
 P0217,"Dillon Brooks",3155526,exact-name-2027,
 P0218,"Mikal Bridges",3147657,existing-verified-2027,3147657
-P0219,"Darius Bazely",,unresolved,
+P0219,"Darius Bazely",4423545,verified-name-alias-2026,
 P0220,"Immanuel Quickley",4395724,existing-verified-2027,4395724
 P0221,"Tre Jones",4395626,exact-name-2027,
 P0222,"Malik Beasley",3907822,exact-name-2027,
@@ -271,13 +271,13 @@ P0284,"Jalen Brunson",3934672,existing-verified-2027,3934672
 P0285,"James Bouknight",4431712,exact-name-2026,
 P0286,"Jalen Johnson",4701230,existing-verified-2027,4701230
 P0287,"Trey Murphy III",4397688,existing-verified-2027,4397688
-P0288,"Collin Sexton - No",,unresolved,
+P0288,"Collin Sexton - No",4277811,verified-name-alias-2027,
 P0289,"Patrick Williams",4431687,existing-verified-2027,4431687
 P0290,"Chet Holmgren",4433255,existing-verified-2027,4433255
 P0291,"Johnny Davis",4432356,exact-name-2027,
 P0293,"Nikola Jovic",4997528,existing-verified-2027,4997528
 P0295,"Keegan Murray",4594327,existing-verified-2027,4594327
-P0297,"A.J. Griffin",,unresolved,
+P0297,"A.J. Griffin",4432585,verified-name-alias-2027,
 P0298,"Jaden Hardy",4868423,exact-name-2027,
 P0299,"Jalen Williams",4593803,existing-verified-2027,4593803
 P0300,"Tari Eason",4433192,existing-verified-2027,4433192
@@ -295,7 +295,7 @@ P0312,"Christian Koloko",4431778,exact-name-2027,
 P0313,"Christian Braun",4431767,existing-verified-2027,4431767
 P0314,"Blake Wesley",4683935,exact-name-2027,
 P0315,"Josh Giddey",4871145,existing-verified-2027,4871145
-P0316,"Malakai Branham",,unresolved,
+P0316,"Malakai Branham",4565201,verified-name-alias-2027,
 P0317,"Jordan Goodwin",4278402,exact-name-2027,
 P0319,"Alperen Sengun",4871144,existing-verified-2027,4871144
 P0320,"Walker Kessler",4433136,existing-verified-2027,4433136
@@ -304,9 +304,9 @@ P0322,"Shaedon Sharpe",4914336,existing-verified-2027,4914336
 P0323,"Ousmane Dieng",4997526,exact-name-2027,
 P0324,"Victor Wembanyama",5104157,existing-verified-2027,5104157
 P0325,"Taylor Hendricks",4684806,exact-name-2027,
-P0326,"Kenyon Martin Jr",,unresolved,
+P0326,"Kenyon Martin Jr",4431828,verified-name-alias-2027,
 P0327,"Simone Fontecchio",3899664,exact-name-2027,
-P0328,"Kenny Lofton Jr",,unresolved,
+P0328,"Kenny Lofton Jr",4585610,verified-name-alias-2027,
 P0329,"Emoni Bates",4433620,exact-name-2027,
 P0330,"Amari Bailey",5105638,exact-name-2027,
 P0331,"Zach Collins",4066650,exact-name-2027,
@@ -348,7 +348,7 @@ P0368,"Jabari Walker",4432446,exact-name-2027,
 P0369,"Olivier-Maxence Prosper",4595400,exact-name-2027,
 P0370,"Kris Murray",4594326,exact-name-2027,
 P0371,"Duop Reath",4066268,exact-name-2027,
-P0372,"Ivan Zubac",,unresolved,
+P0372,"Ivan Zubac",4017837,verified-name-alias-2027,
 P0373,"Toumani Camara",4431736,existing-verified-2027,4431736
 P0374,"Patrick Baldwin Jr",4433246,exact-name-2027,
 P0375,"Jarace Walker",5106060,existing-verified-2027,5106060
@@ -373,7 +373,7 @@ P0393,"Bub Carrington",4845374,existing-verified-2027,4845374
 P0394,"Bronny James",4683774,exact-name-2027,
 P0395,"Tyler Kolek",4433225,exact-name-2027,
 P0396,"Naz Reid",4396971,existing-verified-2027,4396971
-P0397,"TJ McConnell",,unresolved,
+P0397,"TJ McConnell",2530530,verified-name-alias-2027,
 P0398,"Ryan Dunn",4888725,exact-name-2027,
 P0399,"Terrence Shannon Jr.",4432847,exact-name-2027,
 P0400,"Jaylon Tyson",4683747,exact-name-2027,
@@ -390,7 +390,7 @@ P0411,"Tristan Da Silva",4702382,exact-name-2027,
 P0412,"Rob Dillingham",4684275,exact-name-2027,
 P0413,"Zaccharie Risacher",5211175,existing-verified-2027,5211175
 P0414,"Zach Edey",4600663,existing-verified-2027,4600663
-P0415,"Ron Holland II",,unresolved,
+P0415,"Ron Holland II",4683771,verified-name-alias-2027,
 P0416,"Stephon Castle",4845367,existing-verified-2027,4845367
 P0417,"Nikola Topic",5159925,exact-name-2027,
 P0418,"Jarred Vanderbilt",4278077,exact-name-2027,
@@ -400,8 +400,8 @@ P0422,"Kyshawn George",5174563,existing-verified-2027,5174563
 P0423,"Cody Williams",4895758,exact-name-2027,
 P0424,"Yves Missi",5061589,existing-verified-2027,5061589
 P0425,"Isaiah Collier",4683766,existing-verified-2027,4683766
-P0426,"Justin Champaigne",,unresolved,
-P0427,"Jakobe Walter",,unresolved,
+P0426,"Justin Champaigne",4432907,verified-name-alias-2027,
+P0427,"Jakobe Walter",4684272,verified-name-alias-2027,
 P0428,"Justin Edwards",4711297,exact-name-2027,
 P0429,"Adem Bona",5105637,exact-name-2027,
 P0430,"Alex Caruso",2991350,exact-name-2027,
@@ -409,7 +409,7 @@ P0431,"Matas Buzelis",4711294,existing-verified-2027,4711294
 P0432,"Kel'el Ware",5105623,exact-name-2027,
 P0433,"Kyle Filipowski",4684793,exact-name-2027,
 P0434,"Pelle Larsson",4601025,exact-name-2027,
-P0435,"DaRon Holmes III",,unresolved,
+P0435,"DaRon Holmes III",4433607,verified-name-alias-2027,
 P0437,"OG Anunoby",3934719,existing-verified-2027,3934719
 P0438,"Dylan Harper",5037871,exact-name-2027,
 P0439,"Ace Bailey",4873138,exact-name-2027,
@@ -428,7 +428,7 @@ P0452,"Asa Newell",4873201,exact-name-2027,
 P0453,"Daniss Jenkins",5107199,exact-name-2027,
 P0454,"Maxime Raynaud",4898371,exact-name-2027,
 P0455,"Noa Essengue",5242496,exact-name-2027,
-P0456,"Liam McNeely",,unresolved,
+P0456,"Liam McNeely",5239590,verified-name-alias-2027,
 P0457,"Hugo Gonzalez",5175647,exact-name-2027,
 P0458,"Ryan Nembhard",4433629,exact-name-2027,
 P0459,"Rocco Zikarsky",5157587,exact-name-2027,
@@ -470,9 +470,9 @@ P0496,"Cedric Coward",4903027,existing-verified-2027,4903027
 P0497,"Kingston Flemings",5149077,exact-name-2027,
 P0498,"Sergio De Larrea",5279129,exact-name-2027,
 P0499,"Darius Acuff Jr.",5142620,exact-name-2027,
-P0500,"Will Riley (74 g)",,unresolved,
-P0504,"Mikel Brown",,unresolved,
-P0505,"Asa Newell (44 g)",,unresolved,
+P0500,"Will Riley (74 g)",5144126,verified-name-alias-2027,
+P0504,"Mikel Brown",5101761,verified-name-alias-2027,
+P0505,"Asa Newell (44 g)",4873201,verified-name-alias-2027,
 P0509,"Morez Johnson Jr.",4873153,exact-name-2027,
 P0510,"Allen Graves",5149115,exact-name-2027,
 P0513,"Hannes Steinbach",5281370,exact-name-2027,
@@ -481,16 +481,16 @@ P0516,"Keaton Wagler",5254165,exact-name-2027,
 P0517,"Dailyn Swain",4848625,exact-name-2027,
 P0519,"AJ Dybantsa",5142718,exact-name-2027,
 P0520,"Cameron Boozer",5041935,exact-name-2027,
-P0521,"Joan Beringer (40 g)",,unresolved,
+P0521,"Joan Beringer (40 g)",5279133,verified-name-alias-2027,
 P0522,"Brayden Burries",5082206,exact-name-2027,
-P0524,"Javon Small (41 g)",,unresolved,
+P0524,"Javon Small (41 g)",4781746,verified-name-alias-2027,
 P0525,"Aday Mara",5174983,exact-name-2027,
 P0526,"Ebuka Okorie",5258459,exact-name-2027,
 P0527,"Darryn Peterson",5041955,exact-name-2027,
 P0531,"Caleb Wilson",5095151,exact-name-2027,
 P0535,"Labaron Philon Jr.",4873090,exact-name-2027,
-P0536,"Christian Anderson Jr.",,unresolved,
-P0537,"David Jones Garcia (11 g)",,unresolved,
+P0536,"Christian Anderson Jr.",5060701,verified-name-alias-2027,
+P0537,"David Jones Garcia (11 g)",4713010,verified-name-alias-2027,
 P0539,"Zuby Ejiofor",5106262,exact-name-2027,
 P0540,"Dereck Lively II",4683688,existing-verified-2027,4683688
 P0541,"Dylan Cardwell",4433174,existing-verified-2027,4433174
