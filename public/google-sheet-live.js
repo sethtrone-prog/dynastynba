@@ -111,7 +111,8 @@
     const fid=ownership.fid;
     const franchiseRecord=typeof franchise==='function'?franchise(fid):null;
     const candidateName=typeof franchiseLabel==='function'?franchiseLabel(fid):fid;
-    const teamName=/^g[ -]?league$/i.test(String(candidateName||'').trim())?(franchiseRecord?.Franchise_Name||franchiseRecord?.Current_Owner||fid):candidateName;
+    const validTeamName=v=>v&&!/^g[ -]?league$/i.test(String(v).trim())&&!/^f\\d{2}$/i.test(String(v).trim());
+    const teamName=[candidateName,franchiseRecord?.Franchise_Name,franchiseRecord?.Current_Owner,live?.teams?.[fid]?.sheet?.replace(/ Cap$/i,'')].find(validTeamName)||fid;
     const team=(typeof franchise==='function'?franchise(fid):null);
     const owner=team?.Current_Owner||'';
     panel.innerHTML='<b>'+esc(ownership.status)+'</b><span>'+esc(teamName)+'</span>'+(owner?'<small>'+esc(owner)+'</small>':'');
