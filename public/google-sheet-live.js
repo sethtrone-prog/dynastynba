@@ -74,7 +74,7 @@
         const display=normPlayerName(row.display);
         if(display!==n&&!display.startsWith(n+' '))continue;
         const u=Number(row.units?.[yearIndex]);
-        if(Number.isInteger(u)&&u>=1&&u<=5)return u;
+        if(Number.isInteger(u)&&u>=1&&u<=6)return u;
       }
     }
     return null;
