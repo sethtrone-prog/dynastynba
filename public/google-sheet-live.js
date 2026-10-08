@@ -85,8 +85,8 @@
     const out=new Map(),dbPlayers=(typeof DB!=='undefined'&&DB?.Players)?DB.Players:[];
     const players=dbPlayers.filter(p=>p?.Player_ID&&p?.Player_Name).map(p=>({id:p.Player_ID,name:normPlayerName(p.Player_Name)})).sort((a,b)=>b.name.length-a.name.length);
     for(const [fid,team] of Object.entries(live?.teams||{})){
-      for(const row of team.main||[]){const d=normPlayerName(row.display);const p=players.find(x=>x.name&&(d===x.name||d.startsWith(x.name+' ')));if(p)out.set(p.id,{fid,status:row.slot==='TW'?'Two-Way':'Active'});}
-      for(const row of team.gLeague||[]){if(!row.display)continue;const d=normPlayerName(row.display);const p=players.find(x=>x.name&&(d===x.name||d.startsWith(x.name+' ')));if(p)out.set(p.id,{fid,status:'G-League'});}
+      for(const row of team.main||[]){const d=normPlayerName(row.display);const p=players.find(x=>x.name&&(d===x.name||d.startsWith(x.name+' ')));if(p)out.set(String(p.id),{fid,status:row.slot==='TW'?'Two-Way':'Active'});}
+      for(const row of team.gLeague||[]){if(!row.display)continue;const d=normPlayerName(row.display);const p=players.find(x=>x.name&&(d===x.name||d.startsWith(x.name+' ')));if(p)out.set(String(p.id),{fid,status:'G-League'});}
     }
     return out;
   }
@@ -97,7 +97,7 @@
     if(typeof filterPlayers==='function')filterPlayers();
   }
   function renderLivePlayerOwnership(p){
-    const ownership=liveRosterOwnership().get(p.Player_ID);
+    const ownership=liveRosterOwnership().get(String(p.Player_ID));
     const panel=document.querySelector('.player-command .player-status-panel');
     if(!panel)return;
     const snapshotFranchise=document.getElementById('playerSnapshotFranchise');
@@ -111,7 +111,7 @@
     const fid=ownership.fid;
     const franchiseRecord=typeof franchise==='function'?franchise(fid):null;
     const candidateName=typeof franchiseLabel==='function'?franchiseLabel(fid):fid;
-    const validTeamName=v=>v&&!/^g[ -]?league$/i.test(String(v).trim())&&!/^f\\d{2}$/i.test(String(v).trim());
+    const validTeamName=v=>v&&!/^g[ -]?league$/i.test(String(v).trim())&&!/^f\d{2}$/i.test(String(v).trim());
     const teamName=[candidateName,franchiseRecord?.Franchise_Name,franchiseRecord?.Current_Owner,live?.teams?.[fid]?.sheet?.replace(/ Cap$/i,'')].find(validTeamName)||fid;
     const team=(typeof franchise==='function'?franchise(fid):null);
     const owner=team?.Current_Owner||'';
@@ -122,7 +122,7 @@
   function renderPlayerHeader(){
     if(!live?.ok||!seasonIsLive())return;
     const parts=location.hash.replace(/^#/,'').split('/');if(parts[0]!=='player'||!parts[1])return;
-    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>x.Player_ID===parts[1]);if(!p)return;
+    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>String(x.Player_ID)===String(parts[1]));if(!p)return;
     renderLivePlayerOwnership(p);
     const units=liveContractUnitsForPlayer(p.Player_Name);if(units==null)return;
     const badge=document.querySelector('.player-command .base-salary-badge');if(badge)badge.textContent=units+' Unit'+(units===1?'':'s');
