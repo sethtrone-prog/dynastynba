@@ -72,9 +72,9 @@
     for(const team of Object.values(live.teams||{})){
       for(const row of team.main||[]){
         const display=String(row.display||'').trim().toLowerCase();
-        if(display===n||display.includes(n)){
-          const u=row.units?.[yearIndex];
-          if(u!==null&&u!==undefined&&u!=='')return Number(u);
+        if(normPlayerName(display)===normPlayerName(n)||normPlayerName(display).startsWith(normPlayerName(n)+' ')){
+          const u=Number(row.units?.[yearIndex]);
+          if(Number.isInteger(u)&&u>=1&&u<=5)return u;
         }
       }
     }
