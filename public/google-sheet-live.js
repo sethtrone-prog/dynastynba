@@ -109,6 +109,31 @@
     });
     if(typeof filterPlayers==='function')filterPlayers();
   }
+  function renderPlayerOwnership(){
+    if(!live?.ok||!seasonIsLive())return;
+    const parts=location.hash.replace(/^#/,'').split('/');
+    if(parts[0]!=='player'||!parts[1])return;
+    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>x.Player_ID===parts[1]);
+    if(!p)return;
+    const o=liveRosterOwnership().get(p.Player_ID);
+    const fid=o?.fid||'',status=o?.status||'Free Agent';
+    const teamName=fid?(typeof franchiseLabel==='function'?franchiseLabel(fid):fid):'Free Agent';
+    const panel=document.querySelector('.player-status-panel');
+    if(panel){
+      const b=panel.querySelector('b'),span=panel.querySelector('span'),small=panel.querySelector('small');
+      if(b)b.textContent=status;
+      if(span)span.textContent=teamName;
+      if(small)small.textContent=fid&&typeof franchise==='function'?(franchise(fid).Current_Owner||''):'';
+    }
+    const row=(label)=>[...document.querySelectorAll('.snapshot-list>div')].find(x=>x.querySelector('span')?.textContent.trim()===label)?.querySelector('b');
+    const franchiseValue=row('Franchise');
+    if(franchiseValue){
+      if(fid)franchiseValue.innerHTML='<button class="inline-link" onclick="go(\'team/'+fid+'\')">'+teamName.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</button>';
+      else franchiseValue.textContent='—';
+    }
+    const statusValue=row('Roster status');
+    if(statusValue)statusValue.textContent=status;
+  }
   function renderPlayerHeader(){
     if(!live?.ok||!seasonIsLive())return;
     const parts=location.hash.replace(/^#/,'').split('/');if(parts[0]!=='player'||!parts[1])return;
@@ -117,7 +142,7 @@
     const badge=document.querySelector('.player-command .base-salary-badge');if(badge)badge.textContent=units+' Unit'+(units===1?'':'s');
     const contract=document.getElementById('playerContractUnits');if(contract)contract.textContent=String(units);
   }
-  function render(){setTimeout(()=>{renderCap();renderPicks();renderPlayerHeader();renderFreeAgencyOwnership();},80);setTimeout(renderFreeAgencyOwnership,300);}
+  function render(){setTimeout(()=>{renderCap();renderPicks();renderPlayerHeader();renderFreeAgencyOwnership();renderPlayerOwnership();},80);setTimeout(renderFreeAgencyOwnership,300);}
   async function refresh(){try{const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'}),data=await response.json();if(response.ok&&data?.ok&&data?.season&&data?.teams){live=data;window.DYNASTY_LIVE_SHEET=data;ensureSeasonOption();render();}else console.info('Dynasty live sheet fallback active:',data?.message||response.status);}catch(err){console.info('Dynasty live sheet fallback active:',err?.message||err);}}
   window.addEventListener('hashchange',render);document.getElementById('seasonSelect')?.addEventListener('change',render);refresh();setInterval(refresh,REFRESH_MS);
 })();
