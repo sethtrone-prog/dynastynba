@@ -96,10 +96,25 @@
     document.querySelectorAll('#playerTable tbody tr').forEach(tr=>{const name=tr.dataset.name||'',p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>normPlayerName(x.Player_Name)===normPlayerName(name));if(!p)return;const o=owned.get(p.Player_ID);if(!o)return;const cells=tr.children;if(cells[1])cells[1].textContent=typeof franchiseLabel==='function'?franchiseLabel(o.fid):o.fid;if(cells[3])cells[3].textContent=o.status;tr.dataset.team=o.fid;});
     if(typeof filterPlayers==='function')filterPlayers();
   }
+  function renderLivePlayerOwnership(p){
+    const ownership=liveRosterOwnership().get(p.Player_ID);
+    const panel=document.querySelector('.player-command .player-status-panel');
+    if(!panel)return;
+    if(!ownership){
+      panel.innerHTML='<b>Unrostered</b><span>Free agent / no roster record</span>';
+      return;
+    }
+    const fid=ownership.fid;
+    const teamName=typeof franchiseLabel==='function'?franchiseLabel(fid):fid;
+    const team=(typeof franchise==='function'?franchise(fid):null);
+    const owner=team?.Current_Owner||'';
+    panel.innerHTML='<b>'+esc(ownership.status)+'</b><span>'+esc(teamName)+'</span>'+(owner?'<small>'+esc(owner)+'</small>':'');
+  }
   function renderPlayerHeader(){
     if(!live?.ok||!seasonIsLive())return;
     const parts=location.hash.replace(/^#/,'').split('/');if(parts[0]!=='player'||!parts[1])return;
     const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>x.Player_ID===parts[1]);if(!p)return;
+    renderLivePlayerOwnership(p);
     const units=liveContractUnitsForPlayer(p.Player_Name);if(units==null)return;
     const badge=document.querySelector('.player-command .base-salary-badge');if(badge)badge.textContent=units+' Unit'+(units===1?'':'s');
     const contract=document.getElementById('playerContractUnits');if(contract)contract.textContent=String(units);
