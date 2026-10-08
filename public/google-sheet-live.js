@@ -109,7 +109,9 @@
       return;
     }
     const fid=ownership.fid;
-    const teamName=typeof franchiseLabel==='function'?franchiseLabel(fid):fid;
+    const franchiseRecord=typeof franchise==='function'?franchise(fid):null;
+    const candidateName=typeof franchiseLabel==='function'?franchiseLabel(fid):fid;
+    const teamName=/^g[ -]?league$/i.test(String(candidateName||'').trim())?(franchiseRecord?.Franchise_Name||franchiseRecord?.Current_Owner||fid):candidateName;
     const team=(typeof franchise==='function'?franchise(fid):null);
     const owner=team?.Current_Owner||'';
     panel.innerHTML='<b>'+esc(ownership.status)+'</b><span>'+esc(teamName)+'</span>'+(owner?'<small>'+esc(owner)+'</small>':'');
