@@ -100,7 +100,8 @@
       const o=owned.get(p.Player_ID);
       const roster=typeof DB!=='undefined'?(DB.Rosters||[]).find(x=>x.Player_ID===p.Player_ID&&x.Season_ID==='S'+live.season):null;
       const fid=o?.fid||'';
-      const franchiseCell=tr.children[1];
+      const franchiseIndex=[...document.querySelectorAll('#playerTable thead th')].findIndex(th=>th.textContent.includes('Franchise'));
+      const franchiseCell=franchiseIndex>=0?tr.children[franchiseIndex]:null;
       if(franchiseCell){
         if(fid)franchiseCell.textContent=typeof franchiseLabel==='function'?franchiseLabel(fid):fid;
         else franchiseCell.textContent='Free Agent';
