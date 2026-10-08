@@ -100,8 +100,12 @@
     const ownership=liveRosterOwnership().get(p.Player_ID);
     const panel=document.querySelector('.player-command .player-status-panel');
     if(!panel)return;
+    const snapshotFranchise=document.getElementById('playerSnapshotFranchise');
+    const snapshotStatus=document.getElementById('playerSnapshotStatus');
     if(!ownership){
       panel.innerHTML='<b>Unrostered</b><span>Free agent / no roster record</span>';
+      if(snapshotFranchise)snapshotFranchise.textContent='—';
+      if(snapshotStatus)snapshotStatus.textContent='Unrostered';
       return;
     }
     const fid=ownership.fid;
@@ -109,6 +113,8 @@
     const team=(typeof franchise==='function'?franchise(fid):null);
     const owner=team?.Current_Owner||'';
     panel.innerHTML='<b>'+esc(ownership.status)+'</b><span>'+esc(teamName)+'</span>'+(owner?'<small>'+esc(owner)+'</small>':'');
+    if(snapshotFranchise)snapshotFranchise.innerHTML='<button class="inline-link" onclick="go(\'team/'+esc(fid)+'\')">'+esc(teamName)+'</button>';
+    if(snapshotStatus)snapshotStatus.textContent=ownership.status;
   }
   function renderPlayerHeader(){
     if(!live?.ok||!seasonIsLive())return;
