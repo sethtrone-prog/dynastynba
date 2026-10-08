@@ -24,6 +24,19 @@
 
 .history-subnav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.history-subnav button{background:transparent;color:inherit;border:1px solid rgba(190,160,85,.35);border-radius:7px;padding:11px 17px;cursor:pointer;font-weight:600}.history-subnav button.active{border-color:#c5a75a;color:#c5a75a}
 </style>
+<style>
+/* Historical scoring: consistent column alignment and Dynasty NBA gold palette */
+#statTable th.stat-numeric-head,#statTable td.num,
+#historicalPlayerScoring th.stat-numeric-head,#historicalPlayerScoring td.num{text-align:center!important;font-variant-numeric:tabular-nums;vertical-align:middle}
+#statTable th.stat-numeric-head,#historicalPlayerScoring th.stat-numeric-head{color:#c9ac69;letter-spacing:.045em;font-weight:700}
+#statTable td.stat-ppg,#historicalPlayerScoring td.stat-ppg{color:#e5c47c;font-weight:700}
+#statTable td.stat-points,#historicalPlayerScoring td.stat-points{color:#e6e9ef}
+#statTable td.stat-games,#historicalPlayerScoring td.stat-games{color:#aeb8c8}
+#statTable tbody tr:hover td.stat-ppg,#historicalPlayerScoring tbody tr:hover td.stat-ppg{color:#f5d99b}
+#historicalPlayerScoring .historical-summary>div:nth-child(3) b{color:#e5c47c}
+#historicalPlayerScoring .historical-summary>div:nth-child(2) b{color:#e6e9ef}
+#historicalPlayerScoring .historical-summary>div:nth-child(1) b{color:#aeb8c8}
+</style>
 </head>
 <body>
   <div class="topline"><div><span class="live-dot"></span> Dynasty reference database</div><div>ESPN League 76513288</div></div>
