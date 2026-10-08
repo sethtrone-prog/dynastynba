@@ -1,0 +1,84 @@
+Player_ID,Player_Name,Category,ESPN_ID_Status,Next_Action
+P0006,"Enes Kanter",historical-review,Unverified,Search archived ESPN player identity
+P0007,"Will Barton",historical-review,Unverified,Search archived ESPN player identity
+P0008,"Tyreke Evans",historical-review,Unverified,Search archived ESPN player identity
+P0009,"Dwight Howard",historical-review,Unverified,Search archived ESPN player identity
+P0011,"Montrezl Harrell",historical-review,Unverified,Search archived ESPN player identity
+P0012,"J.J. Redick",historical-review,Unverified,Search archived ESPN player identity
+P0017,"Kemba Walker",historical-review,Unverified,Search archived ESPN player identity
+P0020,"Lou Williams",historical-review,Unverified,Search archived ESPN player identity
+P0022,"Rudy Gay",historical-review,Unverified,Search archived ESPN player identity
+P0025,"Jordan Bell",historical-review,Unverified,Search archived ESPN player identity
+P0031,"Chandler Hutchison",historical-review,Unverified,Search archived ESPN player identity
+P0037,"Nikola Mirotic",historical-review,Unverified,Search archived ESPN player identity
+P0038,"Marcus Morris",historical-review,Unverified,Search archived ESPN player identity
+P0048,"Robert Williams",status-needs-verification,Unverified,Verify player identity and roster status
+P0053,"DeMarcus Cousins",historical-review,Unverified,Search archived ESPN player identity
+P0057,"Larry Nance",status-needs-verification,Unverified,Verify player identity and roster status
+P0066,"LaMarcus Aldridge",historical-review,Unverified,Search archived ESPN player identity
+P0067,"Blake Griffin",historical-review,Unverified,Search archived ESPN player identity
+P0073,"Hassan Whiteside",historical-review,Unverified,Search archived ESPN player identity
+P0075,"Tomas Satoransky",historical-review,Unverified,Search archived ESPN player identity
+P0077,"John Wall",historical-review,Unverified,Search archived ESPN player identity
+P0083,"Jabari Parker",historical-review,Unverified,Search archived ESPN player identity
+P0084,"Marc Gasol",historical-review,Unverified,Search archived ESPN player identity
+P0088,"Serge Ibaka",historical-review,Unverified,Search archived ESPN player identity
+P0105,"Thad Young",historical-review,Unverified,Search archived ESPN player identity
+P0106,"Willie Cauley Stein",historical-review,Unverified,Search archived ESPN player identity
+P0110,"Victor Olidipo (DPE)",status-needs-verification,Unverified,Verify player identity and roster status
+P0111,"Mo Wagner",status-needs-verification,Unverified,Verify player identity and roster status
+P0117,"Jeff Teague",historical-review,Unverified,Search archived ESPN player identity
+P0118,"Eric Bledsoe",historical-review,Unverified,Search archived ESPN player identity
+P0124,"Josh Jackson",historical-review,Unverified,Search archived ESPN player identity
+P0127,"Mohammed Bamba",status-needs-verification,Unverified,Verify player identity and roster status
+P0128,"Zhaire Smith",historical-review,Unverified,Search archived ESPN player identity
+P0130,"Otto Porter Jr.",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0132,"Goran Dragic",historical-review,Unverified,Search archived ESPN player identity
+P0134,"TJ Warren",status-needs-verification,Unverified,Verify player identity and roster status
+P0135,"Rodney Hood",historical-review,Unverified,Search archived ESPN player identity
+P0138,"Jeremy Lamb",historical-review,Unverified,Search archived ESPN player identity
+P0139,"Justise Winslow",historical-review,Unverified,Search archived ESPN player identity
+P0143,"Kevin Knox",status-needs-verification,Unverified,Verify player identity and roster status
+P0148,"Derrick Favors",historical-review,Unverified,Search archived ESPN player identity
+P0151,"Kenneth Faried",historical-review,Unverified,Search archived ESPN player identity
+P0152,"Trevor Ariza",historical-review,Unverified,Search archived ESPN player identity
+P0157,"Damyean Dotson",historical-review,Unverified,Search archived ESPN player identity
+P0162,"Kostas Antetokounmpo",status-needs-verification,Unverified,Verify player identity and roster status
+P0168,"Elfrid Payton (2/2)",status-needs-verification,Unverified,Verify player identity and roster status
+P0169,"Jarrett Culver",historical-review,Unverified,Search archived ESPN player identity
+P0170,"Carsen Edwards",historical-review,Unverified,Search archived ESPN player identity
+P0171,"Eric Paschall",historical-review,Unverified,Search archived ESPN player identity
+P0176,"Brandon Clarke",status-needs-verification,Unverified,Verify player identity and roster status
+P0179,"Ricky Rubio",historical-review,Unverified,Search archived ESPN player identity
+P0185,"OG Anunonoby",status-needs-verification,Unverified,Verify player identity and roster status
+P0188,"Paul Millsap",historical-review,Unverified,Search archived ESPN player identity
+P0191,"Nemanja Bjelica (1/2)",status-needs-verification,Unverified,Verify player identity and roster status
+P0194,"Victor Oladipo",status-needs-verification,Unverified,Verify player identity and roster status
+P0201,"Sekou Doumbouya",historical-review,Unverified,Search archived ESPN player identity
+P0209,"Thad Young (1/2)",status-needs-verification,Unverified,Verify player identity and roster status
+P0212,"Romeo Langford",historical-review,Unverified,Search archived ESPN player identity
+P0213,"KZ Okpala",historical-review,Unverified,Search archived ESPN player identity
+P0219,"Darius Bazely",status-needs-verification,Unverified,Verify player identity and roster status
+P0278,"null",invalid-record,Unverified,Inspect source record
+P0288,"Collin Sexton - No",status-needs-verification,Unverified,Verify player identity and roster status
+P0297,"A.J. Griffin",status-needs-verification,Unverified,Verify player identity and roster status
+P0316,"Malakai Branham",status-needs-verification,Unverified,Verify player identity and roster status
+P0326,"Kenyon Martin Jr",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0328,"Kenny Lofton Jr",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0372,"Ivan Zubac",status-needs-verification,Unverified,Verify player identity and roster status
+P0383,"Filip Petrusev",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0397,"TJ McConnell",status-needs-verification,Unverified,Verify player identity and roster status
+P0415,"Ron Holland II",status-needs-verification,Unverified,Verify player identity and roster status
+P0426,"Justin Champaigne",status-needs-verification,Unverified,Verify player identity and roster status
+P0427,"Jakobe Walter",status-needs-verification,Unverified,Verify player identity and roster status
+P0435,"DaRon Holmes III",status-needs-verification,Unverified,Verify player identity and roster status
+P0456,"Liam McNeely",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0485,"Karlo Martkovic",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0500,"Will Riley (74 g)",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0504,"Mikel Brown",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0505,"Asa Newell (44 g)",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0515,"Yaxel Landeborg",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0521,"Joan Beringer (40 g)",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0524,"Javon Small (41 g)",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0536,"Christian Anderson Jr.",prospect-or-current-review,Unverified,Verify player identity and roster status
+P0537,"David Jones Garcia (11 g)",prospect-or-current-review,Unverified,Verify player identity and roster status
