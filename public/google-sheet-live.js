@@ -66,16 +66,15 @@
   }
   function liveContractUnitsForPlayer(playerName){
     if(!live?.ok||!playerName)return null;
-    const n=String(playerName).trim().toLowerCase();
+    const n=normPlayerName(playerName);
     const yearIndex=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').startsWith(String(live.season)));
     if(yearIndex<0)return null;
     for(const team of Object.values(live.teams||{})){
-      for(const row of team.main||[]){
-        const display=String(row.display||'').trim().toLowerCase();
-        if(display===n||display.includes(n)){
-          const u=row.units?.[yearIndex];
-          if(u!==null&&u!==undefined&&u!=='')return Number(u);
-        }
+      for(const row of [...(team.main||[]),...(team.gLeague||[])]){
+        const display=normPlayerName(row.display);
+        if(display!==n&&!display.startsWith(n+' '))continue;
+        const u=Number(row.units?.[yearIndex]);
+        if(Number.isInteger(u)&&u>=1&&u<=5)return u;
       }
     }
     return null;
