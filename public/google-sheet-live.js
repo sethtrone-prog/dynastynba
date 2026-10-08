@@ -85,19 +85,10 @@
     const out=new Map(),dbPlayers=(typeof DB!=='undefined'&&DB?.Players)?DB.Players:[];
     const players=dbPlayers.filter(p=>p?.Player_ID&&p?.Player_Name).map(p=>({id:p.Player_ID,name:normPlayerName(p.Player_Name)})).sort((a,b)=>b.name.length-a.name.length);
     for(const [fid,team] of Object.entries(live?.teams||{})){
-      for(const row of team.main||[]){const d=normPlayerName(row.display);const p=players.find(x=>x.name&&(d===x.name||d.startsWith(x.name+' ')));if(p)out.set(String(p.id),{fid,status:row.slot==='TW'?'Two-Way':'Active'});}
-      for(const row of team.gLeague||[]){if(!row.display)continue;const d=normPlayerName(row.display);const p=players.find(x=>x.name&&(d===x.name||d.startsWith(x.name+' ')));if(p)out.set(String(p.id),{fid,status:'G-League'});}
+      for(const row of team.main||[]){const d=normPlayerName(row.display);const p=players.find(x=>x.name&&(d===x.name||d.startsWith(x.name+' ')));if(p)out.set(p.id,{fid,status:row.slot==='TW'?'Two-Way':'Active'});}
+      for(const row of team.gLeague||[]){if(!row.display)continue;const d=normPlayerName(row.display);const p=players.find(x=>x.name&&(d===x.name||d.startsWith(x.name+' ')));if(p)out.set(p.id,{fid,status:'G-League'});}
     }
     return out;
-  }
-  function liveFantasyTeamName(fid){
-    if(!fid)return 'Free Agent';
-    const raw=typeof franchiseLabel==='function'?franchiseLabel(fid):'';
-    const valid=v=>Boolean(v)&&!/^g[ -]?league$/i.test(String(v).trim())&&!/^f\\d{2}$/i.test(String(v).trim());
-    if(valid(raw))return raw;
-    const record=typeof franchise==='function'?franchise(fid):null;
-    const sheet=live?.teams?.[fid]?.sheet?.replace(/ Cap$/i,'');
-    return [record?.Franchise_Name,record?.Current_Owner,sheet].find(valid)||fid;
   }
   function renderFreeAgencyOwnership(){
     if(!live?.ok||!seasonIsLive()||location.hash.replace(/^#/,'').split('/')[0]!=='players')return;
@@ -109,9 +100,9 @@
       const name=tr.dataset.name||'';
       const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>normPlayerName(x.Player_Name)===normPlayerName(name));
       if(!p)return;
-      const o=owned.get(String(p.Player_ID));
+      const o=owned.get(p.Player_ID);
       if(franchiseIndex>=0&&tr.children[franchiseIndex]){
-        tr.children[franchiseIndex].textContent=o?(liveFantasyTeamName(o.fid)):'Free Agent';
+        tr.children[franchiseIndex].textContent=o?(typeof franchiseLabel==='function'?franchiseLabel(o.fid):o.fid):'Free Agent';
       }
       if(statusIndex>=0&&tr.children[statusIndex]&&o)tr.children[statusIndex].textContent=o.status;
       tr.dataset.team=o?.fid||'FREE_AGENT';
@@ -122,11 +113,11 @@
     if(!live?.ok||!seasonIsLive())return;
     const parts=location.hash.replace(/^#/,'').split('/');
     if(parts[0]!=='player'||!parts[1])return;
-    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>String(x.Player_ID)===String(parts[1]));
+    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>x.Player_ID===parts[1]);
     if(!p)return;
-    const o=liveRosterOwnership().get(String(p.Player_ID));
+    const o=liveRosterOwnership().get(p.Player_ID);
     const fid=o?.fid||'',status=o?.status||'Free Agent';
-    const teamName=fid?(liveFantasyTeamName(fid)):'Free Agent';
+    const teamName=fid?(typeof franchiseLabel==='function'?franchiseLabel(fid):fid):'Free Agent';
     const panel=document.querySelector('.player-status-panel');
     if(panel){
       const b=panel.querySelector('b'),span=panel.querySelector('span'),small=panel.querySelector('small');
@@ -146,7 +137,7 @@
   function renderPlayerHeader(){
     if(!live?.ok||!seasonIsLive())return;
     const parts=location.hash.replace(/^#/,'').split('/');if(parts[0]!=='player'||!parts[1])return;
-    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>String(x.Player_ID)===String(parts[1]));if(!p)return;
+    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>x.Player_ID===parts[1]);if(!p)return;
     const units=liveContractUnitsForPlayer(p.Player_Name);if(units==null)return;
     const badge=document.querySelector('.player-command .base-salary-badge');if(badge)badge.textContent=units+' Unit'+(units===1?'':'s');
     const contract=document.getElementById('playerContractUnits');if(contract)contract.textContent=String(units);
