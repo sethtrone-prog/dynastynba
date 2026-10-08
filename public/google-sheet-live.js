@@ -99,7 +99,7 @@
       if(!p)return;
       const o=owned.get(p.Player_ID);
       const roster=typeof DB!=='undefined'?(DB.Rosters||[]).find(x=>x.Player_ID===p.Player_ID&&x.Season_ID==='S'+live.season):null;
-      const fid=o?.fid||roster?.Franchise_ID||'';
+      const fid=o?.fid||'';
       const franchiseCell=tr.children[1];
       if(franchiseCell){
         if(fid)franchiseCell.textContent=typeof franchiseLabel==='function'?franchiseLabel(fid):fid;
@@ -120,8 +120,8 @@
     if(!p)return;
     const o=liveRosterOwnership().get(p.Player_ID);
     const roster=(typeof DB!=='undefined'?DB.Rosters||[]:[]).find(x=>x.Player_ID===p.Player_ID&&x.Season_ID==='S'+live.season);
-    const fid=o?.fid||roster?.Franchise_ID||'';
-    const status=o?.status||roster?.Roster_Status||'';
+    const fid=o?.fid||'';
+    const status=o?.status||'';
     const teamName=fid?(typeof franchiseLabel==='function'?franchiseLabel(fid):fid):'Free agent / no roster record';
     const panel=document.querySelector('.player-status-panel');
     if(panel){
@@ -134,7 +134,7 @@
     const franchiseRow=[...document.querySelectorAll('.snapshot-list>div')].find(x=>x.querySelector('span')?.textContent.trim()==='Franchise');
     const value=franchiseRow?.querySelector('b');
     if(value){
-      if(fid){value.innerHTML='<button class="inline-link" onclick="go(\'team/'+fid+'\')">'+teamName.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</button>';}
+      if(fid&&value.textContent!==teamName){value.innerHTML='<button class="inline-link" onclick="go(\'team/'+fid+'\')">'+teamName.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</button>';}
       else if(value.textContent!=='—')value.textContent='—';
     }
     const statusRow=[...document.querySelectorAll('.snapshot-list>div')].find(x=>x.querySelector('span')?.textContent.trim()==='Roster status');
