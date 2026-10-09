@@ -60,3 +60,25 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
   background:rgba(255,255,255,.055);
   transition:background-color .14s ease;
 }
+
+
+/* Homepage broadcast accents and top-four playoff cut line */
+.season-ribbon{background:linear-gradient(100deg,#092f50,#06182b 70%);border-color:#b78a34;box-shadow:inset 4px 0 0 var(--gold)}
+.season-ribbon-status{color:#9ed2ff;font-size:10px;font-weight:800;letter-spacing:.7px}
+.season-ribbon .data-sources{margin-left:auto}
+.standings-card{border-color:#2c79aa;box-shadow:0 0 0 1px rgba(47,156,255,.12)}
+.standings-card .section-title{background:linear-gradient(95deg,rgba(47,156,255,.18),rgba(231,184,78,.08));border-bottom:1px solid #2d6b9a}
+.standing-rank{display:inline-grid;place-items:center;width:27px;height:27px;border-radius:6px;color:#adc5da;font:800 15px Oswald,sans-serif}
+.standing-rank.playoff-rank{background:linear-gradient(145deg,#f8d477,#b98123);color:#081d31;box-shadow:0 2px 10px rgba(231,184,78,.25)}
+.standings-card tr.playoff-position td:first-child{border-left:3px solid var(--gold)}
+.standings-card tr.playoff-position{background:rgba(231,184,78,.065)}
+.standings-card tr.playoff-position:hover{background:rgba(231,184,78,.14)}
+.league-news{border-color:#2c79aa;overflow:hidden}
+.league-news .section-title{background:linear-gradient(95deg,rgba(47,156,255,.22),rgba(231,184,78,.1));border-bottom:1px solid #2d6b9a}
+.league-news .news-item{border-left:3px solid transparent;transition:background .15s,border-color .15s}
+.league-news .news-item:nth-child(odd){background:rgba(47,156,255,.075);border-left-color:#2f9cff}
+.league-news .news-item:nth-child(even){background:rgba(231,184,78,.055);border-left-color:#c89d45}
+.league-news .news-item:hover{background:rgba(47,156,255,.15)}
+.league-news .news-date{color:#f2c55d}
+.league-news .news-item b{color:#f3f8ff}
+@media(max-width:760px){.season-ribbon{flex-wrap:wrap;gap:8px}.season-ribbon .data-sources{margin-left:0;width:100%}.standing-rank{width:23px;height:23px}}
