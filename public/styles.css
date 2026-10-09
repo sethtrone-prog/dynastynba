@@ -86,3 +86,8 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
 /* Homepage standings: light-blue team names and gold win-loss records */
 .home-content .standings-card .data-table td:nth-child(2) b{color:#8ed0ff}
 .home-content .standings-card .data-table td.record{color:var(--gold2,#ffd477);font-weight:850}
+
+/* Uniform homepage standings row backgrounds; retain gold playoff rank badges */
+.home-content .standings-card .data-table tbody tr,.home-content .standings-card .data-table tbody tr.playoff-position{background:transparent!important}
+.home-content .standings-card .data-table tbody tr:hover,.home-content .standings-card .data-table tbody tr.playoff-position:hover{background:rgba(47,156,255,.10)!important}
+.home-content .standings-card .data-table tbody tr.playoff-position td:first-child{border-left-color:transparent}
