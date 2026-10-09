@@ -6,7 +6,7 @@
 
   window.drafts = function draftsVerticalColumns() {
     const all = DB['Rookie Draft Picks'] || [];
-    const picks = all.filter(x => x.Season_ID === seasonId(season)).slice().sort((a,b) => Number(a.Overall_Pick) - Number(b.Overall_Pick));
+    const picks = (season >= 2027 ? [] : all.filter(x => x.Season_ID === seasonId(season + 1))).slice().sort((a,b) => Number(a.Overall_Pick) - Number(b.Overall_Pick));
     const rounds = [...new Set(picks.map(x => Number(x.Round)).filter(Boolean))];
     const traded = picks.filter(x => x.Original_Owner_ID && x.Current_Owner_ID && x.Original_Owner_ID !== x.Current_Owner_ID).length;
     const years = seasonYears();
