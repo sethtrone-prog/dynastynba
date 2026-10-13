@@ -26,6 +26,8 @@
     const standings=nav.querySelector('[data-route="standings"]'); standings?standings.after(b):nav.appendChild(b);
   }
   function draw(){
+    // Never overwrite the authoritative live Wins Pool after it has loaded.
+    if(window.DYNASTY_WINS_POOL_LIVE?.ok)return;
     const app=document.getElementById('app');if(!app)return;
     const standings=STANDINGS.map((o,i)=>({...byOwner(o),pos:i+1}));
     app.innerHTML=`<section class="page-head"><div class="eyebrow">Dynasty NBA · 2027</div><h1>Wins Pool</h1><p>Current-year Wins Pool standings and selection board from the 2027 league workbook.</p></section><div class="content">
