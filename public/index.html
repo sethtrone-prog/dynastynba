@@ -157,6 +157,14 @@
 }
 
 </style>
+<style id="wins-pool-column-alignment">
+/* Wins Pool: center all numeric data directly beneath their headers. */
+.wins-pool-standings-table th,.wins-pool-standings-table td,.owner-selections-table th,.owner-selections-table td{box-sizing:border-box;vertical-align:middle;}
+.wins-pool-standings-table th:not(:nth-child(2)),.wins-pool-standings-table td:not(:nth-child(2)){text-align:center!important;}
+.owner-selections-table th:nth-child(2),.owner-selections-table td.selection-pick,.owner-selections-table th:nth-child(n+4),.owner-selections-table td.record,.owner-selections-table td.performance,.owner-selections-table td:nth-child(n+5){text-align:center!important;}
+.wins-pool-standings-table th:nth-child(2),.wins-pool-standings-table td:nth-child(2),.owner-selections-table th:nth-child(1),.owner-selections-table th:nth-child(3),.owner-selections-table td.owner-summary,.owner-selections-table td.selection-team{text-align:left!important;}
+.wins-pool-standings-table,.owner-selections-table{width:100%;table-layout:auto;}
+</style>
 </head>
 <body>
   <div class="topline"><div><span class="live-dot"></span> Dynasty reference database</div><div>ESPN League 76513288</div></div>
