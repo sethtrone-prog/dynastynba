@@ -109,3 +109,34 @@
   .wins-pool-standings-table,
   .owner-selections-table{min-width:780px;}
 }
+
+/* Column alignment only: preserve table cells, row spans, colors, and data. */
+.wins-pool-live-page .wins-pool-standings-table th,
+.wins-pool-live-page .wins-pool-standings-table td,
+.wins-pool-live-page .owner-selections-table th,
+.wins-pool-live-page .owner-selections-table td{
+  vertical-align:middle;
+}
+.wins-pool-live-page .wins-pool-standings-table th:not(:nth-child(2)),
+.wins-pool-live-page .wins-pool-standings-table td:not(:nth-child(2)){
+  text-align:center;
+}
+.wins-pool-live-page .wins-pool-standings-table th:nth-child(2),
+.wins-pool-live-page .wins-pool-standings-table td:nth-child(2){
+  text-align:left;
+}
+/* Owner rows use rowspan, so positional td selectors cannot match headers. */
+.wins-pool-live-page .owner-selections-table thead th:nth-child(1),
+.wins-pool-live-page .owner-selections-table thead th:nth-child(3),
+.wins-pool-live-page .owner-selections-table tbody td.owner-summary,
+.wins-pool-live-page .owner-selections-table tbody td.selection-team{
+  text-align:left;
+}
+.wins-pool-live-page .owner-selections-table thead th:nth-child(2),
+.wins-pool-live-page .owner-selections-table thead th:nth-child(n+4),
+.wins-pool-live-page .owner-selections-table tbody td.selection-pick,
+.wins-pool-live-page .owner-selections-table tbody td.record,
+.wins-pool-live-page .owner-selections-table tbody td.performance,
+.wins-pool-live-page .owner-selections-table tbody td.selection-team ~ td{
+  text-align:center;
+}
