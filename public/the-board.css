@@ -8,3 +8,5 @@
 /* Secondary pace estimate on season win-total challenges. */
 #theBoard .board-metrics .board-projection b{font-size:20px;color:#b8cbdc;margin-top:10px}
 #theBoard .board-metrics .board-projection span{font-size:10px}
+
+#theBoard .board-challenge{font-family:Play,Inter,sans-serif}
