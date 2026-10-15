@@ -1,0 +1,11 @@
+[
+  {
+    "id": "seth-tom-heat-2027",
+    "season": 2027,
+    "participants": ["Seth", "Tom"],
+    "onTheLine": "Sixers or Heat jersey of choice",
+    "challenge": "Heat to finish 6th or better in the Eastern Conference",
+    "sides": ["Heat finish 1st–6th", "Heat finish 7th–15th"],
+    "tracker": { "type": "conference-position", "teamId": "14", "conferenceId": "5", "threshold": 6, "yesParticipant": "Seth", "noParticipant": "Tom" }
+  }
+]
