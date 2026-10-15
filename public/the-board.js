@@ -22,7 +22,7 @@
       settled = team.wins >= tracker.threshold || team.wins + remaining < tracker.threshold;
       if (team.wins >= tracker.threshold) ahead = tracker.yesParticipant;
       else if (team.wins + remaining < tracker.threshold) ahead = tracker.noParticipant;
-      else if (pace !== tracker.threshold) ahead = pace > tracker.threshold ? tracker.yesParticipant : tracker.noParticipant;
+      else if (pace !== (tracker.paceLine ?? tracker.threshold)) ahead = pace > (tracker.paceLine ?? tracker.threshold) ? tracker.yesParticipant : tracker.noParticipant;
     } else if (active) {
       ahead = team.position <= tracker.threshold ? tracker.yesParticipant : tracker.noParticipant;
       settled = data.final;
