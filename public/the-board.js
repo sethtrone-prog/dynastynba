@@ -37,6 +37,18 @@
     const season = `${item.season - 1}–${String(item.season).slice(-2)}`;
     return `<article class="board-card"><div class="board-card-top"><span class="board-kicker">${escape(season)} · Season challenge</span><span class="board-status ${ahead ? 'board-ahead' : ''}">${escape(status)}</span></div><h2>${item.participants.map(escape).join(' <span class="board-versus">vs.</span> ')}</h2><p class="board-challenge">${escape(item.challenge)}</p><div class="board-sides">${item.participants.map((name,i) => `<div class="${ahead === name ? 'board-leading' : ''}"><b>${escape(name)}</b><span>${escape(item.sides[i])}</span></div>`).join('')}</div><div class="board-metrics">${metrics}</div><div class="board-prize"><span>On the line</span><strong>${escape(item.onTheLine)}</strong></div><p class="board-note">${escape(note)}</p><div class="board-update">${error ? escape(error) : data ? `ESPN · Checked ${escape(new Date(data.updatedAt).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))} · Refreshes every 5 minutes` : 'Connecting to ESPN…'}</div></article>`;
   }
+  function playerCard(item, data, error) {
+    const gp = id => data?.players.find(p=>p.id===id)?.games;
+    const g=gp('3032977'), e=gp('3059318'), l=gp('1966');
+    const valid=[g,e,l].every(n=>Number.isInteger(n));
+    const ahead=valid&&data.started ? g>e&&g>l ? 'Seth' : e>g||l>g ? 'Diaz' : null : null;
+    const status=error?'Update unavailable':!data?'Loading games…':!data.started?'Awaiting season':!valid?'Games pending':ahead?`${ahead} ${data.final?'wins':'is ahead'}`:data.final?'Tied · result pending':'Tied';
+    const season=`${item.season-1}–${String(item.season).slice(-2)}`;
+    return `<article class="board-card"><div class="board-card-top"><span class="board-kicker">${escape(season)} · Season challenge</span><span class="board-status ${ahead?'board-ahead':''}">${escape(status)}</span></div><h2>${item.participants.map(escape).join(' <span class="board-versus">vs.</span> ')}</h2><p class="board-challenge">${escape(item.challenge)}</p><div class="board-sides">${item.participants.map((name,i)=>`<div class="${ahead===name?'board-leading':''}"><b>${escape(name)}</b><span>${escape(item.sides[i])}</span></div>`).join('')}</div><div class="board-metrics board-player-games">${[['Giannis',g],['Embiid',e],['LeBron',l]].map(([name,n])=>`<div><span>${name} · GP</span><b>${n??'—'}</b></div>`).join('')}</div><div class="board-prize"><span>On the line</span><strong>${escape(item.onTheLine)}</strong></div><p class="board-note">Regular-season games played only. Seth needs Giannis to finish ahead of both players; Diaz leads if either plays more than Giannis. Ties remain pending.</p><div class="board-update">${error?escape(error):data?`ESPN · Checked ${escape(new Date(data.updatedAt).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))} · Refreshes every 5 minutes`:'Connecting to ESPN…'}</div></article>`;
+  }
+  function renderCard(item,data,error) {
+    return item.tracker.type==='player-games'?playerCard(item,data,error):card(item,data,error);
+  }
   async function mount() {
     clearTimeout(refreshTimer);
     const root = document.getElementById('theBoard');
@@ -45,18 +57,19 @@
     try {
       await loadItems();
       if (!root.isConnected) return;
-      root.innerHTML = items.map(item => `<div data-board-id="${escape(item.id)}" data-board-season="${item.season}">${card(item)}</div>`).join('') || '<p>No challenges on The Board yet.</p>';
-      await Promise.all([...new Set(items.map(i => i.season))].map(async season => {
+      root.innerHTML = items.map(item => `<div data-board-id="${escape(item.id)}" data-board-season="${item.season}">${renderCard(item)}</div>`).join('') || '<p>No challenges on The Board yet.</p>';
+      await Promise.all([...new Set(items.map(i => `${i.season}:${i.tracker.type==='player-games'?'games':'standings'}`))].map(async key => {
+        const [season,kind]=key.split(':');
         let data, error;
         try {
-          const response = await fetch(`/api/board-standings?season=${season}`, {cache:'no-store'});
+          const response = await fetch(`/api/board-${kind}?season=${season}`, {cache:'no-store'});
           data = await response.json();
           if (!response.ok || !data.ok) throw Error();
         } catch { data = null; error = 'Live standings unavailable. Retrying automatically in 5 minutes.'; }
         if (!root.isConnected) return;
         root.querySelectorAll(`[data-board-season="${season}"]`).forEach(el => {
           const item = items.find(i => i.id === el.dataset.boardId);
-          el.innerHTML = card(item, data, error);
+          if((item.tracker.type==='player-games'?'games':'standings')===kind) el.innerHTML = renderCard(item, data, error);
         });
       }));
     } catch { if (root.isConnected) root.innerHTML = '<p class="board-note">The Board could not be loaded. Please reload to try again.</p>'; }

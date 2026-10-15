@@ -65,5 +65,24 @@
       "noParticipant": "Jake",
       "paceLine": 45.5
     }
+  },
+  {
+    "id": "seth-diaz-games-2027",
+    "season": 2027,
+    "participants": [
+      "Seth",
+      "Diaz"
+    ],
+    "onTheLine": "25 units",
+    "challenge": "Giannis to play more games than both Embiid and LeBron",
+    "sides": [
+      "Giannis plays more than both",
+      "Embiid or LeBron plays more than Giannis"
+    ],
+    "tracker": {
+      "type": "player-games",
+      "yesParticipant": "Seth",
+      "noParticipant": "Diaz"
+    }
   }
 ]
