@@ -42,5 +42,27 @@
       "yesParticipant": "Jake",
       "noParticipant": "Friedman"
     }
+  },
+  {
+    "id": "seth-jake-heat-2027",
+    "season": 2027,
+    "participants": [
+      "Seth",
+      "Jake"
+    ],
+    "onTheLine": "100 units",
+    "challenge": "Heat over 45.5 regular-season wins",
+    "sides": [
+      "Heat win 46+ games",
+      "Heat win 45 or fewer games"
+    ],
+    "tracker": {
+      "type": "season-wins",
+      "teamId": "14",
+      "threshold": 46,
+      "seasonGames": 82,
+      "yesParticipant": "Seth",
+      "noParticipant": "Jake"
+    }
   }
 ]
