@@ -7,3 +7,5 @@ Add entries by appending an object to `public/board-items.json`. Each entry need
 The read-only `/api/board-standings?season=2027` endpoint reads ESPN NBA regular-season conference standings, caches for five minutes, and validates season/type and records. The client refreshes every five minutes while the page is open. Use ESPN's playoffSeed position instead of sorting tied records ourselves. Before games begin, or when position is unreported, do not name a leader. Mark final only when every East team has at least 82 regular-season games. An interrupted/shortened schedule would need commissioner review before finalizing. No odds or probabilities are shown.
 
 A new kind of challenge can use a new tracker implementation. No roster, Google Sheet, Wins Pool renderer, or salary logic is involved.
+
+Playoff-finish entries use commissioner-verified finish values: null = pending, 0 = missed playoffs, 1 = first round, 2 = second round, 3 = conference finals, 4 = Finals runner-up, 5 = champion. Both finish values must be entered before resolving; equal values are a push. This tracker is not connected to an automatic playoff results feed.

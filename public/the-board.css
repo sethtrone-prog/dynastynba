@@ -12,3 +12,6 @@
 
 
 #theBoard .board-metrics.board-player-games b{font-size:25px}
+
+#theBoard .board-playoff-metrics{grid-template-columns:1fr 1fr}
+#theBoard .board-playoff-metrics b{font-size:20px}

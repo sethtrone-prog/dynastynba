@@ -46,8 +46,17 @@
     const season=`${item.season-1}–${String(item.season).slice(-2)}`;
     return `<article class="board-card"><div class="board-card-top"><span class="board-kicker">${escape(season)} · Season challenge</span><span class="board-status ${ahead?'board-ahead':''}">${escape(status)}</span></div><h2>${item.participants.map(escape).join(' <span class="board-versus">vs.</span> ')}</h2><p class="board-challenge">${escape(item.challenge)}</p><div class="board-sides">${item.participants.map((name,i)=>`<div class="${ahead===name?'board-leading':''}"><b>${escape(name)}</b><span>${escape(item.sides[i])}</span></div>`).join('')}</div><div class="board-metrics board-player-games">${[['Giannis',g],['Embiid',e],['LeBron',l]].map(([name,n])=>`<div><span>${name} · GP</span><b>${n??'—'}</b></div>`).join('')}</div><div class="board-prize"><span>On the line</span><strong>${escape(item.onTheLine)}</strong></div><p class="board-note">Regular-season games played only. Seth needs Giannis to finish ahead of both players; Diaz leads if either plays more than Giannis. Ties remain pending.</p><div class="board-update">${error?escape(error):data?`ESPN · Checked ${escape(new Date(data.updatedAt).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))} · Refreshes every 5 minutes`:'Connecting to ESPN…'}</div></article>`;
   }
+  function playoffCard(item) {
+    const teams=item.tracker.teams;
+    const rounds=['Missed playoffs','First round','Second round','Conference finals','NBA Finals','Champion'];
+    const complete=teams.every(t=>Number.isInteger(t.finish)&&t.finish>=0&&t.finish<=5);
+    const push=complete&&teams[0].finish===teams[1].finish;
+    const winner=complete&&!push?teams[teams[0].finish>teams[1].finish?0:1].participant:null;
+    const status=push?'Push':winner?`${winner} wins`:'Awaiting playoff results';
+    return `<article class="board-card"><div class="board-card-top"><span class="board-kicker">${item.season-1}–${String(item.season).slice(-2)} · Playoff challenge</span><span class="board-status ${winner?'board-ahead':''}">${escape(status)}</span></div><h2>${item.participants.map(escape).join(' <span class="board-versus">vs.</span> ')}</h2><p class="board-challenge">${escape(item.challenge)}</p><div class="board-sides">${item.participants.map((name,i)=>`<div class="${winner===name?'board-leading':''}"><b>${escape(name)}</b><span>${escape(item.sides[i])}</span></div>`).join('')}</div><div class="board-metrics board-playoff-metrics">${teams.map(t=>`<div><span>${escape(t.name)}</span><b>${Number.isInteger(t.finish)?escape(rounds[t.finish]):'Pending'}</b></div>`).join('')}</div><div class="board-prize"><span>On the line</span><strong>${escape(item.onTheLine)}</strong></div><p class="board-note">The team that advances further wins. Both finish in the same round: push.</p><div class="board-update">Playoff finishes pending verification.</div></article>`;
+  }
   function renderCard(item,data,error) {
-    return item.tracker.type==='player-games'?playerCard(item,data,error):card(item,data,error);
+    return item.tracker.type==='playoff-finish'?playoffCard(item):item.tracker.type==='player-games'?playerCard(item,data,error):card(item,data,error);
   }
   async function mount() {
     clearTimeout(refreshTimer);
@@ -58,7 +67,7 @@
       await loadItems();
       if (!root.isConnected) return;
       root.innerHTML = items.map(item => `<div data-board-id="${escape(item.id)}" data-board-season="${item.season}">${renderCard(item)}</div>`).join('') || '<p>No challenges on The Board yet.</p>';
-      await Promise.all([...new Set(items.map(i => `${i.season}:${i.tracker.type==='player-games'?'games':'standings'}`))].map(async key => {
+      await Promise.all([...new Set(items.filter(i=>i.tracker.type!=='playoff-finish').map(i => `${i.season}:${i.tracker.type==='player-games'?'games':'standings'}`))].map(async key => {
         const [season,kind]=key.split(':');
         let data, error;
         try {
@@ -69,7 +78,7 @@
         if (!root.isConnected) return;
         root.querySelectorAll(`[data-board-season="${season}"]`).forEach(el => {
           const item = items.find(i => i.id === el.dataset.boardId);
-          if((item.tracker.type==='player-games'?'games':'standings')===kind) el.innerHTML = renderCard(item, data, error);
+          if(item.tracker.type!=='playoff-finish'&&(item.tracker.type==='player-games'?'games':'standings')===kind) el.innerHTML = renderCard(item, data, error);
         });
       }));
     } catch { if (root.isConnected) root.innerHTML = '<p class="board-note">The Board could not be loaded. Please reload to try again.</p>'; }

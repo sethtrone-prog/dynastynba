@@ -84,5 +84,34 @@
       "yesParticipant": "Seth",
       "noParticipant": "Diaz"
     }
+  },
+  {
+    "id": "jake-diaz-playoffs-2027",
+    "season": 2027,
+    "participants": [
+      "Jake",
+      "Diaz"
+    ],
+    "onTheLine": "25 units",
+    "challenge": "Better playoff finisher: Celtics vs. 76ers",
+    "sides": [
+      "Boston advances further",
+      "Philadelphia advances further"
+    ],
+    "tracker": {
+      "type": "playoff-finish",
+      "teams": [
+        {
+          "name": "Boston Celtics",
+          "participant": "Jake",
+          "finish": null
+        },
+        {
+          "name": "Philadelphia 76ers",
+          "participant": "Diaz",
+          "finish": null
+        }
+      ]
+    }
   }
 ]
