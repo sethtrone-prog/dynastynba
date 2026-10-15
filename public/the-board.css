@@ -4,3 +4,7 @@
 #theBoard .board-sides>div.board-leading{background:#145c3a;border-color:#51dc92;box-shadow:inset 4px 0 0 #51dc92}
 #theBoard .board-sides>div.board-leading b{color:#acffd0}
 #theBoard .board-sides>div.board-leading span{color:#e1ffed}
+
+/* Secondary pace estimate on season win-total challenges. */
+#theBoard .board-metrics .board-projection b{font-size:20px;color:#b8cbdc;margin-top:10px}
+#theBoard .board-metrics .board-projection span{font-size:10px}

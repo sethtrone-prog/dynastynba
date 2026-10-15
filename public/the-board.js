@@ -29,7 +29,7 @@
     }
     const status = error ? 'Update unavailable' : !data ? 'Loading standings…' : !data.started || (team && !played) ? 'Awaiting season' : !active ? 'Position pending' : settled ? `${ahead} wins` : !ahead ? 'Even pace' : winsTracker ? `${ahead} is ahead · pace` : `${ahead} is ahead`;
     const metrics = winsTracker
-      ? `<div><span>Current wins</span><b>${team ? team.wins : '—'}</b></div><div><span>Projected wins · pace</span><b>${active ? pace.toFixed(1) : '—'}</b></div><div><span>Target</span><b>${escape(tracker.threshold)}+</b></div>`
+      ? `<div><span>Current wins</span><b>${team ? team.wins : '—'}</b></div><div class="board-projection"><span>Projected wins</span><b>${active ? pace.toFixed(1) : '—'}</b></div><div><span>Target</span><b>${escape(tracker.threshold)}+</b></div>`
       : `<div><span>${data?.final ? 'Final East position' : 'Current East position'}</span><b>${active ? ordinal(team.position) : '—'}</b></div><div><span>Miami record</span><b>${team ? `${team.wins}–${team.losses}` : '—'}</b></div><div><span>Target</span><b>Top ${escape(tracker.threshold)}</b></div>`;
     const note = winsTracker
       ? `Regular-season wins only. Green follows the current ${tracker.seasonGames}-game win pace until the result is clinched. ${team ? `${remaining} games remaining.` : ''}`
