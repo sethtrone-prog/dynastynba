@@ -1,0 +1,17 @@
+#theBoard{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,470px),1fr));gap:20px;padding:24px;color:#edf4fa}.board-card{height:100%;border:1px solid #31516e;border-top:3px solid #d9a93b;border-radius:10px;background:linear-gradient(140deg,#102c48,#071a2c);padding:28px}.board-card-top{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}.board-kicker{color:#b7c8d8;font-size:11px;text-transform:uppercase;letter-spacing:1.3px;font-weight:700}.board-status{border:1px solid #456078;border-radius:20px;padding:7px 12px;font-size:12px;color:#c8d5e2}.board-status.board-ahead{background:#103d33;border-color:#3a9372;color:#7ce3b0}.board-card h2{font:700 36px Oswald,sans-serif;color:#f4f7fb;margin:24px 0 10px}.board-versus{color:#d9a93b;font-size:24px;margin:0 8px}.board-challenge{font-size:18px;line-height:1.5;margin:0 0 24px;color:#dce9f6}.board-sides{display:grid;grid-template-columns:1fr 1fr;gap:10px}.board-sides>div{padding:14px;border:1px solid #2e4963;border-radius:7px}.board-sides b,.board-sides span{display:block}.board-sides b{color:#8ecbff;margin-bottom:6px}.board-sides span{font-size:12px;color:#b5c7d7;line-height:1.5}.board-sides>div.board-leading{border-color:#49a37c;background:#0d302b}.board-metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:24px 0}.board-metrics span,.board-prize>span{display:block;color:#a6bbcf;font-size:11px;text-transform:uppercase;letter-spacing:.5px;line-height:1.5}.board-metrics b{display:block;color:#e8c778;font:700 30px Oswald,sans-serif;margin-top:6px}.board-prize{border-top:1px solid #304960;padding-top:20px}.board-prize strong{display:block;color:#f4f7fb;margin-top:8px;font-size:16px;line-height:1.5}.board-note{color:#afc2d3;font-size:12px;line-height:1.6}.board-update{color:#8fa9bf;font-size:11px;line-height:1.6;margin-top:20px}@media(max-width:600px){#theBoard{padding:14px}.board-card{padding:20px}.board-card h2{font-size:30px}.board-challenge{font-size:16px}.board-metrics{gap:8px}.board-metrics b{font-size:26px}}
+/* Automatically follows the participant currently ahead in the live standings. */
+#theBoard .board-sides>div{transition:background-color .2s,border-color .2s,box-shadow .2s}
+#theBoard .board-sides>div.board-leading{background:#145c3a;border-color:#51dc92;box-shadow:inset 4px 0 0 #51dc92}
+#theBoard .board-sides>div.board-leading b{color:#acffd0}
+#theBoard .board-sides>div.board-leading span{color:#e1ffed}
+
+/* Secondary pace estimate on season win-total challenges. */
+#theBoard .board-metrics .board-projection b{font-size:20px;color:#b8cbdc;margin-top:10px}
+#theBoard .board-metrics .board-projection span{font-size:10px}
+
+
+
+#theBoard .board-metrics.board-player-games b{font-size:25px}
+
+#theBoard .board-playoff-metrics{grid-template-columns:1fr 1fr}
+#theBoard .board-playoff-metrics b{font-size:20px}

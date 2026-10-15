@@ -1,0 +1,117 @@
+[
+  {
+    "id": "seth-tom-heat-2027",
+    "season": 2027,
+    "participants": [
+      "Seth",
+      "Tom"
+    ],
+    "onTheLine": "Sixers or Heat jersey of choice",
+    "challenge": "Heat to finish 6th or better in the Eastern Conference",
+    "sides": [
+      "Heat finish 1st\u20136th",
+      "Heat finish 7th\u201315th"
+    ],
+    "tracker": {
+      "type": "conference-position",
+      "teamId": "14",
+      "conferenceId": "5",
+      "threshold": 6,
+      "yesParticipant": "Seth",
+      "noParticipant": "Tom"
+    }
+  },
+  {
+    "id": "jake-friedman-celtics-2027",
+    "season": 2027,
+    "participants": [
+      "Jake",
+      "Friedman"
+    ],
+    "onTheLine": "50 units",
+    "challenge": "Celtics to win 51+ regular-season games",
+    "sides": [
+      "Celtics win 51+ games",
+      "Celtics win 50 or fewer games"
+    ],
+    "tracker": {
+      "type": "season-wins",
+      "teamId": "2",
+      "threshold": 51,
+      "seasonGames": 82,
+      "yesParticipant": "Jake",
+      "noParticipant": "Friedman"
+    }
+  },
+  {
+    "id": "seth-jake-heat-2027",
+    "season": 2027,
+    "participants": [
+      "Seth",
+      "Jake"
+    ],
+    "onTheLine": "100 units",
+    "challenge": "Heat over 45.5 regular-season wins",
+    "sides": [
+      "Heat win 46+ games",
+      "Heat win 45 or fewer games"
+    ],
+    "tracker": {
+      "type": "season-wins",
+      "teamId": "14",
+      "threshold": 46,
+      "seasonGames": 82,
+      "yesParticipant": "Seth",
+      "noParticipant": "Jake",
+      "paceLine": 45.5
+    }
+  },
+  {
+    "id": "seth-diaz-games-2027",
+    "season": 2027,
+    "participants": [
+      "Seth",
+      "Diaz"
+    ],
+    "onTheLine": "25 units",
+    "challenge": "Giannis to play more games than both Embiid and LeBron",
+    "sides": [
+      "Giannis plays more than both",
+      "Embiid or LeBron plays more than Giannis"
+    ],
+    "tracker": {
+      "type": "player-games",
+      "yesParticipant": "Seth",
+      "noParticipant": "Diaz"
+    }
+  },
+  {
+    "id": "jake-diaz-playoffs-2027",
+    "season": 2027,
+    "participants": [
+      "Jake",
+      "Diaz"
+    ],
+    "onTheLine": "25 units",
+    "challenge": "Better playoff finisher: Celtics vs. 76ers",
+    "sides": [
+      "Boston advances further",
+      "Philadelphia advances further"
+    ],
+    "tracker": {
+      "type": "playoff-finish",
+      "teams": [
+        {
+          "name": "Boston Celtics",
+          "participant": "Jake",
+          "finish": null
+        },
+        {
+          "name": "Philadelphia 76ers",
+          "participant": "Diaz",
+          "finish": null
+        }
+      ]
+    }
+  }
+]
