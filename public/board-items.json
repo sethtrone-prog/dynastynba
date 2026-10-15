@@ -26,7 +26,7 @@
     "season": 2027,
     "participants": [
       "Jake",
-      "Friedman"
+      "Jordan"
     ],
     "onTheLine": "50 units",
     "challenge": "Celtics to win 51+ regular-season games",
@@ -40,7 +40,7 @@
       "threshold": 51,
       "seasonGames": 82,
       "yesParticipant": "Jake",
-      "noParticipant": "Friedman"
+      "noParticipant": "Jordan"
     }
   },
   {
