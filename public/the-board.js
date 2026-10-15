@@ -12,11 +12,30 @@
   function card(item, data, error) {
     const tracker = item.tracker;
     const team = data?.teams.find(t => t.id === tracker?.teamId);
-    const active = data?.started && team?.position && team.wins + team.losses > 0;
-    const ahead = active ? (team.position <= tracker.threshold ? tracker.yesParticipant : tracker.noParticipant) : null;
-    let status = error ? 'Update unavailable' : !data ? 'Loading standings…' : !data.started ? 'Awaiting season' : !active ? 'Position pending' : data.final ? `${ahead} wins` : `${ahead} is ahead`;
+    const winsTracker = tracker.type === 'season-wins';
+    const played = team ? team.wins + team.losses : 0;
+    const active = data?.started && played > 0 && (winsTracker || team?.position);
+    const remaining = team ? Math.max(0, (tracker.seasonGames || 82) - played) : null;
+    const pace = played ? team.wins / played * (tracker.seasonGames || 82) : null;
+    let ahead = null, settled = false;
+    if (active && winsTracker) {
+      settled = team.wins >= tracker.threshold || team.wins + remaining < tracker.threshold;
+      if (team.wins >= tracker.threshold) ahead = tracker.yesParticipant;
+      else if (team.wins + remaining < tracker.threshold) ahead = tracker.noParticipant;
+      else if (pace !== tracker.threshold) ahead = pace > tracker.threshold ? tracker.yesParticipant : tracker.noParticipant;
+    } else if (active) {
+      ahead = team.position <= tracker.threshold ? tracker.yesParticipant : tracker.noParticipant;
+      settled = data.final;
+    }
+    const status = error ? 'Update unavailable' : !data ? 'Loading standings…' : !data.started || (team && !played) ? 'Awaiting season' : !active ? 'Position pending' : settled ? `${ahead} wins` : !ahead ? 'Even pace' : winsTracker ? `${ahead} is ahead · pace` : `${ahead} is ahead`;
+    const metrics = winsTracker
+      ? `<div><span>Current wins</span><b>${team ? team.wins : '—'}</b></div><div><span>Projected wins · pace</span><b>${active ? pace.toFixed(1) : '—'}</b></div><div><span>Target</span><b>${escape(tracker.threshold)}+</b></div>`
+      : `<div><span>${data?.final ? 'Final East position' : 'Current East position'}</span><b>${active ? ordinal(team.position) : '—'}</b></div><div><span>Miami record</span><b>${team ? `${team.wins}–${team.losses}` : '—'}</b></div><div><span>Target</span><b>Top ${escape(tracker.threshold)}</b></div>`;
+    const note = winsTracker
+      ? `Regular-season wins only. Green follows the current ${tracker.seasonGames}-game win pace until the result is clinched. ${team ? `${remaining} games remaining.` : ''}`
+      : 'Final regular-season Eastern Conference position decides the result.';
     const season = `${item.season - 1}–${String(item.season).slice(-2)}`;
-    return `<article class="board-card"><div class="board-card-top"><span class="board-kicker">${escape(season)} · Season challenge</span><span class="board-status ${ahead ? 'board-ahead' : ''}">${escape(status)}</span></div><h2>${item.participants.map(escape).join(' <span class="board-versus">vs.</span> ')}</h2><p class="board-challenge">${escape(item.challenge)}</p><div class="board-sides">${item.participants.map((name,i) => `<div class="${ahead === name ? 'board-leading' : ''}"><b>${escape(name)}</b><span>${escape(item.sides[i])}</span></div>`).join('')}</div><div class="board-metrics"><div><span>${data?.final ? 'Final East position' : 'Current East position'}</span><b>${active ? ordinal(team.position) : '—'}</b></div><div><span>Miami record</span><b>${team ? `${team.wins}–${team.losses}` : '—'}</b></div><div><span>Target</span><b>Top ${escape(tracker.threshold)}</b></div></div><div class="board-prize"><span>On the line</span><strong>${escape(item.onTheLine)}</strong></div><p class="board-note">Final regular-season Eastern Conference position decides the result.</p><div class="board-update">${error ? escape(error) : data ? `ESPN · Checked ${escape(new Date(data.updatedAt).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))} · Refreshes every 5 minutes` : 'Connecting to ESPN…'}</div></article>`;
+    return `<article class="board-card"><div class="board-card-top"><span class="board-kicker">${escape(season)} · Season challenge</span><span class="board-status ${ahead ? 'board-ahead' : ''}">${escape(status)}</span></div><h2>${item.participants.map(escape).join(' <span class="board-versus">vs.</span> ')}</h2><p class="board-challenge">${escape(item.challenge)}</p><div class="board-sides">${item.participants.map((name,i) => `<div class="${ahead === name ? 'board-leading' : ''}"><b>${escape(name)}</b><span>${escape(item.sides[i])}</span></div>`).join('')}</div><div class="board-metrics">${metrics}</div><div class="board-prize"><span>On the line</span><strong>${escape(item.onTheLine)}</strong></div><p class="board-note">${escape(note)}</p><div class="board-update">${error ? escape(error) : data ? `ESPN · Checked ${escape(new Date(data.updatedAt).toLocaleString([], {month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))} · Refreshes every 5 minutes` : 'Connecting to ESPN…'}</div></article>`;
   }
   async function mount() {
     clearTimeout(refreshTimer);

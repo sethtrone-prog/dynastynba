@@ -2,10 +2,45 @@
   {
     "id": "seth-tom-heat-2027",
     "season": 2027,
-    "participants": ["Seth", "Tom"],
+    "participants": [
+      "Seth",
+      "Tom"
+    ],
     "onTheLine": "Sixers or Heat jersey of choice",
     "challenge": "Heat to finish 6th or better in the Eastern Conference",
-    "sides": ["Heat finish 1st–6th", "Heat finish 7th–15th"],
-    "tracker": { "type": "conference-position", "teamId": "14", "conferenceId": "5", "threshold": 6, "yesParticipant": "Seth", "noParticipant": "Tom" }
+    "sides": [
+      "Heat finish 1st\u20136th",
+      "Heat finish 7th\u201315th"
+    ],
+    "tracker": {
+      "type": "conference-position",
+      "teamId": "14",
+      "conferenceId": "5",
+      "threshold": 6,
+      "yesParticipant": "Seth",
+      "noParticipant": "Tom"
+    }
+  },
+  {
+    "id": "jake-friedman-celtics-2027",
+    "season": 2027,
+    "participants": [
+      "Jake",
+      "Friedman"
+    ],
+    "onTheLine": "50 units",
+    "challenge": "Celtics to win 51+ regular-season games",
+    "sides": [
+      "Celtics win 51+ games",
+      "Celtics win 50 or fewer games"
+    ],
+    "tracker": {
+      "type": "season-wins",
+      "teamId": "2",
+      "threshold": 51,
+      "seasonGames": 82,
+      "yesParticipant": "Jake",
+      "noParticipant": "Friedman"
+    }
   }
 ]
