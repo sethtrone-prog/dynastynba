@@ -147,5 +147,15 @@
   }
   function render(){setTimeout(()=>{renderCap();renderPicks();renderPlayerHeader();renderFreeAgencyOwnership();renderPlayerOwnership();},80);setTimeout(renderFreeAgencyOwnership,300);}
   async function refresh(){try{const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'}),data=await response.json();if(response.ok&&data?.ok&&data?.season&&data?.teams){live=data;window.DYNASTY_LIVE_SHEET=data;ensureSeasonOption();render();}else console.info('Dynasty live sheet fallback active:',data?.message||response.status);}catch(err){console.info('Dynasty live sheet fallback active:',err?.message||err);}}
+  // ESPN standings can redraw the same route after the sheet has already loaded.
+  // Reapply the live overlay after every base layout, not just hash changes.
+  if(typeof window.layout==='function'){
+    const originalLayout=window.layout;
+    window.layout=function(...args){
+      const result=originalLayout.apply(this,args);
+      render();
+      return result;
+    };
+  }
   window.addEventListener('hashchange',render);document.getElementById('seasonSelect')?.addEventListener('change',render);refresh();setInterval(refresh,REFRESH_MS);
 })();
