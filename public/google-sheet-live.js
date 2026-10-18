@@ -74,8 +74,9 @@
       const fppg=typeof CURRENT_SEASON_FPPG!=='undefined'?Number(CURRENT_SEASON_FPPG.get(String(espnId))||0):0;
       const last=(row.units||[]).reduce((last,value,index)=>value!=null&&value!==''?index:last,-1);
       const end=last>=0?String(live.years?.[last]||'').split(/[-–—]/).pop():'—';
+      const contractType=/\bPRME\b/i.test(row.display)?'PRME':/\bRME\b/i.test(row.display)?'RME':'Standard';
       const tag=String(row.display).match(/\b(?:PRME|RME|NT[^,;]*)/i)?.[0]||'—';
-      return `<tr><td>${linkedPlayerName(row.display)}</td><td><span class="roster-status ${row.status.toLowerCase()}">${esc(row.status)}</span></td><td class="num" style="text-align:center">${esc(row.units?.[0]??'—')}</td><td class="num" style="text-align:center">${fppg.toFixed(2)}</td><td>—</td><td>${esc(tag)}</td><td>${esc(end)}</td></tr>`;
+      return `<tr><td>${linkedPlayerName(row.display)}</td><td><span class="roster-status ${row.status.toLowerCase()}">${esc(row.status)}</span></td><td class="num" style="text-align:center">${esc(row.units?.[0]??'—')}</td><td class="num" style="text-align:center">${fppg.toFixed(2)}</td><td>${contractType}</td><td>${esc(tag)}</td><td>${esc(end)}</td></tr>`;
     }).join('')||'<tr><td colspan="7">No roster data.</td></tr>';
     const active=rows.filter(row=>row.status==='Active').length,special=rows.filter(row=>row.status!=='Active'&&row.status!=='Dead Cap').length;
     const summary=document.querySelector('.team-subhead p');if(summary)summary.textContent=`${rows.length} roster records · ${active} active · ${special} special-status`;
