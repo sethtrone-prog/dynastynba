@@ -69,7 +69,7 @@
     const rows=[...data.main.map(row=>({...row,status:/dead cap/i.test(row.display)?'Dead Cap':row.slot==='TW'?'TW':'Active'})),...(data.gLeague||[]).map(row=>({...row,status:'G-League'}))].filter(row=>row.display);
     rows.sort((a,b)=>a.display.localeCompare(b.display));
     table.querySelector('tbody').innerHTML=rows.map(row=>{
-      const name=normPlayerName(row.display),p=players.find(p=>{const n=normPlayerName(p.Player_Name);return n&&(name===n||name.startsWith(n+' '));});
+      const name=normPlayerName(row.display),p=players.find(p=>{const n=normPlayerName(p.Player_Name).replace(/ (?:jr|sr|ii|iii|iv)$/, '');return n&&(name===n||name.startsWith(n+' '));});
       const espnId=p&&(window.VERIFIED_ESPN_IDS?.[p.Player_ID]||p.ESPN_Player_ID);
       const fppg=typeof CURRENT_SEASON_FPPG!=='undefined'?Number(CURRENT_SEASON_FPPG.get(String(espnId))||0):0;
       const last=(row.units||[]).reduce((last,value,index)=>value!=null&&value!==''?index:last,-1);
@@ -81,6 +81,13 @@
     const summary=document.querySelector('.team-subhead p');if(summary)summary.textContent=`${rows.length} roster records · ${active} active · ${special} special-status`;
     table.dataset.rosterSource='live-sheet';
   }
+
+  // Catch late initial-page renders that replace the standalone roster table.
+  // Observe only #app, and only repaint an unmarked current Roster table.
+  const rosterRoot=document.getElementById('app');
+  if(rosterRoot)new MutationObserver(()=>{
+    if(route().tab==='roster'&&document.querySelector('.team-table')?.dataset.rosterSource!=='live-sheet')renderRoster();
+  }).observe(rosterRoot,{childList:true,subtree:true});
 
   function renderPicks(){
     if(!live?.ok||!seasonIsLive())return;const {fid,tab}=route();if(tab!=='picks'||!fid)return;const rows=live.teams?.[fid]?.futurePicks;if(!rows?.length)return;
