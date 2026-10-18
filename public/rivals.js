@@ -8,6 +8,8 @@
   function franchiseFor(id,year){if(Number(id)===(year<=2024?6:11))return 'F03';return mapping[Number(id)]||null;}
   function result(m){
     if(!m.home||!m.away)return null;
+    // ESPN assigned results to canceled 2020 zero-score matchups.
+    if(m.home.score!=null&&m.away.score!=null&&Number(m.home.score)===0&&Number(m.away.score)===0)return null;
     if(m.winner==='HOME')return 1;
     if(m.winner==='AWAY')return -1;
     // Never turn an undecided 0-0 future matchup into a tie.
@@ -60,7 +62,7 @@
     <section class="card rivals-highlight"><div class="card-pad"><div class="eyebrow">TOP RIVAL${summary.missing.length?' · AVAILABLE DATA':''}</div>${top?`<h2>${escape(title(top.fid))}</h2><div class="rivals-record">${record(top)}</div><p>${top.games} matchups · ${(top.pct*100).toFixed(1)}% win rate</p><button class="text-link" data-rival="${escape(top.fid)}">View opponent →</button>`:'<h2>No completed matchups</h2><p>A top rival appears once ESPN reports completed games for this selection.</p>'}</div></section>
     <p class="note">Top Rival is the record closest to .500, counting ties as half a win. Ties are broken by more matchups, then the smaller average scoring margin. Playoff views exclude consolation games. Records below are W–L–T from this team’s perspective.</p>
     <section class="card"><div class="table-wrap"><table class="data-table rivals-table"><thead><tr><th>Opponent</th><th>W–L–T</th><th>Games</th><th>Win%</th><th>Points For</th><th>Points Against</th><th>Avg. Margin</th></tr></thead><tbody>${rows.map(r=>`<tr class="${r.fid===top?.fid?'rivals-top-row':''}"><td><button class="inline-link" data-rival="${escape(r.fid)}">${escape(title(r.fid))}</button>${r.fid===top?.fid?'<small class="subline">TOP RIVAL</small>':''}</td><td class="record">${record(r)}</td><td>${r.games}</td><td>${r.pct==null?'—':r.pct.toFixed(3)}</td><td>${number(r.pf)}</td><td>${number(r.pa)}</td><td>${number(r.avgMargin)}</td></tr>`).join('')}</tbody></table></div></section>
-    <p class="note">ESPN seasons available: ${loaded.join(', ')||'none'}. Completed results only; no future games counted. Current-season requests refresh every five minutes while this tab is open.${summary.missing.length?' Unavailable or unmapped seasons: '+summary.missing.join(', ')+'. Totals exclude unavailable results.':''}</p>`;
+    <p class="note">ESPN seasons available: ${loaded.join(', ')||'none'}. Completed results only; future and canceled zero-score games excluded. Current-season requests refresh every five minutes while this tab is open.${summary.missing.length?' Unavailable or unmapped seasons: '+summary.missing.join(', ')+'. Totals exclude unavailable results.':''}</p>`;
     root.querySelector('#rivalsMode').addEventListener('change',e=>{mode=e.target.value;draw(root,data,fid);});
     root.querySelectorAll('[data-rival]').forEach(button=>button.addEventListener('click',()=>go('team/'+button.dataset.rival+'/rivals')));
   }
