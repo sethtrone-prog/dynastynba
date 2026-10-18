@@ -44,7 +44,7 @@
 
   function renderCap(){
     if(!live?.ok||!seasonIsLive())return;
-    const {fid,tab}=route();if(!fid||!['overview','roster'].includes(tab))return;
+    const {fid,tab}=route();if(!fid||tab!=='overview')return;
     const data=live.teams?.[fid];if(!data?.main?.length)return;
     const table=document.querySelector('.team-panel .team-table');if(!table)return;const panel=table.closest('.team-panel');if(!panel)return;
     const years=live.years||[];let activeNumber=0;
@@ -57,6 +57,29 @@
     section.innerHTML=`<div class="card-pad section-title"><div><div class="eyebrow">DEVELOPMENT ROSTER</div><h2>G-League</h2></div><span>5 roster slots · does not count toward cap</span></div><div class="table-wrap"><table class="data-table contract-year-grid g-league-table"><thead><tr><th class="contract-player-col">Player</th>${years.map(y=>`<th class="contract-year-head">${esc(y)}</th>`).join('')}</tr></thead><tbody>${(data.gLeague||[]).slice(0,5).map(row=>`<tr><td class="contract-player-col">${row.display?linkedPlayerName(row.display):'<span class="cap-empty-slot">Open slot</span>'}</td>${unitCells(row.units,years)}</tr>`).join('')}</tbody></table></div>`;
     let stack=panel.closest('.corrected-overview-roster-stack');if(!stack){stack=document.createElement('div');stack.className='corrected-overview-roster-stack';panel.parentNode.insertBefore(stack,panel);stack.appendChild(panel);}stack.appendChild(section);
     requestAnimationFrame(fitMobileRosterNames);
+  }
+
+  // The standalone Roster table is distinct from Overview's cap grid.
+  function renderRoster(){
+    if(!live?.ok||!seasonIsLive())return;
+    const {fid,tab}=route();if(!fid||tab!=='roster')return;
+    const data=live.teams?.[fid];if(!Array.isArray(data?.main))return;
+    const table=document.querySelector('.team-table');if(!table)return;
+    const players=(typeof DB!=='undefined'&&DB?.Players||[]).slice().sort((a,b)=>String(b.Player_Name||'').length-String(a.Player_Name||'').length);
+    const rows=[...data.main.map(row=>({...row,status:/dead cap/i.test(row.display)?'Dead Cap':row.slot==='TW'?'TW':'Active'})),...(data.gLeague||[]).map(row=>({...row,status:'G-League'}))].filter(row=>row.display);
+    rows.sort((a,b)=>a.display.localeCompare(b.display));
+    table.querySelector('tbody').innerHTML=rows.map(row=>{
+      const name=normPlayerName(row.display),p=players.find(p=>{const n=normPlayerName(p.Player_Name);return n&&(name===n||name.startsWith(n+' '));});
+      const espnId=p&&(window.VERIFIED_ESPN_IDS?.[p.Player_ID]||p.ESPN_Player_ID);
+      const fppg=typeof CURRENT_SEASON_FPPG!=='undefined'?Number(CURRENT_SEASON_FPPG.get(String(espnId))||0):0;
+      const last=(row.units||[]).reduce((last,value,index)=>value!=null&&value!==''?index:last,-1);
+      const end=last>=0?String(live.years?.[last]||'').split(/[-–—]/).pop():'—';
+      const tag=String(row.display).match(/\b(?:PRME|RME|NT[^,;]*)/i)?.[0]||'—';
+      return `<tr><td>${linkedPlayerName(row.display)}</td><td><span class="roster-status ${row.status.toLowerCase()}">${esc(row.status)}</span></td><td class="num" style="text-align:center">${esc(row.units?.[0]??'—')}</td><td class="num" style="text-align:center">${fppg.toFixed(2)}</td><td>—</td><td>${esc(tag)}</td><td>${esc(end)}</td></tr>`;
+    }).join('')||'<tr><td colspan="7">No roster data.</td></tr>';
+    const active=rows.filter(row=>row.status==='Active').length,special=rows.filter(row=>row.status!=='Active'&&row.status!=='Dead Cap').length;
+    const summary=document.querySelector('.team-subhead p');if(summary)summary.textContent=`${rows.length} roster records · ${active} active · ${special} special-status`;
+    table.dataset.rosterSource='live-sheet';
   }
 
   function renderPicks(){
@@ -145,7 +168,7 @@
     const rosterTimeline=[...document.querySelectorAll('.player-panel')].find(el=>el.querySelector('h2')?.textContent.trim()==='Roster Timeline');
     if(rosterTimeline){for(const tr of rosterTimeline.querySelectorAll('tbody tr')){const cells=tr.querySelectorAll('td');if(cells.length>4&&Number(cells[0].textContent.trim())===Number(live.season))cells[4].textContent=String(units);}}
   }
-  function render(){setTimeout(()=>{renderCap();renderPicks();renderPlayerHeader();renderFreeAgencyOwnership();renderPlayerOwnership();},80);setTimeout(renderFreeAgencyOwnership,300);}
+  function render(){setTimeout(()=>{renderCap();renderRoster();renderPicks();renderPlayerHeader();renderFreeAgencyOwnership();renderPlayerOwnership();},80);setTimeout(renderFreeAgencyOwnership,300);}
   async function refresh(){try{const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'}),data=await response.json();if(response.ok&&data?.ok&&data?.season&&data?.teams){live=data;window.DYNASTY_LIVE_SHEET=data;ensureSeasonOption();render();}else console.info('Dynasty live sheet fallback active:',data?.message||response.status);}catch(err){console.info('Dynasty live sheet fallback active:',err?.message||err);}}
   // ESPN standings can redraw the same route after the sheet has already loaded.
   // Reapply the live overlay after every base layout, not just hash changes.
