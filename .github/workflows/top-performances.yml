@@ -1,0 +1,33 @@
+name: Update Top Performances
+on:
+  schedule:
+    - cron: '15 13 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: top-performances-update
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: main
+          persist-credentials: true
+      - name: Prepare Python
+        run: |
+          python3 -m venv /tmp/performance-updater
+          /tmp/performance-updater/bin/pip install pyarrow==26.0.0
+      - name: Fetch results and rebuild leaderboard
+        run: /tmp/performance-updater/bin/python scripts/update_top_performances.py
+      - name: Publish checked results
+        run: |
+          git add public/data/top-performances.json data/performance-game-cache.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Refresh daily Top Performances leaderboard'
+          git push origin HEAD:main
