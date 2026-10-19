@@ -42,6 +42,18 @@
     app.innerHTML=`<section class="page-head"><div class="eyebrow">Dynasty NBA · ${live.displaySeason}</div><h1>Transactions</h1><p>Live league transaction log from the master Google Sheet.</p></section><div class="content"><section class="card transactions-live-card"><div class="card-pad section-title"><h2>${live.displaySeason} TRANSACTION LOG</h2><span>${rows.length} recorded moves · refreshes every 10 minutes</span></div>${rows.length?table(rows):'<div class="empty">No transactions are currently listed in the Google Sheet.</div>'}</section></div>`;
     if(typeof setActive==='function')setActive();
   }
+  function renderTeamOverview(){
+    if(!live?.ok)return;
+    const p=routeParts();
+    if(p[0]!=='team'||(p[2]&&p[2]!=='overview')||!FID_OWNER[p[1]])return;
+    const feed=document.querySelector('#app .transaction-feed.compact');
+    if(!feed)return;
+    const owner=FID_OWNER[p[1]];
+    const rows=(live.transactions||[]).filter(x=>String(x.team).trim().toLowerCase()===owner.toLowerCase()).slice(0,8);
+    feed.innerHTML=rows.map(x=>`<div class="transaction-row"><time>${esc(x.date||'—')}</time><span class="move-badge">${esc(x.type)}</span><div><b>${typeof playerLink==='function'?playerLink(x.asset,'transaction-player-link'):esc(x.asset)}</b><p>${esc(x.details||'')}</p></div></div>`).join('')||`<div class="empty">No ${esc(live.displaySeason)} transactions are currently listed for this team in the Google Sheet.</div>`;
+  }
+  const originalTeamPage=window.teamPage;
+  window.teamPage=function(){const result=originalTeamPage.apply(this,arguments);renderTeamOverview();return result;};
   function renderTeam(){
     if(!live?.ok)return;
     const p=routeParts();
@@ -57,7 +69,7 @@
     }
     holder.innerHTML=`<section class="card transactions-live-card"><div class="card-pad section-title"><h2>${esc(owner.toUpperCase())} TRANSACTIONS</h2><span>${rows.length} current-season moves · live from Google Sheet</span></div>${rows.length?table(rows):'<div class="empty">No current-season transactions are listed for this team.</div>'}</section>`;
   }
-  function renderAll(){setTimeout(()=>{renderHome();renderLeague();renderTeam();},90);}
+  function renderAll(){setTimeout(()=>{renderHome();renderLeague();renderTeamOverview();renderTeam();},90);}
   async function refresh(){
     try{
       const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'});
