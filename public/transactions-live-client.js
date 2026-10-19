@@ -25,7 +25,7 @@
     const label=card.querySelector('.section-title > span');
     if(label)label.textContent='Latest Sheet Activity';
     const list=card.querySelector('.news-list');
-    if(list)list.innerHTML=rows.length?rows.map(x=>`<div class="news-item"><div class="news-date">${esc(x.date||'—')}</div><div><b>${esc(x.type||'League Move')}</b><small>${esc(x.team)} · ${esc(x.asset)}</small></div></div>`).join(''):`<div class="empty">No ${esc(live.displaySeason)} transactions are currently listed in the Google Sheet.</div>`;
+    if(list)list.innerHTML=rows.length?rows.map(x=>`<div class="news-item"><div class="news-date">${esc(x.date||'—')}</div><div><b>${esc(x.type||'League Move')}</b><small>${esc(x.team)} · ${esc(x.asset)}</small>${x.details?`<small>${esc(x.details)}</small>`:''}</div></div>`).join(''):`<div class="empty">No ${esc(live.displaySeason)} transactions are currently listed in the Google Sheet.</div>`;
   }
   // Reapply after every homepage render, including asynchronous standings updates.
   const originalHome=window.home;
