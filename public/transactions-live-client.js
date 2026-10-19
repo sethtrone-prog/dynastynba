@@ -1,5 +1,8 @@
 // Live Google Sheet transaction overlay. Existing DB remains the fallback.
 (function(){
+  const newsStyle=document.createElement('style');
+  newsStyle.textContent='.league-news .news-live-item{grid-template-columns:42px minmax(0,1fr) minmax(0,1fr);gap:10px}.league-news .news-live-item>div{min-width:0;overflow-wrap:anywhere}.league-news .news-contract small{margin-top:0}';
+  document.head.appendChild(newsStyle);
   const ENDPOINT='/api/transactions-live';
   const REFRESH_MS=10*60*1000;
   const FID_OWNER={F01:'Andrew',F02:'Brandon',F03:'Jake',F04:'Jordan',F05:'Derek',F06:'J&J',F07:'Diaz',F08:'Tom',F09:'Nate',F10:'Seth'};
@@ -25,7 +28,7 @@
     const label=card.querySelector('.section-title > span');
     if(label)label.textContent='Latest Sheet Activity';
     const list=card.querySelector('.news-list');
-    if(list)list.innerHTML=rows.length?rows.map(x=>`<div class="news-item"><div class="news-date">${esc(x.date||'—')}</div><div><b>${esc(x.type||'League Move')}</b><small>${esc(x.team)} · ${esc(x.asset)}</small>${x.details?`<small>${esc(x.details)}</small>`:''}</div></div>`).join(''):`<div class="empty">No ${esc(live.displaySeason)} transactions are currently listed in the Google Sheet.</div>`;
+    if(list)list.innerHTML=rows.length?rows.map(x=>`<div class="news-item news-live-item"><div class="news-date">${esc(x.date||'—')}</div><div><b>${esc(x.type||'League Move')}</b><small>${esc(x.team)} · ${esc(x.asset)}</small></div><div class="news-contract">${x.details?`<small>${esc(x.details)}</small>`:''}</div></div>`).join(''):`<div class="empty">No ${esc(live.displaySeason)} transactions are currently listed in the Google Sheet.</div>`;
   }
   // Reapply after every homepage render, including asynchronous standings updates.
   const originalHome=window.home;
