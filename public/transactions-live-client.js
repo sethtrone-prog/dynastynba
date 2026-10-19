@@ -24,7 +24,7 @@
     const card=document.querySelector('#app .league-news');
     if(!card)return;
     // The master sheet keeps newest moves first, including same-day entries.
-    const rows=(live.transactions||[]).slice(0,4);
+    const rows=(live.transactions||[]).slice(0,5);
     const label=card.querySelector('.section-title > span');
     if(label)label.textContent='Latest Sheet Activity';
     const list=card.querySelector('.news-list');
