@@ -16,6 +16,20 @@
   function table(rows){
     return `<div class="table-wrap"><table class="data-table transactions-live-table"><thead><tr><th>Date</th><th>Team</th><th>Move</th><th>Player / Asset</th><th>Transaction Details</th></tr></thead><tbody>${rows.map(x=>`<tr><td class="tx-date">${esc(x.date||'—')}</td><td class="tx-team"><b>${esc(x.team)}</b></td><td><span class="tx-pill ${pillClass(x.type)}">${esc(x.type)}</span></td><td class="tx-asset">${esc(x.asset)}</td><td class="tx-details">${esc(x.details||'')}</td></tr>`).join('')}</tbody></table></div>`;
   }
+  function renderHome(){
+    if(!live?.ok)return;
+    const card=document.querySelector('#app .league-news');
+    if(!card)return;
+    // The master sheet keeps newest moves first, including same-day entries.
+    const rows=(live.transactions||[]).slice(0,4);
+    const label=card.querySelector('.section-title > span');
+    if(label)label.textContent='Latest Sheet Activity';
+    const list=card.querySelector('.news-list');
+    if(list)list.innerHTML=rows.length?rows.map(x=>`<div class="news-item"><div class="news-date">${esc(x.date||'—')}</div><div><b>${esc(x.type||'League Move')}</b><small>${esc(x.team)} · ${esc(x.asset)}</small></div></div>`).join(''):`<div class="empty">No ${esc(live.displaySeason)} transactions are currently listed in the Google Sheet.</div>`;
+  }
+  // Reapply after every homepage render, including asynchronous standings updates.
+  const originalHome=window.home;
+  window.home=function(){const result=originalHome.apply(this,arguments);renderHome();return result;};
   function renderLeague(){
     if(!live?.ok)return;
     const p=routeParts();
@@ -40,7 +54,7 @@
     }
     holder.innerHTML=`<section class="card transactions-live-card"><div class="card-pad section-title"><h2>${esc(owner.toUpperCase())} TRANSACTIONS</h2><span>${rows.length} current-season moves · live from Google Sheet</span></div>${rows.length?table(rows):'<div class="empty">No current-season transactions are listed for this team.</div>'}</section>`;
   }
-  function renderAll(){setTimeout(()=>{renderLeague();renderTeam();},90);}
+  function renderAll(){setTimeout(()=>{renderHome();renderLeague();renderTeam();},90);}
   async function refresh(){
     try{
       const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'});
