@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Lora:ital,wght@0,400;0,500;1,400&display=swap");
 /* Scope homepage shortcuts and blog styling without altering roster surfaces. */
-.home-actions{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));max-width:1000px}
-.home-actions .hero-btn,.home-actions .hero-btn.primary{width:100%;min-height:56px;padding:12px 14px;background:linear-gradient(#f2cb70,#d9a93b);border:1px solid #d9a93b;color:#071321;font:700 14px Oswald,sans-serif;letter-spacing:.6px;display:flex;align-items:center;justify-content:center;text-align:center}
+.home-actions{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));max-width:750px}
+.home-actions .hero-btn,.home-actions .hero-btn.primary{width:100%;min-height:42px;padding:9px 10.5px;background:linear-gradient(#f2cb70,#d9a93b);border:1px solid #d9a93b;color:#071321;font:700 10.5px Oswald,sans-serif;letter-spacing:.45px;display:flex;align-items:center;justify-content:center;text-align:center}
 .home-actions .hero-btn:hover{background:#ffe097;border-color:#ffe097}
 .home-actions .hero-btn:focus-visible,.tablet-archive a:focus-visible,.tablet-permalink:focus-visible{outline:3px solid #7fc0ff;outline-offset:4px}
 .tablet-masthead{display:flex;align-items:center;gap:32px;padding:30px;margin-bottom:22px;border-top:3px solid #d9a93b}
@@ -15,6 +15,6 @@
 .tablet-copy{font-family:Lora,Georgia,serif;max-width:76ch;color:#e8eef5;font-size:16px;line-height:1.85;overflow-wrap:anywhere}.tablet-copy p{margin:0 0 24px}.tablet-copy p:last-child{margin-bottom:0}
 .tablet-archive{padding:24px}.tablet-archive h3{font:600 25px Oswald,sans-serif;color:#f2c55d;margin:6px 0 20px}.tablet-archive a{display:block;padding:16px 12px;border-top:1px solid #285b85;color:#7fc0ff;text-decoration:none}.tablet-archive a[aria-current]{background:#102f4b;border-left:3px solid #d9a93b}.tablet-archive b{display:block;font-size:16px}.tablet-archive time{display:block;color:#b6ccdd;margin-top:8px;font-size:12px}
 @media(max-width:900px){.home-actions{grid-template-columns:repeat(2,minmax(0,1fr))}.tablet-layout{grid-template-columns:1fr}.tablet-masthead{gap:20px;padding:24px}.tablet-masthead img{width:132px;height:132px}}
-@media(max-width:480px){.tablet-masthead{flex-direction:column;text-align:center}.home-actions .hero-btn{font-size:12px;padding:12px 8px}.tablet-copy{font-size:15px}}
+@media(max-width:480px){.tablet-masthead{flex-direction:column;text-align:center}.home-actions .hero-btn{font-size:9px;padding:9px 6px}.tablet-copy{font-size:15px}}
 
 .tablet-masthead .tablet-signature,.tablet-meta .tablet-signature{font-family:Caveat,"Segoe Print","Bradley Hand",cursive;font-size:28px;font-weight:600;color:#7fc0ff;letter-spacing:.3px}
