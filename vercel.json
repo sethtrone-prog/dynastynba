@@ -9,5 +9,7 @@
       "source": "/api/espn/current",
       "destination": "/api/espn-current"
     }
-  ]
+  ],
+  "buildCommand": "node scripts/build-share-pages.cjs",
+  "outputDirectory": "public"
 }
