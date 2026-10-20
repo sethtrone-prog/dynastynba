@@ -8,7 +8,7 @@
   const FID_OWNER={F01:'Andrew',F02:'Brandon',F03:'Jake',F04:'Jordan',F05:'Derek',F06:'J&J',F07:'Diaz',F08:'Tom',F09:'Nate',F10:'Seth'};
   let live=null;
   const esc=v=>String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const routeParts=()=>location.hash.replace(/^#/,'').split('/');
+  const routeParts=()=>window.DynastyLocation.hash.replace(/^#/,'').split('/');
   const pillClass=type=>{
     const t=String(type||'').toLowerCase();
     if(t.includes('trade')) return 'trade';

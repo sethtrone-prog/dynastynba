@@ -43,6 +43,6 @@
     const original=render;
     render=function(){if(String(route||'').split('/')[0]==='wins-pool'){draw();return;}original();ensureNav();};
   }
-  window.addEventListener('hashchange',()=>{ensureNav();if(location.hash.replace(/^#/,'').split('/')[0]==='wins-pool')setTimeout(draw,0)});
-  setTimeout(()=>{ensureNav();if(location.hash.replace(/^#/,'').split('/')[0]==='wins-pool')draw();},150);
+  window.addEventListener('hashchange',()=>{ensureNav();if(window.DynastyLocation.hash.replace(/^#/,'').split('/')[0]==='wins-pool')setTimeout(draw,0)});
+  setTimeout(()=>{ensureNav();if(window.DynastyLocation.hash.replace(/^#/,'').split('/')[0]==='wins-pool')draw();},150);
 })();

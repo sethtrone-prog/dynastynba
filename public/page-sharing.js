@@ -1,11 +1,11 @@
 // Keep hash navigation compatible, while copied URLs have a crawlable page path.
 (()=>{
- fetch('/share-pages.json').then(r=>{if(!r.ok)throw Error();return r.json()}).then(pages=>{
+ Promise.resolve(window.DYNASTY_SHARE_PAGES).then(pages=>{
   function update(){
-   const route=location.hash.slice(1)||'home',page=pages.find(p=>p[0]===route);
+   const route=window.DynastyLocation.hash.slice(1)||'home',page=pages.find(p=>p[0]===route);
    // Unknown routes must not retain another page's path or preview.
    const target=page?'/'+page[1]:'/';
-   if(location.pathname!==target)history.replaceState(null,'',target+location.search+location.hash);
+   
    if(!page){document.title='Dynasty NBA';for(const selector of ['meta[property="og:title"]','meta[name="twitter:title"]'])document.querySelector(selector)?.setAttribute('content','Dynasty NBA');return;}
    const title=page[2]==='Dynasty NBA'?page[2]:page[2]+' | Dynasty NBA';document.title=title;
    const set=(selector,value)=>{const el=document.querySelector(selector);if(el)el.setAttribute(el.tagName==='LINK'?'href':'content',value)};

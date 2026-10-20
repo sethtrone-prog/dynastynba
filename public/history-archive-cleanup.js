@@ -1,7 +1,7 @@
 // Remove the ESPN season-summary card from the league History view.
 (function(){
   function removeArchiveCard(){
-    const base=location.hash.replace(/^#/,'').split('/')[0]||'home';
+    const base=window.DynastyLocation.hash.replace(/^#/,'').split('/')[0]||'home';
     if(base!=='history')return;
     document.querySelectorAll('#app .espn-season-summary').forEach(el=>el.remove());
   }

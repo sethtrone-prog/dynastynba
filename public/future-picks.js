@@ -4,7 +4,7 @@
 
   function escPick(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
   function routeInfo(){
-    const p=location.hash.replace(/^#/,'').split('/');
+    const p=window.DynastyLocation.hash.replace(/^#/,'').split('/');
     return {fid:p[1]||'', tab:p[2]||'overview'};
   }
   function renderFuturePicks(){
@@ -58,7 +58,7 @@
     if(e.target.closest('[onclick*="go(\'team/"], .team-tabs button')) schedule();
   });
   document.getElementById('seasonSelect')?.addEventListener('change',schedule);
-  if(location.hash.includes('/picks')) schedule();
+  if(window.DynastyLocation.hash.includes('/picks')) schedule();
 
   const style=document.createElement('style');
   style.textContent=`

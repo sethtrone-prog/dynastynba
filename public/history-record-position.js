@@ -1,7 +1,7 @@
 // Keep the all-time regular-season record directly below the six team navigation tabs.
 (function () {
   function positionAllTimeRecord() {
-    const parts = location.hash.replace(/^#/, '').split('/');
+    const parts = window.DynastyLocation.hash.replace(/^#/, '').split('/');
     if (parts[0] !== 'team' || parts[2] !== 'history') return;
 
     const tabs = document.querySelector('#app .team-tabs');

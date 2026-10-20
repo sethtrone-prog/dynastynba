@@ -21,7 +21,7 @@
     return s;
   }
   function routeInfo() {
-    const parts=location.hash.replace(/^#/,'').split('/');
+    const parts=window.DynastyLocation.hash.replace(/^#/,'').split('/');
     const currentSeason=Number(typeof season!=='undefined'?season:document.getElementById('seasonSelect')?.value);
     return {fid:parts[1], valid:parts[0]==='team'&&!!TEAM_CAP_DATA[parts[1]]&&(!parts[2]||parts[2]==='overview')&&currentSeason===TEST_SEASON};
   }
@@ -85,7 +85,7 @@
     if(e.target.closest('[onclick*="go(\'team/"], [data-route="teams"]'))schedule();
   });
   document.getElementById('seasonSelect')?.addEventListener('change',schedule);
-  if(location.hash.startsWith('#team/'))schedule();
+  if(window.DynastyLocation.hash.startsWith('#team/'))schedule();
 
   const style=document.createElement('style');
   style.textContent=`

@@ -12,7 +12,7 @@
   }
 
   function fixScheduleNames(){
-    if(!location.hash.startsWith('#schedule')) return;
+    if(!window.DynastyLocation.hash.startsWith('#schedule')) return;
     document.querySelectorAll('.matchup-row .match-team b').forEach(el=>{
       const current=el.textContent.trim();
       const next=publicTeamName(current);
@@ -35,7 +35,7 @@
   const app=document.getElementById('app');
   if(app){
     const observer=new MutationObserver(()=>{
-      if(!location.hash.startsWith('#schedule')||queued) return;
+      if(!window.DynastyLocation.hash.startsWith('#schedule')||queued) return;
       queued=true;
       requestAnimationFrame(()=>{
         queued=false;

@@ -10,7 +10,7 @@
   const signed=v=>v==null?'—':`${v>0?'+':''}${Number(v).toFixed(1)}`;
   const perfClass=v=>v==null?'':(v>0?'positive':v<0?'negative':'neutral');
   const ord=n=>{const s=['th','st','nd','rd'],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);};
-  const routeParts=()=>location.hash.replace(/^#/,'').split('/');
+  const routeParts=()=>window.DynastyLocation.hash.replace(/^#/,'').split('/');
 
   function renderLeague(){
     if(!live?.ok)return;

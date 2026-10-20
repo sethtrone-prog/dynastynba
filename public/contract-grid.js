@@ -142,7 +142,7 @@
   }
 
   function isOverviewRoute() {
-    const parts = location.hash.replace(/^#/, '').split('/');
+    const parts = window.DynastyLocation.hash.replace(/^#/, '').split('/');
     return parts[0] === 'team' && !!parts[1] && (!parts[2] || parts[2] === 'overview');
   }
 
@@ -270,7 +270,7 @@
 
   function renderContractGrid() {
     if (!isOverviewRoute() || typeof DB === 'undefined' || !DB) return;
-    const parts = location.hash.replace(/^#/, '').split('/');
+    const parts = window.DynastyLocation.hash.replace(/^#/, '').split('/');
     const fid = parts[1];
     const sid = typeof seasonId === 'function' ? seasonId(season) : `S${season}`;
     const fullRoster = (DB.Rosters || []).filter(r => r.Franchise_ID === fid && r.Season_ID === sid);
@@ -325,7 +325,7 @@
   });
   const seasonSelect = document.getElementById('seasonSelect');
   if (seasonSelect) seasonSelect.addEventListener('change', () => setTimeout(renderContractGrid, 0));
-  if (location.hash.startsWith('#team/')) setTimeout(renderContractGrid, 0);
+  if (window.DynastyLocation.hash.startsWith('#team/')) setTimeout(renderContractGrid, 0);
 
   const style = document.createElement('style');
   style.textContent = `

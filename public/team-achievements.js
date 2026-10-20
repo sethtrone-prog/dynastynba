@@ -86,10 +86,10 @@
   }
   function recordText(s){return `${s.W}-${s.L}${s.T?`-${s.T}`:''}`;}
   async function updateTeamHeader(){
-    const parts=location.hash.replace(/^#/,'').split('/');if(parts[0]!=='team'||!parts[1])return;
+    const parts=window.DynastyLocation.hash.replace(/^#/,'').split('/');if(parts[0]!=='team'||!parts[1])return;
     const fid=String(parts[1]).toUpperCase(),meta=document.querySelector('#app .team-command .team-command-meta');if(!meta)return;
     const spans=meta.querySelectorAll('span');if(spans.length<3)return;
-    const s=await calculate(fid);if(location.hash.replace(/^#/,'').split('/')[1]?.toUpperCase()!==fid)return;
+    const s=await calculate(fid);if(window.DynastyLocation.hash.replace(/^#/,'').split('/')[1]?.toUpperCase()!==fid)return;
     spans[0].textContent=`${s.championships} ${s.championships===1?'CHAMPIONSHIP':'CHAMPIONSHIPS'}`;
     spans[1].textContent=`${s.playoffs} ${s.playoffs===1?'PLAYOFF APPEARANCE':'PLAYOFF APPEARANCES'}`;
     spans[2].textContent=`${recordText(s)} ALL-TIME REGULAR-SEASON RECORD`;

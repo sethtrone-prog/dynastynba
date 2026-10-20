@@ -32,7 +32,7 @@ style.textContent=`
 `;
 document.head.appendChild(style);
 function scope(){
-const route=location.hash.replace(/^#\/?/,'').split('/')[0];
+const route=window.DynastyLocation.hash.replace(/^#\/?/,'').split('/')[0];
 const app=document.getElementById('app');if(!app)return;
 app.classList.toggle('accent-team',route==='team');
 app.classList.toggle('accent-wins',route==='wins-pool');
