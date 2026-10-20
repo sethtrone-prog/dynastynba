@@ -98,7 +98,7 @@
   function liveContractUnitsForPlayer(playerName){
     if(!live?.ok||!playerName)return null;
     const n=normPlayerName(playerName);
-    const yearIndex=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').startsWith(String(live.season)));
+    const yearIndex=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').split('-').pop().trim()===String(live.season));
     if(yearIndex<0)return null;
     for(const team of Object.values(live.teams||{})){
       for(const row of [...(team.main||[]),...(team.gLeague||[])]){
@@ -173,10 +173,27 @@
     const contract=document.getElementById('playerContractUnits');if(contract)contract.textContent=String(units);
     const timeline=[...document.querySelectorAll('.player-panel')].find(el=>el.querySelector('h2')?.textContent.trim()==='Contract Timeline');
     if(timeline){for(const tr of timeline.querySelectorAll('tbody tr')){const cells=tr.querySelectorAll('td');if(cells.length>1&&Number(cells[0].textContent.trim())===Number(live.season))cells[1].textContent=String(units);}}
-    const rosterTimeline=[...document.querySelectorAll('.player-panel')].find(el=>el.querySelector('h2')?.textContent.trim()==='Roster Timeline');
-    if(rosterTimeline){for(const tr of rosterTimeline.querySelectorAll('tbody tr')){const cells=tr.querySelectorAll('td');if(cells.length>4&&Number(cells[0].textContent.trim())===Number(live.season))cells[4].textContent=String(units);}}
+
   }
-  function render(){setTimeout(()=>{renderCap();renderRoster();renderPicks();renderPlayerHeader();renderFreeAgencyOwnership();renderPlayerOwnership();},80);setTimeout(renderFreeAgencyOwnership,300);}
+  function renderPlayerRosterTimeline(){
+    if(!live?.ok||!seasonIsLive())return;
+    const parts=location.hash.replace(/^#/,'').split('/');if(parts[0]!=='player'||!parts[1])return;
+    const ownership=liveRosterOwnership().get(parts[1]);if(!ownership)return;
+    const p=(typeof DB!=='undefined'&&DB?.Players||[]).find(x=>x.Player_ID===parts[1]);if(!p)return;
+    const panel=[...document.querySelectorAll('.player-panel')].find(el=>el.querySelector('h2')?.textContent.trim()==='Roster Timeline');
+    const body=panel?.querySelector('tbody');if(!body)return;
+    const year=Number(live.season),fid=ownership.fid,units=liveContractUnitsForPlayer(p.Player_Name);
+    // Reconcile only this player's current franchise row; retain all other history.
+    const matches=[...body.querySelectorAll('tr')].filter(tr=>{
+      const cells=tr.querySelectorAll('td');return cells.length===5&&Number(cells[0].textContent.trim())===year&&cells[1].querySelector('button')?.getAttribute('onclick')==="go('team/"+fid+"/roster')";
+    });
+    const tr=matches.shift()||document.createElement('tr');matches.forEach(row=>row.remove());
+    const owner=typeof franchise==='function'?franchise(fid).Current_Owner||'':'';
+    const label=typeof franchiseLabel==='function'?franchiseLabel(fid):fid;
+    tr.innerHTML=`<td>${esc(year)}</td><td><button class="inline-link" onclick="go('team/${esc(fid)}/roster')">${esc(label)}</button></td><td>${esc(owner||'—')}</td><td><span class="roster-status ${esc(ownership.status.toLowerCase())}">${esc(ownership.status)}</span></td><td>${esc(units??'—')}</td>`;
+    body.querySelector('td[colspan]')?.closest('tr').remove();body.prepend(tr);
+  }
+  function render(){setTimeout(()=>{renderCap();renderRoster();renderPicks();renderPlayerHeader();renderPlayerRosterTimeline();renderFreeAgencyOwnership();renderPlayerOwnership();},80);setTimeout(renderFreeAgencyOwnership,300);}
   async function refresh(){try{const response=await fetch(`${ENDPOINT}?refresh=${Date.now()}`,{cache:'no-store'}),data=await response.json();if(response.ok&&data?.ok&&data?.season&&data?.teams){live=data;window.DYNASTY_LIVE_SHEET=data;ensureSeasonOption();render();}else console.info('Dynasty live sheet fallback active:',data?.message||response.status);}catch(err){console.info('Dynasty live sheet fallback active:',err?.message||err);}}
   // ESPN standings can redraw the same route after the sheet has already loaded.
   // Reapply the live overlay after every base layout, not just hash changes.
