@@ -98,7 +98,7 @@
   function liveContractUnitsForPlayer(playerName){
     if(!live?.ok||!playerName)return null;
     const n=normPlayerName(playerName);
-    const yearIndex=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').startsWith(String(live.season)));
+    const yearIndex=(live.years||[]).findIndex(y=>String(y).replace(/[–—]/g,'-').split('-').pop().trim()===String(live.season));
     if(yearIndex<0)return null;
     for(const team of Object.values(live.teams||{})){
       for(const row of [...(team.main||[]),...(team.gLeague||[])]){
