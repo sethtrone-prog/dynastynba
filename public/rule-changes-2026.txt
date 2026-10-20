@@ -1,3 +1,39 @@
+2026-2027 Changes
+
+Rookie Draft Lottery Changes
+
+SECTION 5 — ROOKIE DRAFT & LOTTERY
+
+5.1 The Rookie Draft has two rounds and uses the same order in both rounds (not a snake draft).
+
+5.2 The six non-playoff franchises each choose a distinct NBA lottery team, in this fantasy standings order: fifth place chooses first, then sixth through tenth place.
+
+5.3 The actual NBA lottery ranking among ONLY the six selected NBA teams determines fantasy Rookie Draft positions 1–6. Unselected NBA teams are ignored for this purpose.
+
+5.4 Playoff franchise draft slots: fourth place picks seventh; third place picks eighth; runner-up picks ninth; champion picks tenth.
+
+5.5 Traded picks normally retain the original franchise's draft position. The missed-games penalty described in Section 2 instead applies to the next first-round selection the offending franchise actually makes, including an acquired pick; there is no sixth-pick exemption.
+
+Playoff Eligibility Changes
+
+SECTION 10 — PLAYOFFS & POSTSEASON ELIGIBILITY
+
+10.1 The top four franchises qualify for a two-week postseason. Seeding ties are resolved by head-to-head record, then total fantasy points.
+
+10.2 A tied playoff matchup is decided by the franchise with more points in the PTS scoring category.
+
+10.3 Playoff rosters lock at playoff commencement. Standard free agency closes. G-League and Two-Way players cannot play unless promoted before the playoffs or approved as an injury replacement.
+
+10.4 Playoff injury replacement requests may be submitted starting Sunday of the final regular-season matchup and must be submitted to the Commissioner and approved BEFORE playoffs begin.
+
+10.5 The injured active player must have a verifiable injury designation, short-term or long-term, supported by an NBA injury report or reliable source. Rest, healthy scratches and suspensions do not qualify.
+
+10.6 The replacement must come from the requesting franchise's own G-League or Two-Way roster. Approval requires a simple majority of actual yes/no votes cast by eligible franchises; the requesting franchise does not vote and abstentions are excluded.
+
+10.7 Once replaced, the injured player is permanently removed from that franchise's active playoff roster even if the player recovers. The replacement must remain on the playoff roster for the entire postseason. Roster size, contracts, salary and future rights are unchanged.
+
+10.8 The DPE is governed by the separate timing and eligibility provisions of Section 9.
+
 2025-2026 Changes
 Schedule changed to an 18 week regular season.
 
