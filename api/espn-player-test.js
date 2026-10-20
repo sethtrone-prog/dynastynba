@@ -2,10 +2,11 @@ const ESPN_BASE = 'https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba';
 const LEAGUE_ID = '76513288';
 
 export default async function handler(req, res) {
+  res.setHeader('cache-control','no-store, max-age=0');
   const season = String(req.query.season || '2026').replace(/[^0-9]/g, '') || '2026';
   const url = `${ESPN_BASE}/seasons/${season}/segments/0/leagues/${LEAGUE_ID}?view=kona_player_info&view=kona_playercard&view=mTeam`;
   try {
-    const upstream = await fetch(url, {headers:{'User-Agent':'dynastynba.com salary engine test','x-fantasy-filter':JSON.stringify({players:{limit:2000,sortPercOwned:{sortPriority:1,sortAsc:false}}})}});
+    const upstream = await fetch(url, {cache:'no-store',headers:{'User-Agent':'dynastynba.com salary engine test','x-fantasy-filter':JSON.stringify({players:{limit:2000,sortPercOwned:{sortPriority:1,sortAsc:false}}})}});
     const body = await upstream.text();
     if (!upstream.ok) return res.status(502).send(body);
     const data = JSON.parse(body);
