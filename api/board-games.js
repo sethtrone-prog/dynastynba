@@ -1,43 +1,27 @@
-const PLAYERS = [{id:'3032977',name:'Giannis Antetokounmpo'},{id:'3059318',name:'Joel Embiid'},{id:'1966',name:'LeBron James'}];
-async function json(url) {
-  const r = await fetch(url,{signal:AbortSignal.timeout(12000)});
-  if(!r.ok) throw Error('ESPN unavailable');
-  return r.json();
-}
-export function gamesPlayed(data,season,started) {
-  const seasonType=String(data.filters?.find(f=>f.name==='seasontype')?.value ?? '2');
-  if(seasonType!=='2') throw Error('Wrong season type');
-  const category=data.categories?.find(c=>c.names?.includes('gamesPlayed'));
-  if(!category) throw Error('Games played unavailable');
-  const rows=category.statistics?.filter(r=>Number(r.season?.year ?? r.season?.displayName ?? season)===season)||[];
-  if(!rows.length) return 0;
-  const index=category.names.indexOf('gamesPlayed');
-  // ESPN supplies a combined row when an athlete has played for multiple teams.
-  const total=rows.find(r=>r.teamSlug==='total'||r.teamSlug==='tot'||r.teamId==='0'||r.teamId==='-1');
-  const selected=total?[total]:rows;
-  const values=selected.map(r=>r.stats[index]);
-  if(values.some(v=>v==null||v===''||!Number.isInteger(Number(v))||Number(v)<0))throw Error('Invalid games played');
-  return values.reduce((sum,v)=>sum+Number(v),0);
-}
+const PLAYERS=[{id:'3032977',name:'Giannis Antetokounmpo'},{id:'3059318',name:'Joel Embiid'},{id:'1966',name:'LeBron James'}];
+const ESPN_BASE='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba';
+const LEAGUE_ID='76513288';
 export default async function handler(req,res) {
-  const season=Number(req.query.season||2027);
-  if(!Number.isInteger(season)||season<2027||season>2100)return res.status(400).json({ok:false});
-  try {
-    const [standings,...stats]=await Promise.all([
-      json(`https://site.web.api.espn.com/apis/v2/sports/basketball/nba/standings?season=${season}&seasontype=2&level=2`),
-      ...PLAYERS.map(p=>json(`https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/${p.id}/stats?season=${season}&seasontype=2`))
-    ]);
-    const groups=standings.children?.filter(g=>g.isConference || /eastern|western/i.test(g.name||''));
-    if(!groups?.length)throw Error('Season unavailable');
-    const entries=groups.flatMap(g=>g.standings.entries||[]);
-    if(!entries.length)throw Error('Standings incomplete');
-    const played=entries.map(e=>['wins','losses'].reduce((sum,key)=>{const n=e.stats.find(s=>s.name===key)?.value;if(!Number.isFinite(Number(n))||Number(n)<0)throw Error('Record unavailable');return sum+Number(n);},0));
-    const started=played.some(n=>n>0),final=played.every(n=>n>=82);
-    const players=PLAYERS.map((p,i)=>({...p,games:gamesPlayed(stats[i],season,started)}));
-    res.setHeader('Cache-Control','s-maxage=300, stale-while-revalidate=120');
-    return res.json({ok:true,season,started,final,players,updatedAt:new Date().toISOString(),source:'ESPN'});
-  }catch{
-    res.setHeader('Cache-Control','no-store');
-    return res.status(502).json({ok:false,error:'Player games played are temporarily unavailable.'});
-  }
+ const season=Number(req.query.season||2027);
+ if(!Number.isInteger(season)||season<2027||season>2100)return res.status(400).json({ok:false});
+ try {
+  const url=`${ESPN_BASE}/seasons/${season}/segments/0/leagues/${LEAGUE_ID}?view=kona_player_info&view=kona_playercard&view=mTeam`;
+  const upstream=await fetch(url,{signal:AbortSignal.timeout(15000),headers:{'User-Agent':'dynastynba.com board games played','x-fantasy-filter':JSON.stringify({players:{limit:2000,sortPercOwned:{sortPriority:1,sortAsc:false}}})}});
+  if(!upstream.ok)throw Error('ESPN HTTP '+upstream.status);
+  const data=await upstream.json();
+  const byId=new Map((data.players||[]).map(e=>[String(e.player?.id??e.id),e.player||{}]));
+  const players=PLAYERS.map(p=>{
+   const athlete=byId.get(p.id);
+   const stat=athlete?.stats?.find(s=>Number(s.seasonId)===season&&Number(s.statSourceId)===0&&Number(s.statSplitTypeId)===0);
+   const raw=stat?.stats?.['42'];
+   const games=raw==null?null:Number(raw);
+   if(games!==null&&(!Number.isInteger(games)||games<0))throw Error('Invalid GP: '+p.name);
+   return {...p,games};
+  });
+  res.setHeader('Cache-Control','s-maxage=300, stale-while-revalidate=120');
+  return res.json({ok:true,season,started:players.some(p=>p.games!==null&&p.games>0),final:false,players,updatedAt:new Date().toISOString(),source:'ESPN Fantasy stat 42'});
+ }catch(error){
+  res.setHeader('Cache-Control','no-store');
+  return res.status(502).json({ok:false,error:'ESPN Fantasy games played unavailable',detail:String(error?.message||error)});
+ }
 }
