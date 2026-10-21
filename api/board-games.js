@@ -12,9 +12,10 @@ export default async function handler(req,res) {
   const byId=new Map((data.players||[]).map(e=>[String(e.player?.id??e.id),e.player||{}]));
   const players=PLAYERS.map(p=>{
    const athlete=byId.get(p.id);
-   const stat=athlete?.stats?.find(s=>Number(s.seasonId)===season&&Number(s.statSourceId)===0&&Number(s.statSplitTypeId)===0);
+   if(!athlete)throw Error('Player missing from ESPN response: '+p.name);
+   const stat=athlete.stats?.find(s=>Number(s.seasonId)===season&&Number(s.statSourceId)===0&&Number(s.statSplitTypeId)===0);
    const raw=stat?.stats?.['42'];
-   const games=raw==null?null:Number(raw);
+   const games=raw==null?0:Number(raw);
    if(games!==null&&(!Number.isInteger(games)||games<0))throw Error('Invalid GP: '+p.name);
    return {...p,games};
   });
