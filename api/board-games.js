@@ -10,7 +10,7 @@ export function gamesPlayed(data,season,started) {
   const category=data.categories?.find(c=>c.names?.includes('gamesPlayed'));
   if(!category) throw Error('Games played unavailable');
   const rows=category.statistics?.filter(r=>Number(r.season?.year ?? r.season?.displayName ?? season)===season)||[];
-  if(!rows.length) return 0;
+  if(!rows.length) return started ? null : 0;
   const index=category.names.indexOf('gamesPlayed');
   // ESPN supplies a combined row when an athlete has played for multiple teams.
   const total=rows.find(r=>r.teamSlug==='total'||r.teamSlug==='tot'||r.teamId==='0'||r.teamId==='-1');
@@ -34,8 +34,9 @@ export default async function handler(req,res) {
     const played=entries.map(e=>['wins','losses'].reduce((sum,key)=>{const n=e.stats.find(s=>s.name===key)?.value;if(!Number.isFinite(Number(n))||Number(n)<0)throw Error('Record unavailable');return sum+Number(n);},0));
     const started=played.some(n=>n>0),final=played.every(n=>n>=82);
     const players=PLAYERS.map((p,i)=>({...p,games:gamesPlayed(stats[i],season,started)}));
+    const diagnostics = req.query.debug === '1' ? stats.map((d,i)=>({name:PLAYERS[i].name,filters:d.filters,categories:(d.categories||[]).map(c=>({names:c.names,rows:(c.statistics||[]).map(r=>({season:r.season,teamSlug:r.teamSlug,teamId:r.teamId,stats:r.stats?.slice(0,15)}))}))})) : undefined;
     res.setHeader('Cache-Control','s-maxage=300, stale-while-revalidate=120');
-    return res.json({ok:true,season,started,final,players,updatedAt:new Date().toISOString(),source:'ESPN'});
+    return res.json({ok:true,season,started,final,players,diagnostics,updatedAt:new Date().toISOString(),source:'ESPN'});
   }catch{
     res.setHeader('Cache-Control','no-store');
     return res.status(502).json({ok:false,error:'Player games played are temporarily unavailable.'});
