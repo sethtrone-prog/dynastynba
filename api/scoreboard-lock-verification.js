@@ -18,7 +18,7 @@ export default async function handler(req,res){
   ]);
   const sorted=observations.items.sort((a,b)=>new Date(a.uploadedAt)-new Date(b.uploadedAt));
   const first=sorted[0],last=sorted.at(-1);
-  const load=async b=>{if(!b)return null;const result=await get(b.pathname,{access:'private',token:process.env.BLOB_READ_WRITE_TOKEN});return result?JSON.parse(await result.stream.text()):null};
+  const load=async b=>{if(!b)return null;const result=await get(b.pathname,{access:'private',token:process.env.BLOB_READ_WRITE_TOKEN});return result?JSON.parse(await new Response(result.stream).text()):null};
   const [earliest,latest]=await Promise.all([load(first),load(last)]);
   const saved=await Promise.all(locks.items.slice(0,300).map(load));
   const names=new Map((league.teams||[]).map(t=>[Number(t.id),t.name||'Team '+t.id]));
