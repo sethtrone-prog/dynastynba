@@ -19,6 +19,6 @@ export default async function handler(req,res){
   }).filter(m=>m.home&&m.away);
   const current=Number(d.scoringPeriodId)||null;
   const active=period||current||Number(matchups[0]?.period)||1;
-  res.status(200).json({ok:true,period:active,currentPeriod:current,updatedAt:new Date().toISOString(),matchups:matchups.filter(m=>Number(m.period)===active),gameLimit:null,notes:'Games used is displayed only when ESPN explicitly supplies a counted-games field. No inferred counts.'});
+  res.status(200).json({ok:true,period:active,currentPeriod:current,updatedAt:new Date().toISOString(),matchups:matchups.filter(m=>Number(m.period)===active),gameLimit:active===1?23:null,notes:'Games used is displayed only when ESPN explicitly supplies a counted-games field. No inferred counts.'});
  }catch(e){res.status(502).json({ok:false,error:'ESPN scoreboard unavailable',detail:String(e.message||e)});}
 }
