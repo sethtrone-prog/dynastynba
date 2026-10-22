@@ -11,5 +11,11 @@
     }
   ],
   "buildCommand": "node scripts/build-share-pages.cjs",
-  "outputDirectory": "public"
+  "outputDirectory": "public",
+  "crons": [
+    {
+      "path": "/api/scoreboard-lock-worker",
+      "schedule": "* * * * *"
+    }
+  ]
 }
