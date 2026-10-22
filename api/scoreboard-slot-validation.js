@@ -1,6 +1,6 @@
 const BASE='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288';
 async function read(q){const r=await fetch(BASE+'?'+q,{headers:{Accept:'application/json'},signal:AbortSignal.timeout(9000)});if(!r.ok)throw Error('ESPN HTTP '+r.status);return r.json()}
-const slotNames={0:'PG',1:'SG',2:'SF',3:'PF',4:'C',5:'G',6:'F',7:'SG/SF',8:'PF/C',9:'UTIL',10:'BE',11:'IR',12:'IR+',13:'BE',20:'BE',21:'IR',22:'IR+',23:'FLEX',24:'G-LEAGUE'};
+const slotNames={5:'Active scoring slot',6:'Active scoring slot',8:'Active scoring slot',9:'Active scoring slot',10:'Active scoring slot',11:'Active scoring slot',12:'Bench',13:'Injured reserve'};
 export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');
  try{
@@ -12,6 +12,9 @@ export default async function handler(req,res){
   const declaredIds=Object.keys(declared);
   const unknown=observed.filter(id=>!declaredIds.includes(id));
   const full=teams.length===10&&teams.every(t=>t.entries>0);
-  res.json({ok:true,verified:full&&unknown.length===0,teamCount:teams.length,declaredSlotCounts:declared,observedSlotIds:observed,unknownSlotIds:unknown,slotNameHints:slotNames,teams,warning:'Slot names are hints only. Validate declared slots and ESPN lock behavior before publishing cumulative counts.'});
+  const activeSlotIds=Object.entries(declared).filter(([id,n])=>Number(n)>0&&Number(id)!==12&&Number(id)!==13).map(([id])=>Number(id));
+  const activeSlotCount=activeSlotIds.reduce((sum,id)=>sum+Number(declared[id]||0),0);
+  const configMatches=activeSlotCount===9&&Number(declared[12])===15&&Number(declared[13])===2;
+  res.json({ok:true,verified:full&&unknown.length===0&&configMatches,activeSlotIds,activeSlotCount,benchSlotId:12,injuredReserveSlotId:13,teamCount:teams.length,declaredSlotCounts:declared,observedSlotIds:observed,unknownSlotIds:unknown,slotNameHints:slotNames,teams,warning:'League slot configuration is validated; historical day-specific lineups and at-lock roster behavior still require separate verification.'});
  }catch(e){res.status(502).json({ok:false,verified:false,error:'ESPN roster validation failed',detail:e.message})}
 }
