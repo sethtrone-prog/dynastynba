@@ -12,7 +12,7 @@ async function run(period){
  const schedule=settings.settings?.scheduleSettings||{};
  const periods=schedule.matchupPeriods||{};
  const dayIds=Object.entries(periods).filter(([k])=>Number(k)===period).flatMap(([,v])=>Array.isArray(v)?v:[]);
- if(!dayIds.length)return {ok:false,reason:'No daily scoring periods returned for this matchup',period,periodKeys:Object.keys(periods)};
+ if(!dayIds.length)return {ok:false,reason:'ESPN did not provide a day mapping for this matchup; no games-used total can be verified',period,periodKeys:Object.keys(periods),periodsSample:Object.entries(periods).slice(0,5),scheduleSettingsKeys:Object.keys(schedule),espnCurrentScoringPeriod:settings.scoringPeriodId??null};
  const days=dayIds.slice(0,10);
  const counts=new Map(),issues=[];
  const daily=await Promise.all(days.map(async day=>{
@@ -24,7 +24,7 @@ async function run(period){
    return {day,rosterTeams,hasRoster:rosterTeams.length>0,dateString,scoringDate};
   }catch(e){issues.push('Day '+day+': '+e.message);return {day,rosterTeams:[],hasRoster:false}}
  }));
- return {ok:true,period,dayIds,daysInspected:daily.map(d=>({day:d.day,teams:d.rosterTeams.length,firstTeamSlots:d.rosterTeams[0]?.roster?.entries?.slice(0,3).map(e=>({slot:e.lineupSlotId,playerId:e.playerId,proTeamId:e.playerPoolEntry?.player?.proTeamId}))||[]})),issues,verified:false,reason:'Requires NBA date-to-scoringPeriodId mapping and lineup slot verification before publishing counts'};
+ return {ok:true,period,dayIds,hasHistoricalRosterData:daily.some(d=>d.rosterTeams.length>0),daysInspected:daily.map(d=>({day:d.day,teams:d.rosterTeams.length,firstTeamSlots:d.rosterTeams[0]?.roster?.entries?.slice(0,3).map(e=>({slot:e.lineupSlotId,playerId:e.playerId,proTeamId:e.playerPoolEntry?.player?.proTeamId}))||[]})),issues,verified:false,reason:daily.some(d=>d.rosterTeams.length>0)?'ESPN roster entries found. Must verify historical accuracy and NBA tipoff mapping before counting.':'No historical daily rosters returned for the inspected scoring days.'};
 }
 export default async function handler(req,res){
  res.setHeader('Cache-Control','public, s-maxage=120');
