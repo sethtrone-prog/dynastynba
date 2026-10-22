@@ -1,0 +1,5 @@
+import {list} from '@vercel/blob';
+export default async function handler(req,res){res.setHeader('Cache-Control','no-store');if(!process.env.BLOB_READ_WRITE_TOKEN)return res.status(503).json({ok:false,error:'Storage not configured'});try{
+ let cursor,files=0,byDate={},pages=0;do{const p=await list({prefix:'scoreboard-beta/locks/',limit:1000,cursor,token:process.env.BLOB_READ_WRITE_TOKEN});for(const b of p.blobs){files++;const date=b.pathname.split('/')[2]||'unknown';byDate[date]=(byDate[date]||0)+1}cursor=p.hasMore?p.cursor:null;pages++}while(cursor&&pages<10);
+ res.json({ok:true,provisionalLockRecords:files,byDate,complete:!cursor,verifiedGamesUsed:false,note:'Record counts include starters and bench. Not published as weekly games used.'});
+}catch(e){res.status(502).json({ok:false,error:e.message})}}
