@@ -7,6 +7,7 @@ async function get(url){const r=await fetch(url,{headers:{Accept:'application/js
 function dateET(now){const p=Object.fromEntries(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(now).map(x=>[x.type,x.value]));return p.year+p.month+p.day}
 export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');
+ console.info('scoreboard-lock-worker invoked',new Date().toISOString());
  if(!process.env.BLOB_READ_WRITE_TOKEN)return res.status(503).json({ok:false,error:'Blob token missing'});
  if(!process.env.CRON_SECRET)return res.status(503).json({ok:false,error:'CRON_SECRET missing'});
  if(req.headers.authorization!=='Bearer '+process.env.CRON_SECRET)return res.status(401).json({ok:false,error:'Unauthorized'});
@@ -26,7 +27,7 @@ export default async function handler(req,res){
   const candidates=[];
   for(const game of events){
    const delta=now.getTime()-new Date(game.start).getTime();
-   if(!Number.isFinite(delta)||delta<0||delta>120000||game.state==='pre'||game.status==='STATUS_POSTPONED')continue;
+   if(!Number.isFinite(delta)||delta<0||delta>900000||game.state==='pre'||game.status==='STATUS_POSTPONED')continue;
    const ids=new Set(game.teams.map(t=>t.nbaTeamId));
    for(const team of teams)for(const player of team.players){
     if(!ACTIVE.has(player.slot)&&!BENCH.has(player.slot))continue;
