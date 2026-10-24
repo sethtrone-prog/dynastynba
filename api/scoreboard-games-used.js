@@ -19,11 +19,15 @@ module.exports=async function handler(req,res){
   const base=await espn('view=mSettings&view=mStatus&view=mSchedule');
   const periods=base.settings?.scheduleSettings?.matchupPeriods||{};
   const keys=Object.keys(periods).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
-  const starts=Object.entries(periods).map(([id,v])=>({id:Number(id),start:Array.isArray(v)?Number(v[0]):NaN})).filter(x=>Number.isInteger(x.start)).sort((a,b)=>a.start-b.start);\n  const index=starts.findIndex(x=>x.id===period);\n  const start=index>=0?starts[index].start:null;\n  const nextStart=index>=0&&index+1<starts.length?starts[index+1].start:null;
+  const starts=Object.entries(periods).map(([id,v])=>({id:Number(id),start:Array.isArray(v)?Number(v[0]):NaN})).filter(x=>Number.isInteger(x.start)).sort((a,b)=>a.start-b.start);
+  const index=starts.findIndex(x=>x.id===period);
+  const start=index>=0?starts[index].start:null;
+  const nextStart=index>=0&&index+1<starts.length?starts[index+1].start:null;
   const current=Number(base.status?.currentScoringPeriod||base.scoringPeriodId||0);
   const through=endOverride??(current>0?current-1:0);
   if(start===null)return res.status(200).json({ok:true,verified:false,period,through,availablePeriodKeys:keys,reason:'ESPN did not expose scoring-period dates for this matchup; no totals published',teams:[]});
-  const last=Math.min(through,nextStart===null?through:nextStart-1);\n  const completed=last>=start?Array.from({length:last-start+1},(_,i)=>start+i):[];
+  const last=Math.min(through,nextStart===null?through:nextStart-1);
+  const completed=last>=start?Array.from({length:last-start+1},(_,i)=>start+i):[];
   if(completed.length>14)return res.status(400).json({ok:false,error:'Too many scoring days'});
   const fetched=await Promise.all(completed.map(async d=>({day:d,data:await espn('view=mRoster&scoringPeriodId='+d)})));
   const ids=new Set((base.teams||[]).map(t=>t.id));
