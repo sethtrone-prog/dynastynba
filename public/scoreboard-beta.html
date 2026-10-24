@@ -9,7 +9,7 @@
 <p><a href="/">Back to Dynasty NBA</a></p></main>
 <script>
 const API='/api/scoreboard-games-used?period=1';
-const ROOT='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288?view=mSchedule&view=mTeam&view=mStatus';
+const ROOT='/api/scoreboard-matchups?period=1';
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const score=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
 async function load(){
@@ -19,7 +19,7 @@ async function load(){
  if(!gr.ok||!sr.ok)throw Error('ESPN or beta API returned an error');
  const [g,s]=await Promise.all([gr.json(),sr.json()]);if(!g.ok||!Array.isArray(g.teams))throw Error(g.error||'Games-used data unavailable');
  const teams=new Map((s.teams||[]).map(t=>[t.id,t]));const counts=new Map(g.teams.map(t=>[t.teamId,t]));
- const matchups=(s.schedule||[]).filter(m=>Number(m.matchupPeriodId)===1&&m.home?.teamId&&m.away?.teamId);
+ const matchups=(s.matchups||[]).filter(m=>Number(m.matchupPeriodId)===1&&m.home?.teamId&&m.away?.teamId);
  if(!matchups.length)throw Error('Week 1 matchups unavailable');
  const row=side=>{const id=side.teamId,t=teams.get(id)||{},c=counts.get(id),used=c?.gamesUsedCandidate,cap=g.weeklyCap||23,over=Number(c?.gamesOverCap||0);const name=t.name||[t.location,t.nickname].filter(Boolean).join(' ')||'Team '+id;return '<div class="team"><div><div class="team-name">'+safe(name)+'</div><div class="usage '+(over?'over':'good')+'">'+(Number.isFinite(used)?'Played '+used+'/'+cap:'Games pending')+(over?' · +'+over+' over cap':'')+'</div></div><div class="score">'+score(side.totalPoints)+'</div></div>'};
  cards.innerHTML=matchups.map((m,i)=>'<article class="card"><h2>Matchup '+(i+1)+'</h2>'+row(m.home)+row(m.away)+'</article>').join('');
