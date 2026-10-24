@@ -11,7 +11,7 @@ function dayEvidence(entry,day){
  const actual=stats.find(s=>s.stats&&Object.keys(s.stats).length>0);
  return {playerId:p.id??entry.playerId??null,name:p.fullName||null,slot:entry.lineupSlotId,hasBoxScore:!!actual,minutesCandidate:actual?.stats?.['34']??null,statKeys:actual?Object.keys(actual.stats):[],playedCandidate:!!actual&&STARTER.has(entry.lineupSlotId)};
 }
-export default async function handler(req,res){
+module.exports=async function handler(req,res){
  res.setHeader('Cache-Control','public, s-maxage=1800, stale-while-revalidate=300');
  const period=Number(req.query.period||1),endOverride=req.query.through===undefined?null:Number(req.query.through);
  if(!Number.isInteger(period)||period<1||period>30||endOverride!==null&&(!Number.isInteger(endOverride)||endOverride<1||endOverride>250))return res.status(400).json({ok:false,error:'Invalid period'});
