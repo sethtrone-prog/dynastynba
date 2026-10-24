@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Scoreboard Beta | Dynasty NBA</title>
+<style>
+:root{color-scheme:dark;font-family:Arial,sans-serif;background:#0b111b;color:#e8edf6}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#1b2b43,#0b111b 55%)}main{max-width:1100px;margin:auto;padding:28px 18px 60px}header{display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap}h1{font-size:32px;margin:8px 0;color:#f5c767}h2{font-size:18px;margin:0 0 14px}p{color:#b9c8d9;line-height:1.55}.muted{color:#9aacc0;font-size:13px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:16px;margin-top:24px}.card{background:#152238;border:1px solid #31425c;border-radius:14px;padding:18px}.team{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #304059}.team:first-of-type{border-top:0}.team-name{font-weight:700;color:#b9d9ff}.score{font-size:21px;font-weight:700;color:#f5c767}.usage{font-size:14px;margin-top:5px}.over{color:#ffad88;font-weight:700}.good{color:#c4d7ed}.error{color:#ffad88}a{color:#f5c767}button{background:#d6ac56;color:#0b111b;border:0;border-radius:8px;padding:10px 14px;font-weight:700;cursor:pointer}.status{margin-top:15px;padding:12px;border:1px solid #31425c;border-radius:10px;background:#122034}</style></head>
+<body><main><header><div><div class="muted">DYNASTY NBA · 2027 SEASON · BETA</div><h1>Week 1 Scoreboard</h1></div><div><button id="refresh">Refresh finalized games</button></div></header>
+<p>Games played count every active-lineup player who logged NBA minutes. Bench appearances and DNPs do not count. Overages remain in the total and are flagged; commissioner point adjustments are handled separately in ESPN.</p>
+<div id="status" class="status">Loading ESPN matchup data and finalized games played…</div><section id="matchups" class="grid"></section>
+<p class="muted">Beta preview · The games-used feed includes finalized scoring days only, with up to 30 minutes of CDN caching. Matchup scores are from ESPN and may include manually adjusted results. Week 1 cap: 23 games. This page does not change league data.</p>
+<p><a href="/">Back to Dynasty NBA</a></p></main>
+<script>
+const API='/api/scoreboard-games-used?period=1';
+const ROOT='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288?view=mSchedule&view=mTeam&view=mStatus';
+const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const score=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
+async function load(){
+ const status=document.getElementById('status'),cards=document.getElementById('matchups');status.textContent='Refreshing finalized games…';
+ try{
+ const [gr,sr]=await Promise.all([fetch(API),fetch(ROOT)]);
+ if(!gr.ok||!sr.ok)throw Error('ESPN or beta API returned an error');
+ const [g,s]=await Promise.all([gr.json(),sr.json()]);if(!g.ok||!Array.isArray(g.teams))throw Error(g.error||'Games-used data unavailable');
+ const teams=new Map((s.teams||[]).map(t=>[t.id,t]));const counts=new Map(g.teams.map(t=>[t.teamId,t]));
+ const matchups=(s.schedule||[]).filter(m=>Number(m.matchupPeriodId)===1&&m.home?.teamId&&m.away?.teamId);
+ if(!matchups.length)throw Error('Week 1 matchups unavailable');
+ const row=side=>{const id=side.teamId,t=teams.get(id)||{},c=counts.get(id),used=c?.gamesUsedCandidate,cap=g.weeklyCap||23,over=Number(c?.gamesOverCap||0);const name=t.name||[t.location,t.nickname].filter(Boolean).join(' ')||'Team '+id;return '<div class="team"><div><div class="team-name">'+safe(name)+'</div><div class="usage '+(over?'over':'good')+'">'+(Number.isFinite(used)?'Played '+used+'/'+cap:'Games pending')+(over?' · +'+over+' over cap':'')+'</div></div><div class="score">'+score(side.totalPoints)+'</div></div>'};
+ cards.innerHTML=matchups.map((m,i)=>'<article class="card"><h2>Matchup '+(i+1)+'</h2>'+row(m.home)+row(m.away)+'</article>').join('');
+ status.textContent='Finalized scoring days: '+(g.completedScoringPeriods||[]).join(', ')+' · '+g.teams.length+' teams · Week 1 cap '+g.weeklyCap+' · Scores from ESPN · '+(g.verified?'Verified':'Provisional week boundary');
+ }catch(e){status.innerHTML='<span class="error">Unable to refresh: '+safe(e.message)+'</span>';cards.innerHTML='';}
+}
+document.getElementById('refresh').addEventListener('click',load);load();
+</script></body></html>
