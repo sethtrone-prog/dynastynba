@@ -38,8 +38,8 @@ module.exports=async function handler(req,res){
   for(const f of fetched)for(const t of f.data.teams||[])ids.add(t.id);
   const teams=[...ids].sort((a,b)=>a-b).map(teamId=>{
    const events=fetched.flatMap(f=>(f.data.teams||[]).filter(t=>t.id===teamId).flatMap(t=>(t.roster?.entries||[]).map(e=>({...dayEvidence(e,f.day),day:f.day})).filter(x=>x.playedCandidate)));
-   return {teamId,gamesUsedCandidate:Math.min(events.length,23),gamesRemainingCandidate:Math.max(0,23-events.length),rawEligibleAppearances:events.length,events};
+   return {teamId,gamesUsedCandidate:events.length,gamesRemainingCandidate:Math.max(0,23-events.length),gamesOverCap:Math.max(0,events.length-23),overCap:events.length>23,display:'Played '+events.length+'/23',rawEligibleAppearances:events.length,events};
   });
-  return res.status(200).json({ok:true,verified:false,season:2027,period,weeklyCap:period===1?23:null,through,matchupStartScoringPeriod:start,nextMatchupStartScoringPeriod:null,boundarySource:'Week 1 provisional: scoring period 1 through previous completed day',completedScoringPeriods:completed,refresh:'Automatic on request; CDN cache 30 minutes',note:'Candidate counts require ESPN stat 40 minutes > 0 and an eligible active slot. Final lineup-lock and 23-game cap order still require validation.',teams});
+  return res.status(200).json({ok:true,verified:false,season:2027,period,weeklyCap:period===1?23:null,through,matchupStartScoringPeriod:start,nextMatchupStartScoringPeriod:null,boundarySource:'Week 1 provisional: scoring period 1 through previous completed day',completedScoringPeriods:completed,refresh:'Automatic on request; CDN cache 30 minutes',note:'Candidate counts require ESPN stat 40 minutes > 0 and an eligible active slot. All qualifying appearances count, including overages; ESPN scoring adjustments are handled manually.',teams});
  }catch(e){return res.status(502).json({ok:false,error:String(e.message).slice(0,180)});}
 }
