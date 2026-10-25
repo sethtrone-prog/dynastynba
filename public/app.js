@@ -62,8 +62,10 @@ function currentTeamHeroStats(fid){
  const o=t.record?.overall||{},w=Number(o.wins)||0,l=Number(o.losses)||0,ties=Number(o.ties)||0;
  const pf=Number(o.pointsFor),rank=Number(t.rank);
  const ordinal=n=>({1:'first',2:'second',3:'third',4:'fourth',5:'fifth',6:'sixth',7:'seventh',8:'eighth',9:'ninth',10:'tenth'}[n]||n+'th');
- const sameRecord=(data.teams||[]).filter(other=>{const r=other.record?.overall||{};return (Number(r.wins)||0)===w&&(Number(r.losses)||0)===l&&(Number(r.ties)||0)===ties;}).length>1;
- const place=rank>0?(sameRecord?'tied-':'')+ordinal(rank):'place pending';
+ const tiedTeams=(data.teams||[]).filter(other=>{const r=other.record?.overall||{};return (Number(r.wins)||0)===w&&(Number(r.losses)||0)===l&&(Number(r.ties)||0)===ties;});
+ const sameRecord=tiedTeams.length>1;
+ const sharedRank=sameRecord?Math.min(...tiedTeams.map(other=>Number(other.rank)).filter(n=>Number.isInteger(n)&&n>0)):rank;
+ const place=rank>0?(sameRecord?'tied-':'')+ordinal(Number.isFinite(sharedRank)?sharedRank:rank):'place pending';
  return {record:w+'-'+l+(ties?'-'+ties:''),label:y+' ESPN RECORD',stats:(Number.isFinite(pf)?fmt(pf)+' PF':'PF —')+' · '+place};
 
 }
