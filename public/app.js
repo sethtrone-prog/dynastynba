@@ -61,7 +61,11 @@ function currentTeamHeroStats(fid){
  if(!t)return {record:'0-0',label:y+' ESPN RECORD',stats:'Current standings unavailable'};
  const o=t.record?.overall||{},w=Number(o.wins)||0,l=Number(o.losses)||0,ties=Number(o.ties)||0;
  const pf=Number(o.pointsFor),rank=Number(t.rank);
- return {record:w+'-'+l+(ties?'-'+ties:''),label:y+' ESPN RECORD',stats:(Number.isFinite(pf)?fmt(pf)+' PF':'PF —')+(rank>0?' · #'+rank:'')};
+ const ordinal=n=>({1:'first',2:'second',3:'third',4:'fourth',5:'fifth',6:'sixth',7:'seventh',8:'eighth',9:'ninth',10:'tenth'}[n]||n+'th');
+ const sameRecord=(data.teams||[]).filter(other=>{const r=other.record?.overall||{};return (Number(r.wins)||0)===w&&(Number(r.losses)||0)===l&&(Number(r.ties)||0)===ties;}).length>1;
+ const place=rank>0?(sameRecord?'tied-':'')+ordinal(rank):'place pending';
+ return {record:w+'-'+l+(ties?'-'+ties:''),label:y+' ESPN RECORD',stats:(Number.isFinite(pf)?fmt(pf)+' PF':'PF —')+' · '+place};
+
 }
 function teamPage(fid,tab){
   let f=franchise(fid),e=eTeamByF(fid),sid=seasonId(season),currentStats=currentTeamHeroStats(fid);tab=tab||'overview';
