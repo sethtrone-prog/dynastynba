@@ -23,7 +23,8 @@ function render(){
  const matchups=(s.matchups||[]).filter(m=>Number(m.matchupPeriodId)===1&&m.home?.teamId&&m.away?.teamId);
  const name=id=>{const t=teams.get(id)||{};return safe(t.name||[t.location,t.nickname].filter(Boolean).join(' ')||'Team '+id)};
  const record=id=>{const r=teams.get(id)?.record;if(!r)return '—';return r.wins+'-'+r.losses+(r.ties?'-'+r.ties:'')};
- const used=id=>counts.get(id)?.gamesUsed??0;
+ const liveCounts=new Map((l?.teams||[]).map(t=>[t.teamId,t.liveAppearanceCandidates||0]));
+ const used=id=>(counts.get(id)?.gamesUsedCandidate||0)+(l?.ok?liveCounts.get(id)||0:0);
  const over=id=>Math.max(0,used(id)-23);
  const playing=id=>(l?.teams||[]).find(t=>t.teamId===id)?.candidates?.filter(p=>p.liveAppearanceCandidate&&p.nbaGameStarted&&!p.nbaGameCompleted&&l.events?.some(e=>e.id===p.eventId&&e.started&&!e.completed))?.length||0;
  const team=(side,other)=>{const u=used(side.teamId),o=over(side.teamId),leader=Number(side.totalPoints)>Number(other.totalPoints);
@@ -39,8 +40,8 @@ function render(){
 }
 async function load(){
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
- try{const response=await fetch('/api/scoreboard-gp-ledger',{cache:'no-store'});const ledger=await response.json();if(!response.ok||!ledger.ok)throw Error(ledger.error||'Shared games-played ledger unavailable');
- const {s,l}=ledger,g={ok:true,teams:ledger.teams};if(!Array.isArray(g.teams)||!s.ok||!(s.matchups||[]).length)throw Error('No Week 1 matchups');
+ try{const [a,b,d]=await Promise.all([fetch(API),fetch(ROOT),fetch(LIVE)]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
+ const [g,s,l]=await Promise.all([a.json(),b.json(),d.ok?d.json():Promise.resolve(null)]);if(!g.ok||!Array.isArray(g.teams)||!s.ok||!(s.matchups||[]).length)throw Error(g.error||s.error||'No Week 1 matchups');
  state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
  }catch(e){document.getElementById('status').innerHTML='<span class="error">Unable to update scoreboard: '+safe(e.message)+'</span>';document.getElementById('refreshState').textContent='Update failed';}
 }
