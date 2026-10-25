@@ -103,6 +103,13 @@
     const promise=fetch('/api/espn-archive?season='+y+(y>=currentYear()?'&rivalsRefresh='+Math.floor(Date.now()/300000):'')).then(r=>{if(!r.ok)throw new Error('Unavailable');return r.json();}).then(d=>{if(!d?.ok||Number(d.season)!==y||!Array.isArray(d.regularSeason)||!Array.isArray(d.teams))throw new Error('Invalid season');return d;}).catch(()=>{cache.delete(y);return {ok:false,season:y};});
     cache.set(y,{promise,expires:y<currentYear()?Infinity:Date.now()+300000});return promise;
   }
+  let sharedPairs=null,sharedUntil=0,sharedPending=null;
+  window.DynastyRivals.getCurrentPairs=async function(){
+    if(sharedPairs&&Date.now()<sharedUntil)return sharedPairs;
+    if(sharedPending)return sharedPending;
+    sharedPending=(async()=>{const ids=(typeof DB!=='undefined'?DB?.Franchises:[]).map(f=>f.Franchise_ID);const end=currentYear();const data=await Promise.all(Array.from({length:end-FIRST+1},(_,i)=>load(FIRST+i)));const pairs=mutualPairs(data,ids);if(pairs){sharedPairs=pairs;sharedUntil=Date.now()+300000;}return pairs;})().finally(()=>{sharedPending=null;});
+    return sharedPending;
+  };
   const title=fid=>{
     const f=(typeof DB!=='undefined'?DB?.Franchises:[])?.find(f=>f.Franchise_ID===fid);
     return f?.Current_Owner||fid;
