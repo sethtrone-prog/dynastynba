@@ -18,30 +18,28 @@ const API='/api/scoreboard-games-used?period=1',ROOT='/api/scoreboard-matchups?p
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
 let state=null,layout='cards';
-// Retain the highest live matchup score seen during this period across refreshes and reloads.
-// This is a provisional display floor, not an official ESPN score correction.
-const SCORE_KEY='dynastynba-live-score-floor-2027-week1-v1';
-let scoreFloors={};
-try{scoreFloors=JSON.parse(localStorage.getItem(SCORE_KEY)||'{}')||{}}catch(_){scoreFloors={}}
-function retainLiveScores(matchups){
- for(const m of matchups||[])for(const side of ['home','away']){
-  const t=m[side];if(!t?.teamId)continue;
-  const key=String(m.matchupPeriodId||1)+':'+String(t.teamId);
-  const value=Number(t.totalPoints);
-  if(!Number.isFinite(value))continue;
-  const prior=Number(scoreFloors[key]);
-  if(!Number.isFinite(prior)||value>prior)scoreFloors[key]=value;
-  else if(value<prior)t.totalPoints=prior;
+// Keep today's played appearances in the GP count after an NBA game goes final.
+// Previous days are counted by the finalized ESPN daily roster endpoint.
+const GP_KEY='dynastynba-week1-today-gp-v1';
+let todayGp={date:'',teams:{}};
+try{todayGp=JSON.parse(localStorage.getItem(GP_KEY)||'null')||todayGp}catch(_){}
+function retainedTodayCounts(l){
+ const date=String(l?.date||'');
+ if(!date)return new Map();
+ if(todayGp.date!==date)todayGp={date,teams:{}};
+ for(const t of l.teams||[]){
+  const id=String(t.teamId),count=Number(t.liveAppearanceCandidates)||0;
+  todayGp.teams[id]=Math.max(Number(todayGp.teams[id])||0,count);
  }
- try{localStorage.setItem(SCORE_KEY,JSON.stringify(scoreFloors))}catch(_){}
+ try{localStorage.setItem(GP_KEY,JSON.stringify(todayGp))}catch(_){}
+ return new Map(Object.entries(todayGp.teams).map(([id,n])=>[Number(id),n]));
 }
-
 function render(){
  if(!state)return;const {g,s,l}=state,teams=new Map((s.teams||[]).map(t=>[t.id,t])),counts=new Map(g.teams.map(t=>[t.teamId,t]));
  const matchups=(s.matchups||[]).filter(m=>Number(m.matchupPeriodId)===1&&m.home?.teamId&&m.away?.teamId);
  const name=id=>{const t=teams.get(id)||{};return safe(t.name||[t.location,t.nickname].filter(Boolean).join(' ')||'Team '+id)};
  const record=id=>{const r=teams.get(id)?.record;if(!r)return '—';return r.wins+'-'+r.losses+(r.ties?'-'+r.ties:'')};
- const liveCounts=new Map((l?.teams||[]).map(t=>[t.teamId,t.liveAppearanceCandidates||0]));
+ const liveCounts=l?.ok?retainedTodayCounts(l):new Map();
  const used=id=>(counts.get(id)?.gamesUsedCandidate||0)+(l?.ok?liveCounts.get(id)||0:0);
  const over=id=>Math.max(0,used(id)-23);
  const playing=id=>(l?.teams||[]).find(t=>t.teamId===id)?.candidates?.filter(p=>p.liveAppearanceCandidate&&p.nbaGameStarted&&!p.nbaGameCompleted&&l.events?.some(e=>e.id===p.eventId&&e.started&&!e.completed))?.length||0;
@@ -60,7 +58,7 @@ async function load(){
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
  try{const [a,b,d]=await Promise.all([fetch(API),fetch(ROOT),fetch(LIVE)]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
  const [g,s,l]=await Promise.all([a.json(),b.json(),d.ok?d.json():Promise.resolve(null)]);if(!g.ok||!Array.isArray(g.teams)||!s.ok||!(s.matchups||[]).length)throw Error(g.error||s.error||'No Week 1 matchups');
- retainLiveScores(s.matchups);state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+ state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
  }catch(e){document.getElementById('status').innerHTML='<span class="error">Unable to update scoreboard: '+safe(e.message)+'</span>';document.getElementById('refreshState').textContent='Update failed';}
 }
 document.getElementById('cardsBtn').onclick=()=>{layout='cards';render()};
