@@ -60,8 +60,8 @@ function currentTeamHeroStats(fid){
  const t=data.teams?.find(t=>String(t.id)===String(eTeamByF(fid).ESPN_Team_ID));
  if(!t)return {record:'0-0',label:y+' ESPN RECORD',stats:'Current standings unavailable'};
  const o=t.record?.overall||{},w=Number(o.wins)||0,l=Number(o.losses)||0,ties=Number(o.ties)||0;
- const pf=Number(o.pointsFor),pa=Number(o.pointsAgainst),rank=Number(t.rank);
- return {record:w+'-'+l+(ties?'-'+ties:''),label:y+' ESPN RECORD',stats:(Number.isFinite(pf)?fmt(pf)+' PF':'PF —')+' · '+(Number.isFinite(pa)?fmt(pa)+' PA':'PA —')+(rank>0?' · #'+rank:'')};
+ const pf=Number(o.pointsFor),rank=Number(t.rank);
+ return {record:w+'-'+l+(ties?'-'+ties:''),label:y+' ESPN RECORD',stats:(Number.isFinite(pf)?fmt(pf)+' PF':'PF —')+(rank>0?' · #'+rank:'')};
 }
 function teamPage(fid,tab){
   let f=franchise(fid),e=eTeamByF(fid),sid=seasonId(season),currentStats=currentTeamHeroStats(fid);tab=tab||'overview';
