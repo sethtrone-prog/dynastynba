@@ -8,7 +8,7 @@ body.embedded{background:transparent}body.embedded main{max-width:none;padding:4
 <div class="sub">Scores update from ESPN · live appearances are provisional until lineup locks are verified</div>
 <div class="toolbar"><div><label class="control-label" for="period">Matchup period</label><select id="period"><option value="1">Week 1 · Current beta</option></select></div><div class="right"><span class="control-label">Layout</span><button id="cardsBtn" class="active" type="button">Cards</button><button id="tableBtn" type="button">Table</button></div></div>
 <div class="meta"><span id="refreshState">Loading scoreboard…</span><span id="cap">Week 1 game limit: 23</span></div>
-<div id="leagueStrip" class="league-strip" aria-label="League scoreboard summary"></div><div id="status" class="status"></div><section id="matchups" class="grid"></section><div id="summary" class="summary"></div>
+<div id="status" class="status"></div><section id="matchups" class="grid"></section><div id="summary" class="summary"></div>
 <p class="bottom">Beta preview with real ESPN matchups and scores. Live NBA appearances are displayed provisionally alongside finalized-day counts; historical lineup locks are not yet verified. ESPN continues counting games above the limit; any overage is flagged for manual commissioner adjustment. This page does not edit league results.</p>
 <button id="refresh" type="button">↻ Refresh scoreboard</button> <a style="margin-left:12px;font-size:12px" href="/">Back to Dynasty NBA</a>
 </main><script>
@@ -35,8 +35,8 @@ function render(){
  const target=document.getElementById('matchups');target.className=layout==='cards'?'grid':'';target.innerHTML=layout==='cards'?cards:table;
  document.getElementById('cardsBtn').classList.toggle('active',layout==='cards');document.getElementById('tableBtn').classList.toggle('active',layout==='table');
  const total=g.teams.reduce((n,t)=>n+used(t.teamId),0),overCount=g.teams.filter(t=>over(t.teamId)>0).length;
- const totalPlaying=g.teams.reduce((n,t)=>n+playing(t.teamId),0);document.getElementById('leagueStrip').innerHTML='<div class="league-stat"><b>'+matchups.length+'</b><span>Matchups</span></div><div class="league-stat"><b>'+totalPlaying+'</b><span>Players playing now</span></div><div class="league-stat"><b>23</b><span>Games limit</span></div>';document.getElementById('summary').textContent=matchups.length+' matchups · '+total+' qualifying player games · '+overCount+' teams over cap';
- reportHeight();document.getElementById('status').textContent='* Provisional live appearances: '+(l?.ok?'connected':'unavailable')+' · Finalized days: '+(g.completedScoringPeriods||[]).join(', ')+' · Live totals are NOT verified lineup locks. Potential overlap requires reconciliation.';
+ document.getElementById('summary').textContent=matchups.length+' matchups · '+total+' qualifying player games · '+overCount+' teams over cap';
+ reportHeight();document.getElementById('status').textContent='';
 }
 async function load(){
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
