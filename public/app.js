@@ -148,7 +148,7 @@ function standingsPage(){let years=seasonYears(),isCurrent=season>=2027,old=seas
 
 let scheduleLiveCache=null,scheduleLiveExpires=0,scheduleDecorating=false;
 async function decorateFantasySchedules(){
- if(scheduleDecorating)return;const currentRoute=route;if(currentRoute!=='schedule'&&!/^team\\/[^/]+\\/schedule$/.test(currentRoute))return;
+ if(scheduleDecorating)return;const currentRoute=route;if(currentRoute!=='schedule'&&!/^team\/[^/]+\/schedule$/.test(currentRoute))return;
  const rows=[...document.querySelectorAll('.period-block .matchup-row, .data-table tbody tr')];if(!rows.length)return;
  scheduleDecorating=true;
  try{
@@ -162,17 +162,17 @@ async function decorateFantasySchedules(){
  for(const f of fids){const id=String(eTeamByF(f.Franchise_ID).ESPN_Team_ID||'');if(id){idByName.set(franchiseLabel(f.Franchise_ID),f.Franchise_ID);idByName.set(names.get(id),f.Franchise_ID);}}
  const pairs=await window.DynastyRivals?.getCurrentPairs?.();
  if(route!==currentRoute)return;
- const teamRoute=/^team\\/([^/]+)\\/schedule$/.exec(route),selected=teamRoute?teamRoute[1]:[...fids].find(f=>String(eTeamByF(f.Franchise_ID).ESPN_Team_ID)===scheduleTeamFilter)?.Franchise_ID;
+ const teamRoute=/^team\/([^/]+)\/schedule$/.exec(route),selected=teamRoute?teamRoute[1]:[...fids].find(f=>String(eTeamByF(f.Franchise_ID).ESPN_Team_ID)===scheduleTeamFilter)?.Franchise_ID;
  const tableRows=[...document.querySelectorAll('.data-table tbody tr')];
  for(const tr of tableRows){const cells=tr.querySelectorAll('td');if(cells.length!==5)continue;const period=Number(cells[0].textContent),opponent=cells[1].textContent.trim(),oppFid=idByName.get(opponent);if(selected&&oppFid&&pairs?.get(selected)?.fid===oppFid&&!cells[1].querySelector('.rivals-tag'))cells[1].insertAdjacentHTML('beforeend',' <span class="rivals-tag">TOP RIVAL</span>');
  const m=games.find(g=>Number(g.matchupPeriodId)===period&&selected&&(String(g.home?.teamId)===String(eTeamByF(selected).ESPN_Team_ID)||String(g.away?.teamId)===String(eTeamByF(selected).ESPN_Team_ID)));if(!m||period!==current)continue;const lm=live.find(x=>String(x.home?.teamId)===String(m.home?.teamId)&&String(x.away?.teamId)===String(m.away?.teamId));if(!lm)continue;const home=String(m.home?.teamId)===String(eTeamByF(selected).ESPN_Team_ID),own=home?lm.home:lm.away,opp=home?lm.away:lm.home;if(Number.isFinite(Number(own?.totalPoints)))cells[2].textContent=fmt(own.totalPoints);if(Number.isFinite(Number(opp?.totalPoints)))cells[3].textContent=fmt(opp.totalPoints);if(!['HOME','AWAY','TIE'].includes(m.winner))cells[4].innerHTML='<strong style="color:#59d8ff">LIVE</strong>';
  }
- for(const block of document.querySelectorAll('.period-block')){const period=Number(block.querySelector('.period-head h3')?.textContent.match(/\\d+/)?.[0]);for(const row of block.querySelectorAll('.matchup-row')){const labels=[...row.querySelectorAll('.match-team b')],scores=[...row.querySelectorAll('.match-team strong')];if(labels.length!==2||scores.length!==2)continue;const awayName=labels[0].textContent.trim(),homeName=labels[1].textContent.trim(),awayFid=idByName.get(awayName),homeFid=idByName.get(homeName);if(pairs&&awayFid&&homeFid&&pairs.get(awayFid)?.fid===homeFid){for(const label of labels)if(!label.querySelector('.rivals-tag'))label.insertAdjacentHTML('beforeend',' <span class="rivals-tag">TOP RIVAL</span>');}
+ for(const block of document.querySelectorAll('.period-block')){const period=Number(block.querySelector('.period-head h3')?.textContent.match(/\d+/)?.[0]);for(const row of block.querySelectorAll('.matchup-row')){const labels=[...row.querySelectorAll('.match-team b')],scores=[...row.querySelectorAll('.match-team strong')];if(labels.length!==2||scores.length!==2)continue;const awayName=labels[0].textContent.trim(),homeName=labels[1].textContent.trim(),awayFid=idByName.get(awayName),homeFid=idByName.get(homeName);if(pairs&&awayFid&&homeFid&&pairs.get(awayFid)?.fid===homeFid){for(const label of labels)if(!label.querySelector('.rivals-tag'))label.insertAdjacentHTML('beforeend',' <span class="rivals-tag">TOP RIVAL</span>');}
  if(period!==current)continue;const match=live.find(m=>names.get(String(m.away?.teamId))===awayName&&names.get(String(m.home?.teamId))===homeName);if(!match)continue;if(Number.isFinite(Number(match.away?.totalPoints)))scores[0].textContent=fmt(match.away.totalPoints);if(Number.isFinite(Number(match.home?.totalPoints)))scores[1].textContent=fmt(match.home.totalPoints);if(!block.querySelector('.live-schedule-label'))block.querySelector('.period-head span')?.insertAdjacentHTML('beforeend',' <span class="live-schedule-label" style="color:#59d8ff">● LIVE</span>');
  }}
  }catch(e){console.warn('Schedule live/rival enhancement unavailable',e)}finally{scheduleDecorating=false;}
 }
-setInterval(()=>{if(route==='schedule'||/^team\\/[^/]+\\/schedule$/.test(route))decorateFantasySchedules()},30000);
+setInterval(()=>{if(route==='schedule'||/^team\/[^/]+\/schedule$/.test(route))decorateFantasySchedules()},30000);
 function compactFantasySchedule(rows){return '<div class="table-wrap"><table class="data-table"><thead><tr><th>Matchup</th><th>Opponent</th><th>Team Score</th><th>Opp. Score</th><th>Result</th></tr></thead><tbody>'+rows.map(r=>'<tr><td>'+esc(String(r.period))+'</td><td>'+esc(r.opponent)+'</td><td>'+esc(r.mine==null?'—':fmt(r.mine))+'</td><td>'+esc(r.theirs==null?'—':fmt(r.theirs))+'</td><td><strong style="color:'+(r.result==='W'?'#54c997':r.result==='L'?'#f18a8a':'#c6a85e')+'">'+esc(r.result)+'</strong></td></tr>').join('')+'</tbody></table></div>';}
 let scheduleTeamFilter='all';
 function chooseScheduleTeam(v){scheduleTeamFilter=String(v);schedule()}
