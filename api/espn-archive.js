@@ -161,7 +161,7 @@ export default async function handler(req, res) {
     const summary = buildSummary(teams, playoffs, playoffTeamCount);
 
     res.setHeader('content-type', 'application/json; charset=utf-8');
-    res.setHeader('cache-control', 's-maxage=3600, stale-while-revalidate=600');
+    res.setHeader('cache-control', season >= 2027 ? 's-maxage=60, stale-while-revalidate=30' : 's-maxage=3600, stale-while-revalidate=600');
     return res.status(200).json({
       ok:true,
       archived:false,
