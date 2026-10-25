@@ -25,6 +25,13 @@
 .historical-summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px}.historical-summary>div{padding:14px;border:1px solid rgba(190,160,85,.25);border-radius:8px;display:flex;flex-direction:column;gap:6px}.historical-summary b{font-size:22px}.historical-summary span,.historical-note{font-size:12px;opacity:.75}.historical-note{padding:14px 4px;line-height:1.5}#statisticsRoot th[data-stat-sort]{cursor:pointer;white-space:nowrap}#statisticsRoot .reference-tools{margin-bottom:18px}#statisticsRoot .num,#historicalPlayerScoring .num{text-align:right}
 
 .history-subnav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.history-subnav button{background:transparent;color:inherit;border:1px solid rgba(190,160,85,.35);border-radius:7px;padding:11px 17px;cursor:pointer;font-weight:600}.history-subnav button.active{border-color:#c5a75a;color:#c5a75a}
+
+/* Current season ribbon: live scoreboard shortcut */
+.season-ribbon .live-ribbon-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;white-space:nowrap;background:#123b65;border:1px solid #c8a652;border-radius:6px;color:#f1cd70;font:700 13px Play,sans-serif;letter-spacing:.055em;padding:10px 17px;cursor:pointer;transition:background .18s,border-color .18s}
+.season-ribbon .live-ribbon-button:hover{background:#1c507f;border-color:#f1cd70}
+.live-ribbon-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#4ddc87;box-shadow:0 0 0 3px rgba(77,220,135,.12);animation:live-ribbon-pulse 2s ease-in-out infinite}
+@keyframes live-ribbon-pulse{50%{box-shadow:0 0 0 6px rgba(77,220,135,0)}}
+@media(max-width:720px){.season-ribbon .live-ribbon-button{width:100%;margin-top:8px;padding:12px 17px}}
 </style>
 <style>
 /* Historical scoring: consistent column alignment and Dynasty NBA gold palette */
@@ -207,7 +214,7 @@
   <div id="searchOverlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Search Dynasty NBA"><div class="search-panel"><div class="search-head"><span>⌕</span><input id="globalSearch" placeholder="Search players, owners, teams…" /><button id="closeSearch" aria-label="Close search">×</button></div><div id="searchResults"></div></div></div>
   <script src="verified-espn-ids.js?v=20261020-clean"></script>
   <script src="historical-statistics.js?v=20261020-clean"></script>
-  <script src="app.js?v=20261025-live-scoring-bluegold"></script>
+  <script src="app.js?v=20261025-season-ribbon"></script>
   <script src="players-list-cleanup.js?v=20261020-clean"></script>
   <script src="player-card-live-fields.js?v=20261020-clean"></script>
   <script src="power-rankings.js?v=20261020-clean"></script>
