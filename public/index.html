@@ -32,6 +32,17 @@
 .live-ribbon-dot{width:8px;height:8px;flex:none;border-radius:50%;background:#4ddc87;box-shadow:0 0 0 3px rgba(77,220,135,.12);animation:live-ribbon-pulse 2s ease-in-out infinite}
 @keyframes live-ribbon-pulse{50%{box-shadow:0 0 0 6px rgba(77,220,135,0)}}
 @media(max-width:720px){.season-ribbon .live-ribbon-button{width:100%;margin-top:8px;padding:12px 17px}}
+
+/* Live scoring homepage feature — preview */
+.live-score-feature-wrap{max-width:1280px;margin:18px auto 4px;padding:0 24px}
+.live-score-feature{width:100%;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 26px;background:linear-gradient(115deg,#102b4b,#173e69 62%,#0c2442);border:1px solid #c5a258;border-left:5px solid #d7ae50;border-radius:10px;color:#f1d18b;text-align:left;cursor:pointer;box-shadow:0 6px 22px rgba(0,0,0,.18);font-family:Play,sans-serif;transition:transform .18s,box-shadow .18s}
+.live-score-feature:hover{transform:translateY(-2px);box-shadow:0 9px 28px rgba(0,0,0,.3)}
+.live-score-feature-left{display:flex;align-items:center;gap:18px}
+.live-score-feature-left strong{display:block;font-size:23px;letter-spacing:.07em;color:#f3d48c}
+.live-score-feature-left small{display:block;margin-top:4px;font-size:13px;color:#d7e4f1;font-weight:400;letter-spacing:.01em}
+.live-score-feature-dot{display:block;width:12px;height:12px;flex:none;background:#4cdb8a;border-radius:50%;box-shadow:0 0 0 5px rgba(76,219,138,.14);animation:live-ribbon-pulse 2s ease-in-out infinite}
+.live-score-feature-cta{white-space:nowrap;border:1px solid #d5ad54;color:#f1d18b;border-radius:5px;padding:12px 17px;font-weight:700;letter-spacing:.045em;font-size:13px}
+@media(max-width:720px){.live-score-feature-wrap{padding:0 14px;margin-top:12px}.live-score-feature{padding:18px;align-items:stretch;flex-direction:column;gap:16px}.live-score-feature-left strong{font-size:19px}.live-score-feature-cta{text-align:center}}
 </style>
 <style>
 /* Historical scoring: consistent column alignment and Dynasty NBA gold palette */
@@ -214,7 +225,7 @@
   <div id="searchOverlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-label="Search Dynasty NBA"><div class="search-panel"><div class="search-head"><span>⌕</span><input id="globalSearch" placeholder="Search players, owners, teams…" /><button id="closeSearch" aria-label="Close search">×</button></div><div id="searchResults"></div></div></div>
   <script src="verified-espn-ids.js?v=20261020-clean"></script>
   <script src="historical-statistics.js?v=20261020-clean"></script>
-  <script src="app.js?v=20261025-season-ribbon"></script>
+  <script src="app.js?v=20261025-feature-bar-beta"></script>
   <script src="players-list-cleanup.js?v=20261020-clean"></script>
   <script src="player-card-live-fields.js?v=20261020-clean"></script>
   <script src="power-rankings.js?v=20261020-clean"></script>
