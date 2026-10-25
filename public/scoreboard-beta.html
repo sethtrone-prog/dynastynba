@@ -5,42 +5,43 @@
 </style></head><body><main>
 <div class="brand">DYNASTY NBA · 2027</div>
 <div class="header"><h1>Live Scoreboard</h1><span class="live">● ESPN SCORES</span></div>
-<div class="sub">Scores update from ESPN · games-used totals reflect finalized scoring days</div>
+<div class="sub">Scores update from ESPN · live appearances are provisional until lineup locks are verified</div>
 <div class="toolbar"><div><label class="control-label" for="period">Matchup period</label><select id="period"><option value="1">Week 1 · Current beta</option></select></div><div class="right"><span class="control-label">Layout</span><button id="cardsBtn" class="active" type="button">Cards</button><button id="tableBtn" type="button">Table</button></div></div>
 <div class="meta"><span id="refreshState">Loading scoreboard…</span><span id="cap">Week 1 game limit: 23</span></div>
 <div id="status" class="status"></div><section id="matchups" class="grid"></section><div id="summary" class="summary"></div>
-<p class="bottom">Beta preview with real ESPN matchups and scores. Only finalized NBA player appearances in active fantasy lineup slots count toward games played. ESPN continues counting games above the limit; any overage is flagged for manual commissioner adjustment. This page does not edit league results.</p>
+<p class="bottom">Beta preview with real ESPN matchups and scores. Live NBA appearances are displayed provisionally alongside finalized-day counts; historical lineup locks are not yet verified. ESPN continues counting games above the limit; any overage is flagged for manual commissioner adjustment. This page does not edit league results.</p>
 <button id="refresh" type="button">↻ Refresh scoreboard</button> <a style="margin-left:12px;font-size:12px" href="/">Back to Dynasty NBA</a>
 </main><script>
-const API='/api/scoreboard-games-used?period=1',ROOT='/api/scoreboard-matchups?period=1';
+const API='/api/scoreboard-games-used?period=1',ROOT='/api/scoreboard-matchups?period=1',LIVE='/api/scoreboard-tipoff-tracker';
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
 let state=null,layout='cards';
 function render(){
- if(!state)return;const {g,s}=state,teams=new Map((s.teams||[]).map(t=>[t.id,t])),counts=new Map(g.teams.map(t=>[t.teamId,t]));
+ if(!state)return;const {g,s,l}=state,teams=new Map((s.teams||[]).map(t=>[t.id,t])),counts=new Map(g.teams.map(t=>[t.teamId,t]));
  const matchups=(s.matchups||[]).filter(m=>Number(m.matchupPeriodId)===1&&m.home?.teamId&&m.away?.teamId);
  const name=id=>{const t=teams.get(id)||{};return safe(t.name||[t.location,t.nickname].filter(Boolean).join(' ')||'Team '+id)};
- const used=id=>counts.get(id)?.gamesUsedCandidate;
- const over=id=>counts.get(id)?.gamesOverCap||0;
+ const liveCounts=new Map((l?.teams||[]).map(t=>[t.teamId,t.liveAppearanceCandidates||0]));
+ const used=id=>(counts.get(id)?.gamesUsedCandidate||0)+(l?.ok?liveCounts.get(id)||0:0);
+ const over=id=>Math.max(0,used(id)-23);
  const team=(side,other)=>{const u=used(side.teamId),o=over(side.teamId),leader=Number(side.totalPoints)>Number(other.totalPoints);
- return '<div class="team '+(leader?'leader':'')+'"><div class="team-top"><span class="team-name">'+name(side.teamId)+'</span><span class="score">'+fmt(side.totalPoints)+'</span></div><div class="bar"><div class="bar-fill '+(Number(u)>23?'over':Number(u)===23?'at-cap':'')+'" style="width:'+Math.min(100,Math.max(0,Number(u||0)/23*100))+'%"></div></div><div class="games">'+(Number.isFinite(u)?u+'/23 GP':'Games pending')+'</div>'+(o?'<div class="warning">+'+o+' over the 23-game limit</div>':'')+'</div>'};
+ return '<div class="team '+(leader?'leader':'')+'"><div class="team-top"><span class="team-name">'+name(side.teamId)+'</span><span class="score">'+fmt(side.totalPoints)+'</span></div><div class="bar"><div class="bar-fill '+(Number(u)>23?'over':Number(u)===23?'at-cap':'')+'" style="width:'+Math.min(100,Math.max(0,Number(u||0)/23*100))+'%"></div></div><div class="games">'+(Number.isFinite(u)?u+'/23 GP'+(l?.ok?' *':''):'Games pending')+'</div>'+(o?'<div class="warning">+'+o+' over the 23-game limit</div>':'')+'</div>'};
  const cards=matchups.map((m,i)=>{const a=Number(m.home.totalPoints),b=Number(m.away.totalPoints),diff=Math.abs(a-b);
  return '<article class="card"><h2><span>MATCHUP '+(i+1)+'</span><span class="week">WEEK 1</span></h2>'+team(m.home,m.away)+team(m.away,m.home)+'<div class="foot"><span>Current margin</span><span class="margin">'+(a===b?'Tied': '+'+fmt(diff))+'</span></div></article>'}).join('');
  const table='<div class="table-wrap"><table class="scoretable"><thead><tr><th>Matchup</th><th>Team</th><th>Score</th><th>Games played</th><th>Overage</th></tr></thead><tbody>'+matchups.flatMap((m,i)=>[m.home,m.away].map(side=>'<tr><td>'+ (i+1)+'</td><td>'+name(side.teamId)+'</td><td>'+fmt(side.totalPoints)+'</td><td>'+used(side.teamId)+'/23</td><td>'+(over(side.teamId)?'+'+over(side.teamId):'—')+'</td></tr>')).join('')+'</tbody></table></div>';
  const target=document.getElementById('matchups');target.className=layout==='cards'?'grid':'';target.innerHTML=layout==='cards'?cards:table;
  document.getElementById('cardsBtn').classList.toggle('active',layout==='cards');document.getElementById('tableBtn').classList.toggle('active',layout==='table');
- const total=g.teams.reduce((n,t)=>n+Number(t.gamesUsedCandidate||0),0),overCount=g.teams.filter(t=>t.overCap).length;
+ const total=g.teams.reduce((n,t)=>n+used(t.teamId),0),overCount=g.teams.filter(t=>over(t.teamId)>0).length;
  document.getElementById('summary').textContent=matchups.length+' matchups · '+total+' qualifying player games · '+overCount+' teams over cap';
- document.getElementById('status').textContent='Finalized scoring periods: '+(g.completedScoringPeriods||[]).join(', ')+' · Daily counts may lag live ESPN scores';
+ document.getElementById('status').textContent='* Provisional live appearances: '+(l?.ok?'connected':'unavailable')+' · Finalized days: '+(g.completedScoringPeriods||[]).join(', ')+' · Live totals are NOT verified lineup locks. Potential overlap requires reconciliation.';
 }
 async function load(){
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
- try{const [a,b]=await Promise.all([fetch(API),fetch(ROOT)]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
- const [g,s]=await Promise.all([a.json(),b.json()]);if(!g.ok||!Array.isArray(g.teams)||!s.ok||!(s.matchups||[]).length)throw Error(g.error||s.error||'No Week 1 matchups');
- state={g,s};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+ try{const [a,b,d]=await Promise.all([fetch(API),fetch(ROOT),fetch(LIVE)]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
+ const [g,s,l]=await Promise.all([a.json(),b.json(),d.ok?d.json():Promise.resolve(null)]);if(!g.ok||!Array.isArray(g.teams)||!s.ok||!(s.matchups||[]).length)throw Error(g.error||s.error||'No Week 1 matchups');
+ state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
  }catch(e){document.getElementById('status').innerHTML='<span class="error">Unable to update scoreboard: '+safe(e.message)+'</span>';document.getElementById('refreshState').textContent='Update failed';}
 }
 document.getElementById('cardsBtn').onclick=()=>{layout='cards';render()};
 document.getElementById('tableBtn').onclick=()=>{layout='table';render()};
-document.getElementById('refresh').onclick=load;load();
+document.getElementById('refresh').onclick=load;load();setInterval(load,60000);
 </script></body></html>
