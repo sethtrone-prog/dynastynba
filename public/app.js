@@ -60,13 +60,13 @@ function currentTeamHeroStats(fid){
  const t=data.teams?.find(t=>String(t.id)===String(eTeamByF(fid).ESPN_Team_ID));
  if(!t)return {record:'0-0',label:y+' ESPN RECORD',stats:'Current standings unavailable'};
  const o=t.record?.overall||{},w=Number(o.wins)||0,l=Number(o.losses)||0,ties=Number(o.ties)||0;
- const pf=Number(o.pointsFor),rank=Number(t.rank);
+ const rank=Number(t.rank);
  const ordinal=n=>({1:'first',2:'second',3:'third',4:'fourth',5:'fifth',6:'sixth',7:'seventh',8:'eighth',9:'ninth',10:'tenth'}[n]||n+'th');
  const tiedTeams=(data.teams||[]).filter(other=>{const r=other.record?.overall||{};return (Number(r.wins)||0)===w&&(Number(r.losses)||0)===l&&(Number(r.ties)||0)===ties;});
  const sameRecord=tiedTeams.length>1;
  const sharedRank=sameRecord?Math.min(...tiedTeams.map(other=>Number(other.rank)).filter(n=>Number.isInteger(n)&&n>0)):rank;
- const place=rank>0?(sameRecord?'tied-':'')+ordinal(Number.isFinite(sharedRank)?sharedRank:rank):'place pending';
- return {record:w+'-'+l+(ties?'-'+ties:''),label:y+' ESPN RECORD',stats:(Number.isFinite(pf)?fmt(pf)+' PF':'PF —')+' · '+place};
+ const place=rank>0?(sameRecord?'T-':'')+ordinal(Number.isFinite(sharedRank)?sharedRank:rank).replace(/^./,c=>c.toUpperCase()):'Place pending';
+ return {record:w+'-'+l+(ties?'-'+ties:''),label:y+' ESPN RECORD',stats:place};
 
 }
 function teamPage(fid,tab){
@@ -88,7 +88,7 @@ function teamPage(fid,tab){
   let allRoster=DB.Rosters.filter(x=>x.Franchise_ID===fid);
   let uniquePlayers=new Set(allRoster.map(x=>x.Player_ID).filter(Boolean)).size;
   let draftMade=(DB['Rookie Draft Picks']||[]).filter(x=>x.Current_Franchise_ID===fid||x.Franchise_ID===fid).length;
-  let hero=`<section class="team-command"><div class="team-command-main">${teamMark(fid,title,'team-crest')}<div><div class="eyebrow">${esc(fid)} · DYNASTY NBA FRANCHISE</div><h1>${esc(title)}</h1><p>${esc(f.Current_Owner||e.Owner_Name||'')}</p><div class="team-command-meta"><span>${ownerHist.length} archived seasons</span><span>${uniquePlayers} players in franchise history</span><span>${txAll.length} recorded transactions</span></div></div></div><div class="team-record-panel"><b>${esc(currentStats.record)}</b><span>${esc(currentStats.label)}</span><small>${esc(currentStats.stats)}</small></div></section>`;
+  let hero=`<section class="team-command"><div class="team-command-main">${teamMark(fid,title,'team-crest')}<div><div class="eyebrow">${esc(fid)} · DYNASTY NBA FRANCHISE</div><h1>${esc(title)}</h1><p>${esc(f.Current_Owner||e.Owner_Name||'')}</p><div class="team-command-meta"><span>${ownerHist.length} archived seasons</span><span>${uniquePlayers} players in franchise history</span><span>${txAll.length} recorded transactions</span></div></div></div><div class="team-record-panel"><b>${esc(currentStats.record)}</b><span>${esc(currentStats.label)}</span><small style="display:block;font-size:clamp(18px,2.2vw,26px);font-weight:700;color:var(--gold);line-height:1.2;margin-top:8px">${esc(currentStats.stats)}</small></div></section>`;
   let rosterRows=rs.slice().sort((a,b)=>String(player(a.Player_ID).Player_Name||a.Player_Name_Raw||'').localeCompare(String(player(b.Player_ID).Player_Name||b.Player_Name_Raw||''))).map(r=>{let c=cByP[r.Player_ID]||{};return `<tr><td><span class="player-link" onclick="go('player/${r.Player_ID}')">${esc(player(r.Player_ID).Player_Name||r.Player_Name_Raw)}</span></td><td><span class="roster-status ${String(r.Roster_Status||'').toLowerCase()}">${esc(r.Roster_Status||'')}</span></td><td class="num"${tab==='roster'?' style="text-align:center"':''}>${c.Units??'—'}</td>${tab==='roster'?'<td class="num" style="text-align:center">'+(CURRENT_SEASON_FPPG.get(String(window.VERIFIED_ESPN_IDS?.[r.Player_ID]||player(r.Player_ID).ESPN_Player_ID))||0).toFixed(2)+'</td>':''}<td>${esc(c.Contract_Type||'—')}</td><td>${esc(c.Option_Info||c.Option_Tag||c.Contract_Tag||'—')}</td><td>${esc(c.End_Season||'—')}</td></tr>`}).join('');
   let body='';
   if(tab==='overview'){
