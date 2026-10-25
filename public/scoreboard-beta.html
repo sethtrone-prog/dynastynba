@@ -18,6 +18,24 @@ const API='/api/scoreboard-games-used?period=1',ROOT='/api/scoreboard-matchups?p
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
 let state=null,layout='cards';
+// Retain the highest live matchup score seen during this period across refreshes and reloads.
+// This is a provisional display floor, not an official ESPN score correction.
+const SCORE_KEY='dynastynba-live-score-floor-2027-week1-v1';
+let scoreFloors={};
+try{scoreFloors=JSON.parse(localStorage.getItem(SCORE_KEY)||'{}')||{}}catch(_){scoreFloors={}}
+function retainLiveScores(matchups){
+ for(const m of matchups||[])for(const side of ['home','away']){
+  const t=m[side];if(!t?.teamId)continue;
+  const key=String(m.matchupPeriodId||1)+':'+String(t.teamId);
+  const value=Number(t.totalPoints);
+  if(!Number.isFinite(value))continue;
+  const prior=Number(scoreFloors[key]);
+  if(!Number.isFinite(prior)||value>prior)scoreFloors[key]=value;
+  else if(value<prior)t.totalPoints=prior;
+ }
+ try{localStorage.setItem(SCORE_KEY,JSON.stringify(scoreFloors))}catch(_){}
+}
+
 function render(){
  if(!state)return;const {g,s,l}=state,teams=new Map((s.teams||[]).map(t=>[t.id,t])),counts=new Map(g.teams.map(t=>[t.teamId,t]));
  const matchups=(s.matchups||[]).filter(m=>Number(m.matchupPeriodId)===1&&m.home?.teamId&&m.away?.teamId);
@@ -42,7 +60,7 @@ async function load(){
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
  try{const [a,b,d]=await Promise.all([fetch(API),fetch(ROOT),fetch(LIVE)]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
  const [g,s,l]=await Promise.all([a.json(),b.json(),d.ok?d.json():Promise.resolve(null)]);if(!g.ok||!Array.isArray(g.teams)||!s.ok||!(s.matchups||[]).length)throw Error(g.error||s.error||'No Week 1 matchups');
- state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+ retainLiveScores(s.matchups);state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
  }catch(e){document.getElementById('status').innerHTML='<span class="error">Unable to update scoreboard: '+safe(e.message)+'</span>';document.getElementById('refreshState').textContent='Update failed';}
 }
 document.getElementById('cardsBtn').onclick=()=>{layout='cards';render()};
