@@ -18,13 +18,32 @@ const API='/api/scoreboard-games-used?period=1',ROOT='/api/scoreboard-matchups?p
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
 let state=null,layout='cards';
+// Browser-local GP floor: keep live appearances counted after their NBA games end.
+// ESPN's finalized daily roster count takes over once the scoring day is finalized.
+const GP_FLOOR_KEY='dynastynba-2027-week1-gp-floor-v2';
+let gpFloor={};
+try{gpFloor=JSON.parse(localStorage.getItem(GP_FLOOR_KEY)||'{}')||{}}catch(_){}
+function gameCount(id,g,l){
+ const base=Number(g.teams.find(t=>Number(t.teamId)===Number(id))?.gamesUsedCandidate)||0;
+ const live=Number(l?.teams?.find(t=>Number(t.teamId)===Number(id))?.liveAppearanceCandidates)||0;
+ const through=Number(g.through)||0;
+ const key=String(id);
+ const old=gpFloor[key]||{};
+ // Once ESPN has finalized a new scoring day, discard the previous provisional floor.
+ const floor=through>Number(old.through||0)?0:Number(old.count)||0;
+ const count=Math.max(base+live,floor);
+ gpFloor[key]={count,through};
+ return count;
+}
+function saveGpFloor(){try{localStorage.setItem(GP_FLOOR_KEY,JSON.stringify(gpFloor))}catch(_){}}
+
 function render(){
  if(!state)return;const {g,s,l}=state,teams=new Map((s.teams||[]).map(t=>[t.id,t])),counts=new Map(g.teams.map(t=>[t.teamId,t]));
  const matchups=(s.matchups||[]).filter(m=>Number(m.matchupPeriodId)===1&&m.home?.teamId&&m.away?.teamId);
  const name=id=>{const t=teams.get(id)||{};return safe(t.name||[t.location,t.nickname].filter(Boolean).join(' ')||'Team '+id)};
  const record=id=>{const r=teams.get(id)?.record;if(!r)return '—';return r.wins+'-'+r.losses+(r.ties?'-'+r.ties:'')};
  const liveCounts=new Map((l?.teams||[]).map(t=>[t.teamId,t.liveAppearanceCandidates||0]));
- const used=id=>(counts.get(id)?.gamesUsedCandidate||0)+(l?.ok?liveCounts.get(id)||0:0);
+ const used=id=>gameCount(id,g,l);
  const over=id=>Math.max(0,used(id)-23);
  const playing=id=>(l?.teams||[]).find(t=>t.teamId===id)?.candidates?.filter(p=>p.liveAppearanceCandidate&&p.nbaGameStarted&&!p.nbaGameCompleted&&l.events?.some(e=>e.id===p.eventId&&e.started&&!e.completed))?.length||0;
  const team=(side,other)=>{const u=used(side.teamId),o=over(side.teamId),leader=Number(side.totalPoints)>Number(other.totalPoints);
@@ -36,7 +55,7 @@ function render(){
  document.getElementById('cardsBtn').classList.toggle('active',layout==='cards');document.getElementById('tableBtn').classList.toggle('active',layout==='table');
  const total=g.teams.reduce((n,t)=>n+used(t.teamId),0),overCount=g.teams.filter(t=>over(t.teamId)>0).length;
  document.getElementById('summary').textContent=matchups.length+' matchups · '+total+' qualifying player games · '+overCount+' teams over cap';
- reportHeight();document.getElementById('status').textContent='';
+ saveGpFloor();reportHeight();document.getElementById('status').textContent='';
 }
 async function load(){
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
