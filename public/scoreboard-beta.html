@@ -2,7 +2,7 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Live Scoreboard | Dynasty NBA</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap" rel="stylesheet"><style>
 :root{color-scheme:dark;font-family:'Play',sans-serif;color:#e6edf6;background:#0a111d}*{box-sizing:border-box;font-family:inherit}body{margin:0;background:#0a111d}main{max-width:1000px;margin:auto;padding:24px 22px 50px}.brand{font-size:12px;letter-spacing:.11em;font-weight:800;color:#d8ad55}.header{display:flex;justify-content:space-between;align-items:center;gap:12px}.header h1{font-size:27px;margin:6px 0 2px}.live{font-size:11px;border-radius:12px;background:#103b2d;color:#3ce28e;padding:6px 10px;font-weight:800}.sub{color:#91a2b9;font-size:12px}.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:end;flex-wrap:wrap;margin:22px 0 12px}.control-label{display:block;color:#9aabc1;font-size:12px;margin-bottom:7px}select,button{border:1px solid #30415b;background:#101b2c;color:#e8edf7;padding:10px 12px;border-radius:8px;font-size:13px}select{min-width:270px}button{cursor:pointer}button.active{background:#283b57;border-color:#607a9e}button:hover{border-color:#bca06d}.right{text-align:right}.meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#8e9eb4;font-size:12px;margin:12px 0 14px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{border:1px solid #2b3e59;border-radius:9px;background:#172438;padding:12px 14px}.card h2{font-size:11px;font-weight:700;letter-spacing:.04em;color:#9aacc4;margin:0 0 13px;display:flex;justify-content:space-between}.week{color:#d5af62}.team{padding:8px 0 10px}.team-top{display:flex;justify-content:space-between;gap:12px;align-items:baseline}.team-name{font-size:18px;font-weight:700}.score{font-size:24px;font-weight:700;white-space:nowrap}.leader .score{color:#e5bc62}.leader .team-name:before{content:'› ';color:#59d8ff;font-weight:900}.bar{height:10px;border-radius:4px;background:#35445d;margin-top:8px;overflow:hidden}.bar-fill{height:100%;border-radius:4px;background:#54bce6}.bar-fill.at-cap{background:#9ce7b4}.bar-fill.over{background:#f06464}.games{text-align:right;font-size:17px;font-weight:800;color:#e6edf6;margin-top:7px}.warning{color:#ffab92;font-size:11px;font-weight:700;margin-top:5px}.foot{border-top:1px solid #304159;margin-top:9px;padding-top:10px;display:flex;justify-content:space-between;color:#8fa3bd;font-size:11px}.margin{color:#39db95;font-weight:800}.table-wrap{overflow:auto;border:1px solid #30415b;border-radius:9px}.scoretable{width:100%;border-collapse:collapse;min-width:600px}.scoretable th,.scoretable td{padding:12px;border-bottom:1px solid #29394f;text-align:left;font-size:13px}.scoretable th{color:#cdb272;background:#16263c}.scoretable tr:last-child td{border:0}.status{color:#a8bbd0;font-size:12px;margin:12px 0}.error{color:#ffad92}.bottom{font-size:12px;color:#8fa0b6;margin-top:16px;line-height:1.5}a{color:#e5bc62}.summary{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#98aac2;margin-top:13px}@media(max-width:650px){main{padding:18px 12px}.grid{grid-template-columns:1fr}.header h1{font-size:23px}select{min-width:210px}}
-</style></head><body><main>
+body.embedded{background:transparent}body.embedded main{max-width:none;padding:4px 2px 24px}body.embedded .brand,body.embedded .header,body.embedded .sub,body.embedded .bottom,body.embedded #refresh+ a{display:none}body.embedded .toolbar{margin-top:6px}body.embedded .card{background:#10243b;border-color:#31506b}body.embedded .grid{gap:14px}</style></head><body><main>
 <div class="brand">DYNASTY NBA · 2027</div>
 <div class="header"><h1>Live Scoreboard</h1><span class="live">● ESPN SCORES</span></div>
 <div class="sub">Scores update from ESPN · live appearances are provisional until lineup locks are verified</div>
@@ -12,6 +12,8 @@
 <p class="bottom">Beta preview with real ESPN matchups and scores. Live NBA appearances are displayed provisionally alongside finalized-day counts; historical lineup locks are not yet verified. ESPN continues counting games above the limit; any overage is flagged for manual commissioner adjustment. This page does not edit league results.</p>
 <button id="refresh" type="button">↻ Refresh scoreboard</button> <a style="margin-left:12px;font-size:12px" href="/">Back to Dynasty NBA</a>
 </main><script>
+if(new URLSearchParams(location.search).has('embedded'))document.body.classList.add('embedded');
+const reportHeight=()=>{if(window.parent!==window)window.parent.postMessage({type:'dynastynba-scoreboard-height',height:document.documentElement.scrollHeight},location.origin)};
 const API='/api/scoreboard-games-used?period=1',ROOT='/api/scoreboard-matchups?period=1',LIVE='/api/scoreboard-tipoff-tracker';
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
@@ -32,7 +34,7 @@ function render(){
  document.getElementById('cardsBtn').classList.toggle('active',layout==='cards');document.getElementById('tableBtn').classList.toggle('active',layout==='table');
  const total=g.teams.reduce((n,t)=>n+used(t.teamId),0),overCount=g.teams.filter(t=>over(t.teamId)>0).length;
  document.getElementById('summary').textContent=matchups.length+' matchups · '+total+' qualifying player games · '+overCount+' teams over cap';
- document.getElementById('status').textContent='* Provisional live appearances: '+(l?.ok?'connected':'unavailable')+' · Finalized days: '+(g.completedScoringPeriods||[]).join(', ')+' · Live totals are NOT verified lineup locks. Potential overlap requires reconciliation.';
+ reportHeight();document.getElementById('status').textContent='* Provisional live appearances: '+(l?.ok?'connected':'unavailable')+' · Finalized days: '+(g.completedScoringPeriods||[]).join(', ')+' · Live totals are NOT verified lineup locks. Potential overlap requires reconciliation.';
 }
 async function load(){
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
@@ -43,5 +45,5 @@ async function load(){
 }
 document.getElementById('cardsBtn').onclick=()=>{layout='cards';render()};
 document.getElementById('tableBtn').onclick=()=>{layout='table';render()};
-document.getElementById('refresh').onclick=load;load();setInterval(load,60000);
+document.getElementById('refresh').onclick=load;window.addEventListener('resize',reportHeight);load();setInterval(load,60000);
 </script></body></html>
