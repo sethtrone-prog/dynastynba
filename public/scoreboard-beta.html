@@ -29,8 +29,9 @@ function gameCount(id,g,l){
  const through=Number(g.through)||0;
  const key=String(id);
  const old=gpFloor[key]||{};
- // Once ESPN has finalized a new scoring day, discard the previous provisional floor.
- const floor=through>Number(old.through||0)?0:Number(old.count)||0;
+ // Keep the floor until ESPN's finalized roster total actually catches up.
+ // A date change alone is not evidence that ESPN has posted the games.
+ const floor=Number(old.count)||0;
  const count=Math.max(base+live,floor);
  gpFloor[key]={count,through};
  return count;
