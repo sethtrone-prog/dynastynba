@@ -6,7 +6,7 @@ async function json(url){const r=await fetch(url);if(!r.ok)throw Error('Upstream
 module.exports=async(req,res)=>{
  res.setHeader('Cache-Control','no-store');
  const date=String(req.query.date||new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/-/g,''));
- if(!/^\\d{8}$/.test(date))return res.status(400).json({ok:false,error:'date must be YYYYMMDD'});
+ if(!/^\d{8}$/.test(date))return res.status(400).json({ok:false,error:'date must be YYYYMMDD'});
  try{
   const [league,board]=await Promise.all([json(LEAGUE+'?view=mRoster&view=mStatus'),json(NBA+'?dates='+date)]);
   const events=(board.events||[]).map(e=>({id:String(e.id),name:e.name,status:e.status?.type?.name||null,started:!!e.status?.type?.started,completed:!!e.status?.type?.completed,teams:(e.competitions?.[0]?.competitors||[]).map(c=>({id:Number(c.team?.id),name:c.team?.displayName}))}));
