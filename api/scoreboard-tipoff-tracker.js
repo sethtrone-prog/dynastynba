@@ -9,7 +9,7 @@ module.exports=async(req,res)=>{
  if(!/^\d{8}$/.test(date))return res.status(400).json({ok:false,error:'date must be YYYYMMDD'});
  try{
   const [league,board]=await Promise.all([json(LEAGUE+'?view=mRoster&view=mStatus'),json(NBA+'?dates='+date)]);
-  const events=(board.events||[]).map(e=>({id:String(e.id),name:e.name,status:e.status?.type?.name||null,started:!!e.status?.type?.started,completed:!!e.status?.type?.completed,teams:(e.competitions?.[0]?.competitors||[]).map(c=>({id:Number(c.team?.id),name:c.team?.displayName}))}));
+  const hasStarted=status=>!['STATUS_SCHEDULED','STATUS_POSTPONED','STATUS_CANCELED','STATUS_DELAYED','STATUS_TIME_TBD'].includes(status)&&!!status;\n  const events=(board.events||[]).map(e=>({id:String(e.id),name:e.name,status:e.status?.type?.name||null,started:hasStarted(e.status?.type?.name),completed:e.status?.type?.name==='STATUS_FINAL'||!!e.status?.type?.completed,teams:(e.competitions?.[0]?.competitors||[]).map(c=>({id:Number(c.team?.id),name:c.team?.displayName}))}));
   // Both APIs expose ESPN NBA team IDs; report candidate joins but do not assert lineup lock.
   const byProTeam=new Map(events.flatMap(e=>e.teams.map(t=>[t.id,e])));
   const teams=(league.teams||[]).map(t=>{
