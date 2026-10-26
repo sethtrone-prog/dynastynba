@@ -1,0 +1,7 @@
+// League matchup boundaries sourced from the October 18 DynastyNBA handoff.
+// Date interpretation is America/New_York. NBA Cup game counts may change, but dates are fixed.
+const ranges=[["2026-10-20","2026-10-25"],["2026-10-26","2026-11-01"],["2026-11-02","2026-11-08"],["2026-11-09","2026-11-15"],["2026-11-16","2026-11-22"],["2026-11-23","2026-11-29"],["2026-11-30","2026-12-06"],["2026-12-07","2026-12-13"],["2026-12-14","2026-12-20"],["2026-12-21","2026-12-27"],["2026-12-28","2027-01-03"],["2027-01-04","2027-01-10"],["2027-01-11","2027-01-17"],["2027-01-18","2027-01-24"],["2027-01-25","2027-01-31"],["2027-02-01","2027-02-07"],["2027-02-08","2027-02-14"],["2027-02-15","2027-02-28"],["2027-03-01","2027-03-07"],["2027-03-08","2027-03-14"]];
+function easternDate(date=new Date()){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(date).replace(/\//g,'-')}
+function currentMatchup(date=easternDate()){const i=ranges.findIndex(([start,end])=>date>=start&&date<=end);if(i>=0)return i+1;if(date<ranges[0][0])return 1;return ranges.length}
+function periodDays(period){const range=ranges[period-1];if(!range)return null;const origin=Date.parse(ranges[0][0]+'T00:00:00Z');return {start:Math.round((Date.parse(range[0]+'T00:00:00Z')-origin)/86400000)+1,end:Math.round((Date.parse(range[1]+'T00:00:00Z')-origin)/86400000)+1,startDate:range[0],endDate:range[1]}}
+module.exports={ranges,easternDate,currentMatchup,periodDays};
