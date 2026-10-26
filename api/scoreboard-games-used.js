@@ -16,7 +16,7 @@ module.exports=async function handler(req,res){
  const period=Number(req.query.period||1),endOverride=req.query.through===undefined?null:Number(req.query.through);
  if(!Number.isInteger(period)||period<1||period>30||endOverride!==null&&(!Number.isInteger(endOverride)||endOverride<1||endOverride>250))return res.status(400).json({ok:false,error:'Invalid period'});
  try{
-  const base=await espn('view=mSettings&view=mStatus&view=mSchedule');
+  const base=await espn('view=mSettings&view=mStatus&view=mSchedule&view=mTeam');
   const currentMatchup=calendar.currentMatchup();
   const boundary=calendar.periodDays(period);
   if(!boundary)return res.status(400).json({ok:false,error:'Unknown matchup period'});
@@ -31,6 +31,8 @@ module.exports=async function handler(req,res){
   if(completed.length>14)return res.status(400).json({ok:false,error:'Too many scoring days'});
   const fetched=await Promise.all(completed.map(async d=>({day:d,data:await espn('view=mRoster&scoringPeriodId='+d)})));
   const ids=new Set((base.teams||[]).map(t=>t.id));
+  for(const m of base.schedule||[]){if(m.home?.teamId)ids.add(m.home.teamId);if(m.away?.teamId)ids.add(m.away.teamId);}
+  // Empty new weeks must still return all franchises before any NBA games finalize.
   for(const f of fetched)for(const t of f.data.teams||[])ids.add(t.id);
   const teams=[...ids].sort((a,b)=>a-b).map(teamId=>{
    const events=fetched.flatMap(f=>(f.data.teams||[]).filter(t=>t.id===teamId).flatMap(t=>(t.roster?.entries||[]).map(e=>({...dayEvidence(e,f.day),day:f.day})).filter(x=>x.playedCandidate)));
