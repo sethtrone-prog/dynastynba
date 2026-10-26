@@ -28,14 +28,14 @@ let gpFloor={};
 function restoreFloor(){try{gpFloor=JSON.parse(localStorage.getItem(floorKey())||'{}')||{}}catch(_){gpFloor={}}}
 function gameCount(id,g,l){
  const base=Number(g.teams.find(t=>Number(t.teamId)===Number(id))?.gamesUsedCandidate)||0;
- const live=Number(l?.teams?.find(t=>Number(t.teamId)===Number(id))?.liveAppearanceCandidates)||0;
+ const live=selectedPeriod===currentPeriod?(Number(l?.teams?.find(t=>Number(t.teamId)===Number(id))?.liveAppearanceCandidates)||0):0;
  const through=Number(g.through)||0;
  const key=String(id);
  const old=gpFloor[key]||{};
  // Keep the floor until ESPN's finalized roster total actually catches up.
  // A date change alone is not evidence that ESPN has posted the games.
- const floor=Number(old.count)||0;
- const count=Math.max(base+live,floor);
+ const floor=selectedPeriod>currentPeriod?0:(Number(old.count)||0);
+ const count=selectedPeriod>currentPeriod?0:Math.max(base+live,floor);
  gpFloor[key]={count,through};
  return count;
 }
@@ -75,6 +75,7 @@ async function load(){
  const [a,d,p]=await Promise.all([fetch(API+'?period='+period),period===currentPeriod?fetch(LIVE):Promise.resolve({ok:false}),period===currentPeriod?fetch('/api/scoreboard-active-players?period='+period):Promise.resolve({ok:false})]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
  const [g,l]=await Promise.all([a.json(),d.ok?d.json():Promise.resolve(null)]);
  weeklyCap=Number(g.weeklyCap)|| (period===1?23:27);
+ if(!Array.isArray(g.teams)||!g.teams.length)throw Error(g.reason||'Weekly GP data unavailable');
  const select=document.getElementById('period');const periods=s.availablePeriods||[period];select.innerHTML=periods.map(n=>'<option value="'+n+'">Week '+n+(n===currentPeriod?' · Current':'')+'</option>').join('');select.value=String(period);
  document.getElementById('cap').textContent='Week '+period+' game limit: '+weeklyCap;if(!g.ok||!Array.isArray(g.teams)||!s.ok||!(s.matchups||[]).length)throw Error(g.error||s.error||'No matchups for Week '+period);
  const incoming=p.ok?await p.json().catch(()=>null):null;
