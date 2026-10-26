@@ -19,7 +19,7 @@ const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
 let state=null,layout='cards',activeDetails=null,detailsStale=false,loading=false;const expandedMatchups=new Set();
 const DETAILS_CACHE_KEY='dynastynba-active-player-details-beta-v1';
-try{const saved=JSON.parse(sessionStorage.getItem(DETAILS_CACHE_KEY)||'null');if(saved?.ok&&Array.isArray(saved.teams))activeDetails=saved}catch(_){}
+try{const saved=JSON.parse(sessionStorage.getItem(DETAILS_CACHE_KEY)||'null');if(saved?.ok&&Array.isArray(saved.teams)&&saved.date===new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/-/g,''))activeDetails=saved}catch(_){}
 // Browser-local GP floor: keep live appearances counted after their NBA games end.
 // ESPN's finalized daily roster count takes over once the scoring day is finalized.
 const GP_FLOOR_KEY='dynastynba-2027-week1-gp-floor-v2';
