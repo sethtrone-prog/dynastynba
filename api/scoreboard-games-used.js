@@ -31,15 +31,16 @@ module.exports=async function handler(req,res){
   if(start===null)return res.status(200).json({ok:true,verified:false,period,through,availablePeriodKeys:keys,reason:'ESPN did not expose scoring-period dates for this matchup; no totals published',teams:[]});
   const last=weekOne?through:Math.min(through,nextStart===null?through:nextStart-1);
   const completed=last>=start?Array.from({length:last-start+1},(_,i)=>start+i):[];
-  if(!weekOne)return res.status(200).json({ok:true,verified:false,period,reason:'Matchup boundaries require independent validation; Week 1 only is enabled',teams:[]});
+  // Later-week ESPN boundaries are provisional until independently validated.
+  const weeklyCap=period===1?23:27;
   if(completed.length>14)return res.status(400).json({ok:false,error:'Too many scoring days'});
   const fetched=await Promise.all(completed.map(async d=>({day:d,data:await espn('view=mRoster&scoringPeriodId='+d)})));
   const ids=new Set((base.teams||[]).map(t=>t.id));
   for(const f of fetched)for(const t of f.data.teams||[])ids.add(t.id);
   const teams=[...ids].sort((a,b)=>a-b).map(teamId=>{
    const events=fetched.flatMap(f=>(f.data.teams||[]).filter(t=>t.id===teamId).flatMap(t=>(t.roster?.entries||[]).map(e=>({...dayEvidence(e,f.day),day:f.day})).filter(x=>x.playedCandidate)));
-   return {teamId,gamesUsedCandidate:events.length,gamesRemainingCandidate:Math.max(0,23-events.length),gamesOverCap:Math.max(0,events.length-23),overCap:events.length>23,display:'Played '+events.length+'/23',rawEligibleAppearances:events.length,events};
+   return {teamId,gamesUsedCandidate:events.length,gamesRemainingCandidate:Math.max(0,weeklyCap-events.length),gamesOverCap:Math.max(0,events.length-weeklyCap),overCap:events.length>weeklyCap,display:'Played '+events.length+'/'+weeklyCap,rawEligibleAppearances:events.length,events};
   });
-  return res.status(200).json({ok:true,verified:false,season:2027,period,weeklyCap:period===1?23:null,through,matchupStartScoringPeriod:start,nextMatchupStartScoringPeriod:null,boundarySource:'Week 1 provisional: scoring period 1 through previous completed day',completedScoringPeriods:completed,refresh:'Automatic on request; CDN cache 30 minutes',note:'Candidate counts require ESPN stat 40 minutes > 0 and an eligible active slot. All qualifying appearances count, including overages; ESPN scoring adjustments are handled manually.',teams});
+  return res.status(200).json({ok:true,verified:false,season:2027,period,weeklyCap,through,matchupStartScoringPeriod:start,nextMatchupStartScoringPeriod:nextStart,boundarySource:weekOne?'Week 1 confirmed starting period':'ESPN matchupPeriods provisional boundaries; pending validation',completedScoringPeriods:completed,refresh:'Automatic on request; CDN cache 30 minutes',note:'Candidate counts require ESPN stat 40 minutes > 0 and an eligible active slot. All qualifying appearances count, including overages; ESPN scoring adjustments are handled manually.',teams});
  }catch(e){return res.status(502).json({ok:false,error:String(e.message).slice(0,180)});}
 }
