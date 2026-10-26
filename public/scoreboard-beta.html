@@ -67,9 +67,10 @@ async function load(){
  if(loading)return;loading=true;
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
  try{const sUrl=ROOT+(selectedPeriod?'?period='+selectedPeriod:'');
- const b=await fetch(sUrl);if(!b.ok)throw Error('ESPN matchup data unavailable');const s=await b.json();if(!s.ok)throw Error(s.error||'ESPN matchup data unavailable');
+ const b=await fetch(sUrl);if(!b.ok)throw Error('ESPN matchup data unavailable');let s=await b.json();if(!s.ok)throw Error(s.error||'ESPN matchup data unavailable');
  if(selectedPeriod===null||(!manualWeek&&Number(s.currentPeriod)>0&&selectedPeriod!==Number(s.currentPeriod))){selectedPeriod=Number(s.currentPeriod)||1;restoreFloor();}
  currentPeriod=Number(s.currentPeriod)||currentPeriod;
+ if(Number(s.period)!==selectedPeriod){const selectedResponse=await fetch(ROOT+'?period='+selectedPeriod);if(!selectedResponse.ok)throw Error('Selected week unavailable');s=await selectedResponse.json();if(!s.ok)throw Error(s.error||'Selected week unavailable');}
  const period=selectedPeriod;
  const [a,d,p]=await Promise.all([fetch(API+'?period='+period),period===currentPeriod?fetch(LIVE):Promise.resolve({ok:false}),period===currentPeriod?fetch('/api/scoreboard-active-players?period='+period):Promise.resolve({ok:false})]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
  const [g,l]=await Promise.all([a.json(),d.ok?d.json():Promise.resolve(null)]);
