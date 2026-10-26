@@ -23,7 +23,7 @@ const DETAILS_CACHE_KEY='dynastynba-active-player-details-beta-v1';
 try{const saved=JSON.parse(sessionStorage.getItem(DETAILS_CACHE_KEY)||'null');if(saved?.ok&&Array.isArray(saved.teams)&&saved.date===new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/-/g,''))activeDetails=saved}catch(_){}
 // Browser-local GP floor: keep live appearances counted after their NBA games end.
 // ESPN's finalized daily roster count takes over once the scoring day is finalized.
-const floorKey=()=>`dynastynba-2027-week${selectedPeriod}-gp-floor-v3`;
+const floorKey=()=>`dynastynba-2027-week${selectedPeriod}-gp-floor-v4`;
 let gpFloor={};
 function restoreFloor(){try{gpFloor=JSON.parse(localStorage.getItem(floorKey())||'{}')||{}}catch(_){gpFloor={}}}
 function gameCount(id,g,l){
