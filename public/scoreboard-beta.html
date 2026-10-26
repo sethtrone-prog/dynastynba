@@ -15,7 +15,7 @@ body.embedded{background:transparent}body.embedded main{max-width:none;padding:4
 if(new URLSearchParams(location.search).has('embedded'))document.body.classList.add('embedded');
 const reportHeight=()=>{if(window.parent!==window)window.parent.postMessage({type:'dynastynba-scoreboard-height',height:document.documentElement.scrollHeight},location.origin)};
 const API='/api/scoreboard-games-used',ROOT='/api/scoreboard-matchups',LIVE='/api/scoreboard-tipoff-tracker';
-let selectedPeriod=null,currentPeriod=1,weeklyCap=23;
+let selectedPeriod=null,currentPeriod=1,weeklyCap=23,manualWeek=false;
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
 let state=null,layout='cards',activeDetails=null,detailsStale=false,loading=false;const expandedMatchups=new Set();
@@ -68,21 +68,22 @@ async function load(){
  document.getElementById('refreshState').textContent='↻ Updating ESPN data…';
  try{const sUrl=ROOT+(selectedPeriod?'?period='+selectedPeriod:'');
  const b=await fetch(sUrl);if(!b.ok)throw Error('ESPN matchup data unavailable');const s=await b.json();if(!s.ok)throw Error(s.error||'ESPN matchup data unavailable');
- if(selectedPeriod===null){selectedPeriod=Number(s.currentPeriod)||1;restoreFloor();}
+ if(selectedPeriod===null||(!manualWeek&&Number(s.currentPeriod)>0&&selectedPeriod!==Number(s.currentPeriod))){selectedPeriod=Number(s.currentPeriod)||1;restoreFloor();}
  currentPeriod=Number(s.currentPeriod)||currentPeriod;
  const period=selectedPeriod;
- const [a,d,p]=await Promise.all([fetch(API+'?period='+period),fetch(LIVE),fetch('/api/scoreboard-active-players?period='+period)]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
+ const [a,d,p]=await Promise.all([fetch(API+'?period='+period),period===currentPeriod?fetch(LIVE):Promise.resolve({ok:false}),period===currentPeriod?fetch('/api/scoreboard-active-players?period='+period):Promise.resolve({ok:false})]);if(!a.ok||!b.ok)throw Error('ESPN data unavailable');
  const [g,l]=await Promise.all([a.json(),d.ok?d.json():Promise.resolve(null)]);
  weeklyCap=Number(g.weeklyCap)|| (period===1?23:27);
  const select=document.getElementById('period');const periods=s.availablePeriods||[period];select.innerHTML=periods.map(n=>'<option value="'+n+'">Week '+n+(n===currentPeriod?' · Current':'')+'</option>').join('');select.value=String(period);
  document.getElementById('cap').textContent='Week '+period+' game limit: '+weeklyCap;if(!g.ok||!Array.isArray(g.teams)||!s.ok||!(s.matchups||[]).length)throw Error(g.error||s.error||'No matchups for Week '+period);
  const incoming=p.ok?await p.json().catch(()=>null):null;
- if(incoming?.ok&&Array.isArray(incoming.teams)){activeDetails=incoming;detailsStale=false;try{sessionStorage.setItem(DETAILS_CACHE_KEY,JSON.stringify(incoming))}catch(_){}}
+ if(period!==currentPeriod){activeDetails=null;detailsStale=false;}
+ else if(incoming?.ok&&Array.isArray(incoming.teams)){activeDetails=incoming;detailsStale=false;try{sessionStorage.setItem(DETAILS_CACHE_KEY,JSON.stringify(incoming))}catch(_){}}
  else{detailsStale=true;}
  state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
  }catch(e){document.getElementById('status').innerHTML='<span class="error">Unable to update scoreboard: '+safe(e.message)+'</span>';document.getElementById('refreshState').textContent='Update failed';}finally{loading=false;}
 }
-document.getElementById('period').onchange=e=>{selectedPeriod=Number(e.target.value);gpFloor={};restoreFloor();activeDetails=null;detailsStale=false;expandedMatchups.clear();load()};
+document.getElementById('period').onchange=e=>{selectedPeriod=Number(e.target.value);manualWeek=selectedPeriod!==currentPeriod;gpFloor={};restoreFloor();activeDetails=null;detailsStale=false;expandedMatchups.clear();load()};
 document.getElementById('cardsBtn').onclick=()=>{layout='cards';render()};
 document.getElementById('tableBtn').onclick=()=>{layout='table';render()};
 document.getElementById('refresh').onclick=load;window.addEventListener('resize',reportHeight);load();setInterval(load,60000);
