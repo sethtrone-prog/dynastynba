@@ -16,6 +16,7 @@ module.exports=async function handler(req,res){
  if(!Number.isInteger(period)||period<1||period>30||endOverride!==null&&(!Number.isInteger(endOverride)||endOverride<1||endOverride>250))return res.status(400).json({ok:false,error:'Invalid period'});
  try{
   const base=await espn('view=mSettings&view=mStatus&view=mSchedule');
+  const currentMatchup=Number(base.status?.currentMatchupPeriod||base.status?.currentMatchupPeriodId||1);
   const periods=base.settings?.scheduleSettings?.matchupPeriods||{};
   const keys=Object.keys(periods).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
   const starts=Object.entries(periods).map(([id,v])=>({id:Number(id),start:Array.isArray(v)?Number(v[0]):NaN})).filter(x=>Number.isInteger(x.start)).sort((a,b)=>a.start-b.start);
@@ -26,13 +27,16 @@ module.exports=async function handler(req,res){
   // Week 1 has a confirmed 23-game cap; use all finalized days through yesterday.
   // Do not publish inferred week boundaries for later matchups.
   const weekOne=period===1;
+  const weeklyCap=weekOne?23:27;
+  if(period>currentMatchup){const ids=(base.teams||[]).map(t=>t.id);return res.status(200).json({ok:true,verified:true,period,currentMatchup,weeklyCap,through:null,boundarySource:'Future matchup: no eligible appearances yet',completedScoringPeriods:[],teams:ids.map(teamId=>({teamId,gamesUsedCandidate:0,gamesRemainingCandidate:weeklyCap,gamesOverCap:0,overCap:false,display:'Played 0/'+weeklyCap,rawEligibleAppearances:0,events:[]}))});}
+  if(period>1)return res.status(200).json({ok:true,verified:false,period,currentMatchup,weeklyCap,reason:'Later-week scoring boundaries have not been independently verified; refusing to attribute games to the wrong week',teams:[]});
   const current=Number(base.status?.currentScoringPeriod||base.scoringPeriodId||0);
   const through=endOverride??(current>0?current-1:0);
   if(start===null)return res.status(200).json({ok:true,verified:false,period,through,availablePeriodKeys:keys,reason:'ESPN did not expose scoring-period dates for this matchup; no totals published',teams:[]});
   const last=weekOne?through:Math.min(through,nextStart===null?through:nextStart-1);
   const completed=last>=start?Array.from({length:last-start+1},(_,i)=>start+i):[];
   // Later-week ESPN boundaries are provisional until independently validated.
-  const weeklyCap=period===1?23:27;
+
   if(completed.length>14)return res.status(400).json({ok:false,error:'Too many scoring days'});
   const fetched=await Promise.all(completed.map(async d=>({day:d,data:await espn('view=mRoster&scoringPeriodId='+d)})));
   const ids=new Set((base.teams||[]).map(t=>t.id));
