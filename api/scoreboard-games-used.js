@@ -2,6 +2,7 @@
 // Counts only eligible starters with a recorded NBA box score (minutes > 0).
 const ROOT='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288';
 const STARTER=new Set([5,6,8,9,10,11]);
+const calendar=require('./_matchup-calendar');
 async function espn(q){const r=await fetch(ROOT+'?'+q,{headers:{'User-Agent':'DynastyNBA daily games-used beta'}});if(!r.ok)throw Error('ESPN '+r.status);return r.json();}
 function dayEvidence(entry,day){
  const p=entry.playerPoolEntry?.player||{};
@@ -16,27 +17,17 @@ module.exports=async function handler(req,res){
  if(!Number.isInteger(period)||period<1||period>30||endOverride!==null&&(!Number.isInteger(endOverride)||endOverride<1||endOverride>250))return res.status(400).json({ok:false,error:'Invalid period'});
  try{
   const base=await espn('view=mSettings&view=mStatus&view=mSchedule');
-  const currentMatchup=Number(base.status?.currentMatchupPeriod||base.status?.currentMatchupPeriodId||1);
-  const periods=base.settings?.scheduleSettings?.matchupPeriods||{};
-  const keys=Object.keys(periods).map(Number).filter(Number.isFinite).sort((a,b)=>a-b);
-  const starts=Object.entries(periods).map(([id,v])=>({id:Number(id),start:Array.isArray(v)?Number(v[0]):NaN})).filter(x=>Number.isInteger(x.start)).sort((a,b)=>a.start-b.start);
-  const index=starts.findIndex(x=>x.id===period);
-  const start=index>=0?starts[index].start:null;
-  const nextStart=index>=0&&index+1<starts.length?starts[index+1].start:null;
-  // ESPN matchupPeriods values are not reliable week boundaries in this league.
-  // Week 1 has a confirmed 23-game cap; use all finalized days through yesterday.
-  // Do not publish inferred week boundaries for later matchups.
-  const weekOne=period===1;
-  const weeklyCap=weekOne?23:27;
-  if(period>currentMatchup){const ids=(base.teams||[]).map(t=>t.id);return res.status(200).json({ok:true,verified:true,period,currentMatchup,weeklyCap,through:null,boundarySource:'Future matchup: no eligible appearances yet',completedScoringPeriods:[],teams:ids.map(teamId=>({teamId,gamesUsedCandidate:0,gamesRemainingCandidate:weeklyCap,gamesOverCap:0,overCap:false,display:'Played 0/'+weeklyCap,rawEligibleAppearances:0,events:[]}))});}
-  if(period>1)return res.status(200).json({ok:true,verified:false,period,currentMatchup,weeklyCap,reason:'Later-week scoring boundaries have not been independently verified; refusing to attribute games to the wrong week',teams:[]});
-  const current=Number(base.status?.currentScoringPeriod||base.scoringPeriodId||0);
-  const through=endOverride??(current>0?current-1:0);
-  if(start===null)return res.status(200).json({ok:true,verified:false,period,through,availablePeriodKeys:keys,reason:'ESPN did not expose scoring-period dates for this matchup; no totals published',teams:[]});
-  const last=weekOne?through:Math.min(through,nextStart===null?through:nextStart-1);
+  const currentMatchup=calendar.currentMatchup();
+  const boundary=calendar.periodDays(period);
+  if(!boundary)return res.status(400).json({ok:false,error:'Unknown matchup period'});
+  const {start,end,startDate,endDate}=boundary;
+  const weeklyCap=period===1?23:27;
+  const today=calendar.easternDate();
+  const origin=Date.parse('2026-10-20T00:00:00Z');
+  const todayPeriod=Math.round((Date.parse(today+'T00:00:00Z')-origin)/86400000)+1;
+  const through=endOverride??Math.min(end,todayPeriod-1);
+  const last=Math.min(through,end);
   const completed=last>=start?Array.from({length:last-start+1},(_,i)=>start+i):[];
-  // Later-week ESPN boundaries are provisional until independently validated.
-
   if(completed.length>14)return res.status(400).json({ok:false,error:'Too many scoring days'});
   const fetched=await Promise.all(completed.map(async d=>({day:d,data:await espn('view=mRoster&scoringPeriodId='+d)})));
   const ids=new Set((base.teams||[]).map(t=>t.id));
@@ -45,6 +36,6 @@ module.exports=async function handler(req,res){
    const events=fetched.flatMap(f=>(f.data.teams||[]).filter(t=>t.id===teamId).flatMap(t=>(t.roster?.entries||[]).map(e=>({...dayEvidence(e,f.day),day:f.day})).filter(x=>x.playedCandidate)));
    return {teamId,gamesUsedCandidate:events.length,gamesRemainingCandidate:Math.max(0,weeklyCap-events.length),gamesOverCap:Math.max(0,events.length-weeklyCap),overCap:events.length>weeklyCap,display:'Played '+events.length+'/'+weeklyCap,rawEligibleAppearances:events.length,events};
   });
-  return res.status(200).json({ok:true,verified:false,season:2027,period,weeklyCap,through,matchupStartScoringPeriod:start,nextMatchupStartScoringPeriod:nextStart,boundarySource:weekOne?'Week 1 confirmed starting period':'ESPN matchupPeriods provisional boundaries; pending validation',completedScoringPeriods:completed,refresh:'Automatic on request; CDN cache 30 minutes',note:'Candidate counts require ESPN stat 40 minutes > 0 and an eligible active slot. All qualifying appearances count, including overages; ESPN scoring adjustments are handled manually.',teams});
+  return res.status(200).json({ok:true,verified:false,season:2027,period,weeklyCap,through,matchupStartScoringPeriod:start,nextMatchupStartScoringPeriod:end+1,matchupStartDate:startDate,matchupEndDate:endDate,boundarySource:'2026-27 league matchup calendar (Oct 18 handoff)',completedScoringPeriods:completed,refresh:'Automatic on request; CDN cache 30 minutes',note:'Candidate counts require ESPN stat 40 minutes > 0 and an eligible active slot. All qualifying appearances count, including overages; ESPN scoring adjustments are handled manually.',teams});
  }catch(e){return res.status(502).json({ok:false,error:String(e.message).slice(0,180)});}
 }
