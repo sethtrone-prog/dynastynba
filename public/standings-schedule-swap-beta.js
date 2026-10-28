@@ -38,9 +38,9 @@
     let sum=0,n=0;
     ids.forEach(scheduleId=>{
      const cell=document.createElement('td'),v=byId.get(id)?.get(scheduleId);
-     cell.textContent=v?String(v.wins)+(v.ties?' ('+v.ties+'T)':''):'—';
-     cell.title=v?String(v.wins)+'-'+String(v.losses)+(v.ties?'-'+String(v.ties):'')+' with '+(idToName.get(scheduleId)||scheduleId)+' schedule':'Unavailable';
-     if(v){sum+=v.wins+v.ties*.5;n++;}
+     cell.textContent=id===scheduleId?'—':v?String(v.wins)+(v.ties?' ('+v.ties+'T)':''):'—';
+     cell.title=id===scheduleId?'Self-comparison excluded':v?String(v.wins)+'-'+String(v.losses)+(v.ties?'-'+String(v.ties):'')+' with '+(idToName.get(scheduleId)||scheduleId)+' schedule':'Unavailable';
+     if(v&&id!==scheduleId){sum+=v.wins+v.ties*.5;n++;}
      if(id===scheduleId)cell.classList.add('schedule-swap-actual');
      tr.appendChild(cell);
     });
@@ -48,7 +48,7 @@
    });
    table.appendChild(tbody);wrap.appendChild(table);section.appendChild(wrap);
    const note=document.createElement('p');note.className='sos-explanation';
-   note.textContent='Rows = team scoring; columns = whose opponent schedule is used. Each cell shows hypothetical wins through '+data.weeks.length+' fully completed week(s). Diagonal = actual wins. A tie counts as half a win in Avg Wins. When a swapped schedule would pit a team against itself, the schedule owner takes that opponent slot. Hover a cell for W-L detail.';
+   note.textContent='Rows = team scoring; columns = whose opponent schedule is used. Each cell shows hypothetical wins through '+data.weeks.length+' fully completed week(s). Diagonal self-comparisons are excluded from the table and Avg Wins. A tie counts as half a win in Avg Wins. When a swapped schedule would pit a team against itself, the schedule owner takes that opponent slot. Hover a cell for W-L detail.';
    section.appendChild(note);
   }
   card.after(section);
