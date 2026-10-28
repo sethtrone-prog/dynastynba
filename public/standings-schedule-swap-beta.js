@@ -5,7 +5,7 @@
   if(app?.querySelector('.page-head h1')?.textContent.trim()!=='Standings')return;
   const year=Number(document.querySelector('#seasonSelect')?.value);
   const card=app.querySelector('.standings-archive-card');
-  if(!card||year<2027||card.querySelector('.schedule-swap-card'))return;
+  if(!card||year<2027||app.querySelector('.schedule-swap-card'))return;
   const standingsTable=card.querySelector('.sos-standings-table');
   if(!standingsTable)return;
   if(!cache.has(year)){
