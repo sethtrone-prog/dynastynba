@@ -37,6 +37,7 @@
  }
 
  function hub(){
+  document.title='G-League Rosters | Dynasty NBA';
   const sid=seasonId(season);if(!loaded&&!loading)loadStats();if(!liveTeams&&!liveLoading)loadLive();
   const cards=DB.Franchises.map(f=>{
    const fid=f.Franchise_ID,name=franchiseLabel(fid);
@@ -62,5 +63,5 @@
   layout('G-League Rosters','All 10 franchises · Five G-League slots per team','<div class="gl-intro"><span>'+season+' DEVELOPMENT ROSTERS</span><button onclick="go(\'teams\')">← ALL TEAMS</button></div><div class="gl-grid">'+cards+'</div><p class="gl-footnote">* Career GP reflects ESPN fantasy records since 2018–19, not necessarily all NBA career games. A dash indicates no current-season games or unavailable data.</p>');
  }
  teams=function(){originalTeams();const grid=document.querySelector('#app .team-grid');if(grid){grid.insertAdjacentHTML('afterend','<div class="gl-entry"><button onclick="go(\'g-league\')">VIEW G-LEAGUE ROSTERS →</button><span>All 10 franchises · 50 total slots</span></div>');}};
- render=function(){if(route==='g-league'){hub();return;}originalRender();};
+ render=function(){if(route==='g-league'){hub();return;}document.title='Dynasty NBA | League Reference';originalRender();};
 })();
