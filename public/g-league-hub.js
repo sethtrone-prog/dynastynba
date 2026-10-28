@@ -5,7 +5,7 @@
   const sid=seasonId(season);
   const cards=DB.Franchises.map(f=>{
    const fid=f.Franchise_ID,name=franchiseLabel(fid);
-   const members=DB.Rosters.filter(r=>String(r.Franchise_ID)===String(fid)&&r.Season_ID===sid&&/^(g[\\s-]?league|gleague)$/i.test(String(r.Roster_Status||'').trim()));
+   const members=DB.Rosters.filter(r=>String(r.Franchise_ID)===String(fid)&&r.Season_ID===sid&&/^g[ -]?league$/i.test(String(r.Roster_Status||'').trim()));
    const unique=[...new Map(members.map(r=>[String(r.Player_ID),r])).values()].slice(0,5);
    const slots=Array.from({length:5},(_,i)=>{
     const r=unique[i],p=r&&player(r.Player_ID),label=p?.Player_Name||r?.Player_Name_Raw;
