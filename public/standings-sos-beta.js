@@ -15,10 +15,9 @@
   }
   const heads=table.querySelectorAll('thead tr th');
   if(heads.length!==6)return;
-  ['PA','Trad. SOS','Fantasy SOS','SOS Rank'].forEach(h=>{const th=document.createElement('th');th.textContent=h;th.title={PA:'Total opponent points against', 'Trad. SOS':'Combined winning percentage of opponents faced', 'Fantasy SOS':'Average points scored against this team per completed matchup','SOS Rank':'Average of traditional and fantasy SOS ranks; 1 is toughest'}[h];heads[0].appendChild(th)});
+  ['PA','Trad. SOS','Fantasy SOS','SOS Rank'].forEach(h=>{const th=document.createElement('th');th.textContent=h;th.title={PA:'Total opponent points against', 'Trad. SOS':'Combined winning percentage of opponents faced', 'Fantasy SOS':'Average points scored against this team per completed matchup','SOS Rank':'Average of traditional and fantasy SOS ranks; 1 is toughest'}[h];heads[0].parentElement.appendChild(th)});
   const byId=new Map(rows.teams.map(x=>[String(x.id),x]));
   const teamRows=[...table.querySelectorAll('tbody tr')];
-  const espnIds=[...document.querySelectorAll('.standings-archive-card tbody tr')].map((_,i)=>null);
   // Existing standings rows are in the same order as standings(), retaining ESPN's ordering.
   const current=typeof standings==='function'?standings():[];
   teamRows.forEach((tr,i)=>{
