@@ -1,0 +1,19 @@
+.sos-standings-table th:nth-last-child(-n+4){color:#e4bf68;white-space:nowrap}.sos-standings-table .sos-number-cell,.sos-standings-table .sos-rank-cell{text-align:center;font-variant-numeric:tabular-nums}.sos-standings-table .sos-rank-cell{color:#e4bf68;font-weight:800}.sos-explanation{font-size:12px;color:#a9bdd0;line-height:1.6;padding:8px 16px 16px}.sos-standings-table{min-width:1050px}
+/* Align every numeric SOS heading with its numeric values on the right. */
+.sos-standings-table thead th:nth-child(4),
+.sos-standings-table thead th:nth-child(5),
+.sos-standings-table thead th:nth-child(n+7),
+.sos-standings-table tbody td:nth-child(4),
+.sos-standings-table tbody td:nth-child(5),
+.sos-standings-table tbody td:nth-child(n+7),
+.sos-standings-table .sos-number-cell,
+.sos-standings-table .sos-rank-cell { text-align:right !important; }
+
+/* Gold headers across the entire standings table; owner is now the last column. */
+.sos-standings-table thead th {color:#e4bf68 !important;}
+.sos-standings-table thead th:last-child,
+.sos-standings-table tbody td:last-child {text-align:left !important;}
+.sos-standings-table thead th:nth-child(6),
+.sos-standings-table tbody td:nth-child(6) {text-align:right !important;}
+
+.schedule-swap-card{margin-top:20px}.schedule-swap-table{min-width:1150px}.schedule-swap-table thead th{color:#e4bf68!important;text-align:center;white-space:normal;min-width:78px;font-size:11px}.schedule-swap-table thead th:first-child,.schedule-swap-table tbody td:first-child{text-align:left;min-width:150px;position:sticky;left:0;background:#0a2136;z-index:1}.schedule-swap-table tbody td{text-align:center;font-variant-numeric:tabular-nums}.schedule-swap-table .schedule-swap-actual{color:#e4bf68;font-weight:800;background:rgba(228,191,104,.09)}.schedule-swap-table .schedule-swap-average{color:#e4bf68;font-weight:800}.schedule-swap-table .schedule-swap-team{font-weight:700}.schedule-swap-card .table-wrap{overflow-x:auto}
