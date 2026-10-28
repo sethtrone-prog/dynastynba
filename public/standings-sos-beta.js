@@ -25,6 +25,10 @@
    const values=s&&s.played?[s.pa.toLocaleString(undefined,{maximumFractionDigits:2}),s.traditional?.toFixed(3)??'—',s.fantasy?.toLocaleString(undefined,{maximumFractionDigits:2})??'—',s.sosRank??'—']:['—','—','—','—'];
    values.forEach((v,j)=>{const td=document.createElement('td');td.textContent=v;td.className=j===3?'sos-rank-cell':'sos-number-cell';tr.appendChild(td)});
   });
+  // Move Owner to the final column, preserving its existing data and row click behavior.
+  const headerRow=table.querySelector('thead tr');
+  if(headerRow?.children.length===10)headerRow.appendChild(headerRow.children[5]);
+  teamRows.forEach(tr=>{if(tr.children.length===10)tr.appendChild(tr.children[5]);});
   table.dataset.sosYear=String(year);
   table.classList.add('sos-standings-table');
   const note=document.createElement('p');note.className='sos-explanation';note.textContent='SOS: 1 = toughest schedule. Traditional SOS uses opponents’ current records; Fantasy SOS uses their actual points against you. Combined rank weights both equally. Only completed ESPN matchups count.';
