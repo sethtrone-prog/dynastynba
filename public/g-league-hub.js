@@ -40,7 +40,7 @@
     const fppg=r?(stat?.fppg!=null?stat.fppg.toFixed(2):(loading?'…':'-')):'';
     return '<div class="gl-slot '+(r?'filled':'vacant')+'"><span class="gl-number">'+(i+1)+'</span><span class="gl-player">'+(r?(p?.Player_ID?playerLink(label):esc(label||'Player not mapped')):'EMPTY SLOT')+'</span><span class="gl-stat">'+gp+'</span><span class="gl-stat">'+fppg+'</span></div>';
    }).join('');
-   return '<article class="gl-card"><header>'+teamMark(fid,name,'gl-logo')+'<div><h2>'+esc(name)+'</h2><small>'+esc(f.Current_Owner||'')+'</small></div><strong>'+unique.length+'/5</strong></header><div class="gl-slots">'+slots+'</div><button class="gl-full" onclick="go(\'team/'+esc(fid)+'/roster\')">VIEW FULL ROSTER →</button></article>';
+   return '<article class="gl-card"><header>'+teamMark(fid,name,'gl-logo')+'<div><h2>'+esc(name)+'</h2><small>'+esc(f.Current_Owner||'')+'</small></div><strong>'+unique.length+'/5</strong></header><div class="gl-stat-head"><span>PLAYER</span><span>CAREER GP*</span><span>2026–27 FPPG</span></div><div class="gl-slots">'+slots+'</div><button class="gl-full" onclick="go(\'team/'+esc(fid)+'/roster\')">VIEW FULL ROSTER →</button></article>';
   }).join('');
   layout('G-League Rosters','All 10 franchises · Five G-League slots per team','<div class="gl-intro"><span>'+season+' DEVELOPMENT ROSTERS</span><button onclick="go(\'teams\')">← ALL TEAMS</button></div><div class="gl-grid">'+cards+'</div><p class="gl-footnote">* Career GP reflects ESPN fantasy records since 2018–19, not necessarily all NBA career games. A dash indicates no current-season games or unavailable data.</p>');
  }
