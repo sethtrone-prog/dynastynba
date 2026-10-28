@@ -22,3 +22,15 @@
 .sos-standings-table thead th:nth-child(9),
 .sos-standings-table tbody td:nth-child(9),
 .sos-standings-table .sos-rank-cell { text-align:center !important; }
+
+/* Explicitly center every numeric cell in the schedule comparison matrix. */
+#app .schedule-swap-card table.schedule-swap-table thead th:not(:first-child),
+#app .schedule-swap-card table.schedule-swap-table tbody td:not(:first-child) {
+  text-align: center !important;
+  vertical-align: middle;
+}
+/* Keep SOS Rank centered in the primary standings table. */
+#app .sos-standings-table thead tr > th:nth-child(9),
+#app .sos-standings-table tbody tr > td:nth-child(9) {
+  text-align: center !important;
+}
