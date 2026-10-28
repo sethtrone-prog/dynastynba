@@ -8,3 +8,10 @@
 .sos-standings-table tbody td:nth-child(n+7),
 .sos-standings-table .sos-number-cell,
 .sos-standings-table .sos-rank-cell { text-align:right !important; }
+
+/* Gold headers across the entire standings table; owner is now the last column. */
+.sos-standings-table thead th {color:#e4bf68 !important;}
+.sos-standings-table thead th:last-child,
+.sos-standings-table tbody td:last-child {text-align:left !important;}
+.sos-standings-table thead th:nth-child(6),
+.sos-standings-table tbody td:nth-child(6) {text-align:right !important;}
