@@ -2,7 +2,7 @@
 const LEAGUE='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288';
 const NBA='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
 const ACTIVE=new Set([5,6,8,9,10,11]);
-const {scoringDate}=require('./_scoring-day');
+const {scoringDate,scoringPeriodForDate}=require('./_scoring-day');
 async function json(url){const r=await fetch(url);if(!r.ok)throw Error('Upstream '+r.status);return r.json();}
 module.exports=async(req,res)=>{
  res.setHeader('Cache-Control','no-store');
@@ -25,6 +25,6 @@ module.exports=async(req,res)=>{
    });
    return {teamId:t.id,provisionalTipoffCandidates:candidates.filter(c=>c.provisional).length,liveAppearanceCandidates:candidates.filter(c=>c.liveAppearanceCandidate).length,candidates};
   });
-  res.status(200).json({ok:true,diagnostic:true,verified:false,date,scoringPeriodId:Number(league.status?.currentScoringPeriod||league.scoringPeriodId||0),generatedAt:new Date().toISOString(),source:'ESPN fantasy current roster + ESPN NBA scoreboard',boxscoreCoverage:summaries.map(s=>({eventId:s.eventId,available:s.available,athletes:s.athletes.length,error:s.error||null})),warning:'Live appearance candidates require positive NBA boxscore MIN and matching player/team IDs, but current roster is NOT a verified historical tipoff lineup. Do not publish or combine with finalized-day totals until lineup-lock evidence and deduplication are implemented. Tip-off candidates only. Current roster snapshots do not prove lineup-at-tipoff; NBA game start does not prove player appearance. Do not add these counts to official games-used until lineup lock and DNP reconciliation are validated.',events,teams});
+  res.status(200).json({ok:true,diagnostic:true,verified:false,date,scoringPeriodId:scoringPeriodForDate(date),generatedAt:new Date().toISOString(),source:'ESPN fantasy current roster + ESPN NBA scoreboard',boxscoreCoverage:summaries.map(s=>({eventId:s.eventId,available:s.available,athletes:s.athletes.length,error:s.error||null})),warning:'Live appearance candidates require positive NBA boxscore MIN and matching player/team IDs, but current roster is NOT a verified historical tipoff lineup. Do not publish or combine with finalized-day totals until lineup-lock evidence and deduplication are implemented. Tip-off candidates only. Current roster snapshots do not prove lineup-at-tipoff; NBA game start does not prove player appearance. Do not add these counts to official games-used until lineup lock and DNP reconciliation are validated.',events,teams});
  }catch(e){res.status(502).json({ok:false,error:String(e.message).slice(0,180)});}
 };
