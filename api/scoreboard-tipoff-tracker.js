@@ -2,10 +2,11 @@
 const LEAGUE='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288';
 const NBA='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
 const ACTIVE=new Set([5,6,8,9,10,11]);
+const {scoringDate}=require('./_scoring-day');
 async function json(url){const r=await fetch(url);if(!r.ok)throw Error('Upstream '+r.status);return r.json();}
 module.exports=async(req,res)=>{
  res.setHeader('Cache-Control','no-store');
- const date=String(req.query.date||new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/-/g,''));
+ const date=String(req.query.date||scoringDate());
  if(!/^\d{8}$/.test(date))return res.status(400).json({ok:false,error:'date must be YYYYMMDD'});
  try{
   const [league,board]=await Promise.all([json(LEAGUE+'?view=mRoster&view=mStatus'),json(NBA+'?dates='+date)]);
