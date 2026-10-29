@@ -19,8 +19,9 @@ let selectedPeriod=null,currentPeriod=1,weeklyCap=23,manualWeek=false;
 const safe=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number.isFinite(Number(n))?Number(n).toFixed(2):'—';
 let state=null,layout='cards',activeDetails=null,detailsStale=false,loading=false;const expandedMatchups=new Set();
+function scoringDay(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',hourCycle:'h23'}).formatToParts(new Date());const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));if(Number(p.hour)>=3)return p.year+p.month+p.day;return new Date(Date.UTC(Number(p.year),Number(p.month)-1,Number(p.day)-1)).toISOString().slice(0,10).replace(/-/g,'')}
 const DETAILS_CACHE_KEY='dynastynba-active-player-details-beta-v1';
-try{const saved=JSON.parse(sessionStorage.getItem(DETAILS_CACHE_KEY)||'null');if(saved?.ok&&Array.isArray(saved.teams)&&saved.date===new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/-/g,''))activeDetails=saved}catch(_){}
+try{const saved=JSON.parse(sessionStorage.getItem(DETAILS_CACHE_KEY)||'null');if(saved?.ok&&Array.isArray(saved.teams)&&saved.date===scoringDay())activeDetails=saved}catch(_){}
 // Browser-local GP floor: keep live appearances counted after their NBA games end.
 // ESPN's finalized daily roster count takes over once the scoring day is finalized.
 const floorKey=()=>`dynastynba-2027-week${selectedPeriod}-gp-floor-v4`;
