@@ -4,15 +4,15 @@ const NBA='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboa
 const ACTIVE=new Set([5,6,8,9,10,11]);
 async function get(url){const r=await fetch(url,{headers:{'User-Agent':'DynastyNBA active-lineup beta'}});if(!r.ok)throw Error('Upstream '+r.status);return r.json();}
 function playerPoints(p,day){const stats=(p.stats||[]).filter(s=>Number(s.scoringPeriodId)===day&&Number(s.statSourceId)===0&&Number(s.statSplitTypeId)===5);const match=stats.find(s=>s.appliedTotal!==null&&s.appliedTotal!==undefined&&Number.isFinite(Number(s.appliedTotal)));return match?{points:Number(match.appliedTotal),verified:true}: {points:null,verified:false};}
-function nyDate(){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/-/g,'');}
+const {scoringDate,scoringPeriodForDate}=require('./_scoring-day');
 function gameStatus(event){const s=event?.status?.type||{};if(s.completed||s.name==='STATUS_FINAL')return 'FINAL';if(['STATUS_SCHEDULED','STATUS_TIME_TBD'].includes(s.name))return 'UPCOMING';if(['STATUS_POSTPONED','STATUS_CANCELED','STATUS_DELAYED'].includes(s.name))return 'UNAVAILABLE';return s.name?'LIVE':'UNKNOWN';}
 module.exports=async(req,res)=>{
  res.setHeader('Cache-Control','private, no-store');
- const period=Number(req.query.period||1),date=String(req.query.date||nyDate());
+ const period=Number(req.query.period||1),date=String(req.query.date||scoringDate());
  if(!Number.isInteger(period)||period<1||period>30||!/^\d{8}$/.test(date))return res.status(400).json({ok:false,error:'Invalid period or date'});
  try{
   const [base,board]=await Promise.all([get(ROOT+'?view=mStatus&view=mSchedule&view=mTeam'),get(NBA+'?dates='+date)]);
-  const scoringPeriodId=Number(req.query.scoringPeriodId||base.status?.currentScoringPeriod||base.scoringPeriodId);
+  const scoringPeriodId=Number(req.query.scoringPeriodId||scoringPeriodForDate(date));
   if(!Number.isInteger(scoringPeriodId)||scoringPeriodId<1||scoringPeriodId>250)return res.status(502).json({ok:false,error:'ESPN scoring period unavailable'});
   const roster=await get(ROOT+'?view=mRoster&scoringPeriodId='+scoringPeriodId);
   const games=new Map();
