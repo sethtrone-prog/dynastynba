@@ -9,7 +9,7 @@ function scoringDate(now=new Date()){
 }
 // ESPN 2026-27 fantasy scoring period 1 begins October 20, 2026.
 function scoringPeriodForDate(date){
- if(!/^\\d{8}$/.test(date))return NaN;
+ if(!/^\d{8}$/.test(date))return NaN;
  const t=Date.UTC(Number(date.slice(0,4)),Number(date.slice(4,6))-1,Number(date.slice(6,8)));
  return Math.round((t-Date.UTC(2026,9,20))/86400000)+1;
 }
