@@ -24,17 +24,25 @@ const DETAILS_CACHE_KEY='dynastynba-active-player-details-beta-v1';
 try{const saved=JSON.parse(sessionStorage.getItem(DETAILS_CACHE_KEY)||'null');if(saved?.ok&&Array.isArray(saved.teams)&&saved.date===scoringDay())activeDetails=saved}catch(_){}
 // Browser-local GP floor: keep live appearances counted after their NBA games end.
 // ESPN's finalized daily roster count takes over once the scoring day is finalized.
-const floorKey=()=>`dynastynba-2027-week${selectedPeriod}-gp-floor-v4`;
+const floorKey=()=>`dynastynba-2027-week${selectedPeriod}-gp-floor-v5`;
 let gpFloor={};
 function restoreFloor(){try{gpFloor=JSON.parse(localStorage.getItem(floorKey())||'{}')||{}}catch(_){gpFloor={}}}
 function gameCount(id,g,l){
  const base=Number(g.teams.find(t=>Number(t.teamId)===Number(id))?.gamesUsedCandidate)||0;
- const live=selectedPeriod===currentPeriod?(Number(l?.teams?.find(t=>Number(t.teamId)===Number(id))?.liveAppearanceCandidates)||0):0;
+ // Deduplicate by scoring period and player ID, even if ESPN's finalized
+ // and live sources briefly overlap during a scoring-day transition.
+ const teamLive=selectedPeriod===currentPeriod?l?.teams?.find(t=>Number(t.teamId)===Number(id)):null;
+ const finalized=g.teams.find(t=>Number(t.teamId)===Number(id))?.events||[];
+ const finalizedKeys=new Set(finalized.filter(e=>e.playerId!=null).map(e=>String(e.day)+':'+String(e.playerId)));
+ const liveDay=Number(l?.scoringPeriodId);
+ const livePlayers=teamLive?.candidates?.filter(p=>p.liveAppearanceCandidate&&p.playerId!=null)||[];
+ const liveKeys=new Set(livePlayers.map(p=>String(liveDay)+':'+String(p.playerId)).filter(k=>!finalizedKeys.has(k)));
+ const live=liveKeys.size;
  const through=Number(g.through)||0;
  const key=String(id);
  const old=gpFloor[key]||{};
- // Keep the floor until ESPN's finalized roster total actually catches up.
- // A date change alone is not evidence that ESPN has posted the games.
+ // v5 discards prior inflated browser floors; new counts are rebuilt from
+ // unique finalized and live appearances, then remain monotonic within the week.
  const floor=selectedPeriod>currentPeriod?0:(Number(old.count)||0);
  const count=selectedPeriod>currentPeriod?0:Math.max(base+live,floor);
  gpFloor[key]={count,through};
