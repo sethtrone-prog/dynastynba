@@ -3,6 +3,7 @@
 const ROOT='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288';
 const STARTER=new Set([5,6,8,9,10,11]);
 const calendar=require('./_matchup-calendar');
+const {scoringDate,scoringPeriodForDate}=require('./_scoring-day');
 async function espn(q){const r=await fetch(ROOT+'?'+q,{headers:{'User-Agent':'DynastyNBA daily games-used beta'}});if(!r.ok)throw Error('ESPN '+r.status);return r.json();}
 function dayEvidence(entry,day){
  const p=entry.playerPoolEntry?.player||{};
@@ -12,7 +13,7 @@ function dayEvidence(entry,day){
  return {playerId:p.id??entry.playerId??null,name:p.fullName||null,slot:entry.lineupSlotId,hasBoxScore:!!actual,minutesPlayed:actual?.stats?.['40']??null,statKeys:actual?Object.keys(actual.stats):[],playedCandidate:!!actual&&Number(actual.stats?.['40'])>0&&STARTER.has(entry.lineupSlotId)};
 }
 module.exports=async function handler(req,res){
- res.setHeader('Cache-Control','public, s-maxage=1800, stale-while-revalidate=300');
+ res.setHeader('Cache-Control','public, s-maxage=30, stale-while-revalidate=10');
  const period=Number(req.query.period||1),endOverride=req.query.through===undefined?null:Number(req.query.through);
  if(!Number.isInteger(period)||period<1||period>30||endOverride!==null&&(!Number.isInteger(endOverride)||endOverride<1||endOverride>250))return res.status(400).json({ok:false,error:'Invalid period'});
  try{
@@ -22,9 +23,8 @@ module.exports=async function handler(req,res){
   if(!boundary)return res.status(400).json({ok:false,error:'Unknown matchup period'});
   const {start,end,startDate,endDate}=boundary;
   const weeklyCap=period===1?23:27;
-  const today=calendar.easternDate();
-  const origin=Date.parse('2026-10-20T00:00:00Z');
-  const todayPeriod=Math.round((Date.parse(today+'T00:00:00Z')-origin)/86400000)+1;
+  // A day is not finalized until 3 AM Los Angeles time (6 AM Eastern).
+  const todayPeriod=scoringPeriodForDate(scoringDate());
   const through=endOverride??Math.min(end,todayPeriod-1);
   const last=Math.min(through,end);
   const completed=last>=start?Array.from({length:last-start+1},(_,i)=>start+i):[];
@@ -38,6 +38,6 @@ module.exports=async function handler(req,res){
    const events=fetched.flatMap(f=>(f.data.teams||[]).filter(t=>t.id===teamId).flatMap(t=>(t.roster?.entries||[]).map(e=>({...dayEvidence(e,f.day),day:f.day})).filter(x=>x.playedCandidate)));
    return {teamId,gamesUsedCandidate:events.length,gamesRemainingCandidate:Math.max(0,weeklyCap-events.length),gamesOverCap:Math.max(0,events.length-weeklyCap),overCap:events.length>weeklyCap,display:'Played '+events.length+'/'+weeklyCap,rawEligibleAppearances:events.length,events};
   });
-  return res.status(200).json({ok:true,verified:false,season:2027,period,weeklyCap,through,matchupStartScoringPeriod:start,nextMatchupStartScoringPeriod:end+1,matchupStartDate:startDate,matchupEndDate:endDate,boundarySource:'2026-27 league matchup calendar (Oct 18 handoff)',completedScoringPeriods:completed,refresh:'Automatic on request; CDN cache 30 minutes',note:'Candidate counts require ESPN stat 40 minutes > 0 and an eligible active slot. All qualifying appearances count, including overages; ESPN scoring adjustments are handled manually.',teams});
+  return res.status(200).json({ok:true,verified:false,season:2027,period,weeklyCap,through,matchupStartScoringPeriod:start,nextMatchupStartScoringPeriod:end+1,matchupStartDate:startDate,matchupEndDate:endDate,boundarySource:'2026-27 league matchup calendar (Oct 18 handoff)',completedScoringPeriods:completed,refresh:'Automatic on request; CDN cache 30 seconds',note:'Candidate counts require ESPN stat 40 minutes > 0 and an eligible active slot. All qualifying appearances count, including overages; ESPN scoring adjustments are handled manually.',teams});
  }catch(e){return res.status(502).json({ok:false,error:String(e.message).slice(0,180)});}
 }
