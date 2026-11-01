@@ -22,7 +22,9 @@
   const current=typeof standings==='function'?standings():[];
   teamRows.forEach((tr,i)=>{
    const id=String(current[i]?.ESPN_Team_ID||'');const s=byId.get(id);
-   const values=s&&s.played?[s.pa.toLocaleString(undefined,{maximumFractionDigits:2}),s.traditional?.toFixed(3)??'—',s.fantasy?.toLocaleString(undefined,{maximumFractionDigits:2})??'—',s.sosRank??'—']:['—','—','—','—'];
+   const pa=Number(current[i]?.Points_Against);
+   const paDisplay=Number.isFinite(pa)?pa.toLocaleString(undefined,{maximumFractionDigits:2}):'—';
+   const values=s&&s.played?[paDisplay,s.traditional?.toFixed(3)??'—',s.fantasy?.toLocaleString(undefined,{maximumFractionDigits:2})??'—',s.sosRank??'—']:[paDisplay,'—','—','—'];
    values.forEach((v,j)=>{const td=document.createElement('td');td.textContent=v;td.className=j===3?'sos-rank-cell':'sos-number-cell';tr.appendChild(td)});
   });
   // Move Owner to the final column, preserving its existing data and row click behavior.
