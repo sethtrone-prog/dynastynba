@@ -35,3 +35,6 @@ body:has(.schedule-match-grid) .content,body:has(.schedule-match-grid) .hero,bod
 .schedule-match-center small{font-size:8px}
 .schedule-match-side.schedule-match-winner{padding:7px 4px;border-radius:7px}
 @media(max-width:520px){.period-block .period-head{padding:11px 12px;margin:18px 0 10px}.period-block .period-head h3{font-size:20px!important}.period-block .period-head span{font-size:10px}.schedule-match-grid{gap:8px}.schedule-match-card{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:4px;padding:9px 6px}.schedule-match-name{font-size:13px}.schedule-match-record{font-size:11px}.schedule-match-score{font-size:20px}.schedule-match-side.schedule-match-winner{padding:6px 2px}}
+
+/* Compact red rivalry marker immediately before both team names. */
+.schedule-rival-r{display:inline-grid;place-items:center;vertical-align:middle;background:#c52e40;color:#fff;border:1px solid #f16b79;border-radius:4px;font:700 11px/1 'Play',sans-serif;padding:3px 5px;margin-right:4px}
