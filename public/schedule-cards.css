@@ -1,0 +1,12 @@
+/* Schedule cards: consistent mobile/desktop alignment */
+.schedule-match-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:14px 0 24px}
+.schedule-match-card{display:grid;grid-template-columns:minmax(0,1fr) 46px minmax(0,1fr);align-items:stretch;gap:8px;padding:16px;background:#101b2a;border:1px solid rgba(197,167,90,.35);border-radius:12px;min-width:0}
+.schedule-match-side{display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;gap:7px;min-width:0}
+.schedule-match-name{font-size:16px;line-height:1.3;font-weight:750;color:#f4f5f7;overflow-wrap:anywhere}
+.schedule-match-record{font-size:13px;color:#d7bc74;font-weight:650;font-variant-numeric:tabular-nums}
+.schedule-match-score{font:700 26px/1.2 Inter,sans-serif;color:#fff;font-variant-numeric:tabular-nums}
+.schedule-match-center{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:#c8a652;font-size:12px;font-weight:800}
+.schedule-match-center small{font-size:9px;letter-spacing:.04em;color:#9ca8b8}
+.period-block .period-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+@media(max-width:900px){.schedule-match-grid{grid-template-columns:1fr}}
+@media(max-width:520px){.schedule-match-grid{gap:10px}.schedule-match-card{grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr);gap:5px;padding:13px 8px}.schedule-match-name{font-size:14px}.schedule-match-score{font-size:23px}.schedule-match-record{font-size:12px}.schedule-match-center{font-size:10px}.schedule-match-center small{font-size:8px}}
