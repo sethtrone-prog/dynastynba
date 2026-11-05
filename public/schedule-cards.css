@@ -20,3 +20,18 @@
 body:has(.schedule-match-grid) .content,body:has(.schedule-match-grid) .hero,body:has(.schedule-match-grid) .schedule-match-grid{font-family:'Play',sans-serif}
 .schedule-match-grid,.schedule-match-grid *{font-family:'Play',sans-serif!important}
 .schedule-match-score{font-family:'Play',sans-serif!important}
+
+/* More prominent matchup-period heading, denser cards on both screen sizes. */
+.period-block .period-head{padding:12px 16px;margin:22px 0 12px;background:linear-gradient(90deg,#173657,#0b1c30);border-left:5px solid #f0c45a;border-bottom:1px solid rgba(240,196,90,.35);border-radius:7px}
+.period-block .period-head h3{font-family:'Play',sans-serif!important;font-size:23px!important;font-weight:700!important;line-height:1.2;margin:0;color:#f6d47a;letter-spacing:.025em}
+.period-block .period-head span{font-family:'Play',sans-serif;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#d8e2ed}
+.schedule-match-grid{gap:10px;margin:10px 0 20px}
+.schedule-match-card{grid-template-columns:minmax(0,1fr) 36px minmax(0,1fr);gap:6px;padding:10px 9px;border-radius:9px}
+.schedule-match-side{gap:4px}
+.schedule-match-name{font-size:14px;line-height:1.2}
+.schedule-match-record{font-size:11px}
+.schedule-match-score{font-size:22px;line-height:1.15}
+.schedule-match-center{gap:4px;font-size:11px}
+.schedule-match-center small{font-size:8px}
+.schedule-match-side.schedule-match-winner{padding:7px 4px;border-radius:7px}
+@media(max-width:520px){.period-block .period-head{padding:11px 12px;margin:18px 0 10px}.period-block .period-head h3{font-size:20px!important}.period-block .period-head span{font-size:10px}.schedule-match-grid{gap:8px}.schedule-match-card{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:4px;padding:9px 6px}.schedule-match-name{font-size:13px}.schedule-match-record{font-size:11px}.schedule-match-score{font-size:20px}.schedule-match-side.schedule-match-winner{padding:6px 2px}}
