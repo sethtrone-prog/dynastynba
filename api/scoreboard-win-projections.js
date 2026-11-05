@@ -1,4 +1,4 @@
-// Beta: schedule-aware player FPPG projections for the current fantasy matchup.
+// Beta: schedule-aware player FPPG projections for current and upcoming fantasy matchups.
 const calendar=require('./_matchup-calendar');
 const LEAGUE='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288';
 const NBA='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
@@ -20,7 +20,7 @@ module.exports=async function(req,res){
  const period=Number(req.query.period||calendar.currentMatchup());
  const days=calendar.periodDays(period);
  if(!days)return res.status(400).json({ok:false,error:'Invalid period'});
- if(period!==calendar.currentMatchup())return res.status(200).json({ok:false,reason:'Schedule projections are only available for the current matchup'});
+ if(period<calendar.currentMatchup())return res.status(200).json({ok:false,reason:'Historical matchups do not use future roster projections'});
  try{
   const today=calendar.easternDate();
   const dates=dateList(today>days.startDate?today:days.startDate,days.endDate);
