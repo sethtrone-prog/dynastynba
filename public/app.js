@@ -164,11 +164,11 @@ function standingsPage(){let years=seasonYears(),isCurrent=season>=2027,old=seas
 let scheduleLiveCache=null,scheduleLiveExpires=0,scheduleDecorating=false;
 async function decorateFantasySchedules(){
  if(scheduleDecorating)return;const currentRoute=route;if(currentRoute!=='schedule'&&!/^team\/[^/]+\/schedule$/.test(currentRoute))return;
- const rows=[...document.querySelectorAll('.period-block .matchup-row, .data-table tbody tr')];if(!rows.length)return;
+ const rows=[...document.querySelectorAll('.period-block .matchup-row, .period-block .schedule-match-card, .data-table tbody tr')];if(!rows.length)return;
  scheduleDecorating=true;
  try{
- const data=fetchScheduleYear(Math.max(2027,season));if(!data)return;
- const games=[...(data.regularSeason||[]),...(data.playoffs||[])],names=new Map(data.teams.map(t=>[String(t.id),t.name]));
+ const data=fetchScheduleYear(Math.max(2027,season));if(!data&&scheduleYear()!==2026)return;
+ const games=[...(data?.regularSeason||[]),...(data?.playoffs||[])],names=new Map((data?.teams||[]).map(t=>[String(t.id),t.name]));
  const periods=[...new Set(games.map(m=>Number(m.matchupPeriodId)))].sort((a,b)=>a-b);
  const current=periods.find(p=>games.some(m=>Number(m.matchupPeriodId)===p&&!['HOME','AWAY','TIE'].includes(m.winner)))||periods.at(-1);
  if(!scheduleLiveCache||Date.now()>scheduleLiveExpires||scheduleLiveCache.period!==current){const resp=await fetch('/api/scoreboard-matchups?period='+current);if(resp.ok){scheduleLiveCache=await resp.json();scheduleLiveExpires=Date.now()+30000;}}
@@ -178,6 +178,10 @@ async function decorateFantasySchedules(){
  const pairs=await window.DynastyRivals?.getCurrentPairs?.();
  if(route!==currentRoute)return;
  const teamRoute=/^team\/([^/]+)\/schedule$/.exec(route),selected=teamRoute?teamRoute[1]:[...fids].find(f=>String(eTeamByF(f.Franchise_ID).ESPN_Team_ID)===scheduleTeamFilter)?.Franchise_ID;
+ const cardRows=[...document.querySelectorAll('.period-block .schedule-match-card')];
+ if(cardRows.length){const fidByName=new Map();for(const f of DB.Franchises||[]){fidByName.set(franchiseLabel(f.Franchise_ID),String(f.Franchise_ID));const espnName=names.get(String(eTeamByF(f.Franchise_ID).ESPN_Team_ID||''));if(espnName)fidByName.set(espnName,String(f.Franchise_ID));}
+ for(const card of cardRows){const labels=[...card.querySelectorAll('.schedule-match-name')];if(labels.length!==2)continue;const away=fidByName.get(labels[0].textContent.trim()),home=fidByName.get(labels[1].textContent.trim());if(!away||!home||String(pairs?.get(away)?.fid)!==home&&String(pairs?.get(home)?.fid)!==away)continue;for(const label of labels){if(!label.querySelector('.schedule-rival-r'))label.insertAdjacentHTML('afterbegin','<span class="schedule-rival-r" title="Top Rival">R</span> ')}}
+ }
  const tableRows=[...document.querySelectorAll('.data-table tbody tr')];
  for(const tr of tableRows){const cells=tr.querySelectorAll('td');if(cells.length!==5)continue;const period=Number(cells[0].textContent),opponent=cells[1].textContent.trim(),oppFid=idByName.get(opponent);if(selected&&oppFid&&pairs?.get(selected)?.fid===oppFid&&!cells[1].querySelector('.rivals-tag'))cells[1].insertAdjacentHTML('beforeend',' <span class="rivals-tag">TOP RIVAL</span>');
  const m=games.find(g=>Number(g.matchupPeriodId)===period&&selected&&(String(g.home?.teamId)===String(eTeamByF(selected).ESPN_Team_ID)||String(g.away?.teamId)===String(eTeamByF(selected).ESPN_Team_ID)));if(!m||period!==current)continue;const lm=live.find(x=>String(x.home?.teamId)===String(m.home?.teamId)&&String(x.away?.teamId)===String(m.away?.teamId));if(!lm)continue;const home=String(m.home?.teamId)===String(eTeamByF(selected).ESPN_Team_ID),own=home?lm.home:lm.away,opp=home?lm.away:lm.home;if(Number.isFinite(Number(own?.totalPoints)))cells[2].textContent=fmt(own.totalPoints);if(Number.isFinite(Number(opp?.totalPoints)))cells[3].textContent=fmt(opp.totalPoints);if(!['HOME','AWAY','TIE'].includes(m.winner))cells[4].innerHTML='<strong style="color:#59d8ff">LIVE</strong>';
@@ -205,8 +209,8 @@ function scheduleSubnav(active){return ''}
 function scheduleScoreboard(){layout('Live Scoreboard','Live ESPN scores and provisional player appearances.','<div style="border:1px solid rgba(190,160,85,.25);border-radius:12px;overflow:hidden;background:#0a111d"><iframe title="Dynasty NBA live scoreboard" id="scheduleScoreboardFrame" src="/scoreboard-beta.html?embedded=1" style="width:100%;height:980px;border:0;display:block" loading="lazy"></iframe></div><div class="note">Beta: Live games used are provisional until historical lineup locks are verified.</div>')}
 function scheduleRecordMap(games,getId,isFinal,getWinner){
  const records=new Map(),byPeriod=new Map();
- const sorted=[...games].sort((a,b)=>Number(a.matchupPeriodId||a.Matchup_Period||a.MatchupPeriod||0)-Number(b.matchupPeriodId||b.Matchup_Period||b.MatchupPeriod||0));
- for(const m of sorted){const p=Number(m.matchupPeriodId||m.Matchup_Period||m.MatchupPeriod||0);if(!p)continue;if(!byPeriod.has(p))byPeriod.set(p,[]);byPeriod.get(p).push(m)}
+ const sorted=[...games].sort((a,b)=>Number(a.matchupPeriodId||a.Matchup_Period||a.MatchupPeriod||a.Matchup_Period_ID||a.Scoring_Period||0)-Number(b.matchupPeriodId||b.Matchup_Period||b.MatchupPeriod||b.Matchup_Period_ID||b.Scoring_Period||0));
+ for(const m of sorted){const p=Number(m.matchupPeriodId||m.Matchup_Period||m.MatchupPeriod||m.Matchup_Period_ID||m.Scoring_Period||0);if(!p)continue;if(!byPeriod.has(p))byPeriod.set(p,[]);byPeriod.get(p).push(m)}
  const snapshots=new Map();
  for(const [period,matches] of [...byPeriod].sort((a,b)=>a[0]-b[0])){
   const before=new Map([...records].map(([id,r])=>[id,{...r}]));
