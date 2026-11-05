@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-04T20:27:03.940152+00:00",
+  "updatedAt": "2026-11-05T17:16:09.163Z",
   "checkedThrough": "2026-11-04",
   "updateFrequency": "daily",
   "playerBoxScoresReviewed": 248561,
@@ -65,7 +65,7 @@
       "person_id": 1628389,
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022500938/box-score",
-      "fantasy": 76.0,
+      "fantasy": 76,
       "rank": 3
     },
     {
@@ -132,6 +132,27 @@
       "rank": 6
     },
     {
+      "points": 52,
+      "rebounds_total": 24,
+      "assists": 2,
+      "steals": 2,
+      "blocks": 8,
+      "turnovers": 1,
+      "field_goals_made": 16,
+      "field_goals_attempted": 28,
+      "free_throws_made": 19,
+      "free_throws_attempted": 23,
+      "name": "Victor Wembanyama",
+      "game_date": "2026-11-04",
+      "matchup": "SAS vs. DAL",
+      "game_id": "2026-11-04-DAL-SAS",
+      "person_id": 1641705,
+      "season": 2027,
+      "sourceUrl": "https://www.cbssports.com/nba/gametracker/recap/NBA_20261104_DAL%40SA/",
+      "fantasy": 72.5,
+      "rank": 7
+    },
+    {
       "points": 71,
       "rebounds_total": 6,
       "assists": 6,
@@ -149,8 +170,8 @@
       "person_id": 203081,
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200917/box-score",
-      "fantasy": 70.0,
-      "rank": 7
+      "fantasy": 70,
+      "rank": 8
     },
     {
       "points": 64,
@@ -171,7 +192,7 @@
       "season": 2024,
       "sourceUrl": "https://www.nba.com/game/0022300315/box-score",
       "fantasy": 69.75,
-      "rank": 8
+      "rank": 9
     },
     {
       "points": 59,
@@ -192,7 +213,7 @@
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200195/box-score",
       "fantasy": 69.75,
-      "rank": 8
+      "rank": 9
     },
     {
       "points": 59,
@@ -213,7 +234,7 @@
       "season": 2025,
       "sourceUrl": "https://www.nba.com/game/0022400223/box-score",
       "fantasy": 69.75,
-      "rank": 8
+      "rank": 9
     },
     {
       "points": 61,
@@ -233,8 +254,8 @@
       "person_id": 203999,
       "season": 2025,
       "sourceUrl": "https://www.nba.com/game/0022401102/box-score",
-      "fantasy": 66.0,
-      "rank": 11
+      "fantasy": 66,
+      "rank": 12
     },
     {
       "points": 60,
@@ -255,7 +276,7 @@
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200727/box-score",
       "fantasy": 65.75,
-      "rank": 12
+      "rank": 13
     },
     {
       "points": 60,
@@ -276,7 +297,7 @@
       "season": 2022,
       "sourceUrl": "https://www.nba.com/game/0022101030/box-score",
       "fantasy": 65.5,
-      "rank": 13
+      "rank": 14
     },
     {
       "points": 55,
@@ -297,7 +318,7 @@
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200349/box-score",
       "fantasy": 65.5,
-      "rank": 13
+      "rank": 14
     },
     {
       "points": 55,
@@ -317,8 +338,8 @@
       "person_id": 203999,
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022500224/box-score",
-      "fantasy": 65.0,
-      "rank": 15
+      "fantasy": 65,
+      "rank": 16
     },
     {
       "points": 50,
@@ -338,8 +359,8 @@
       "person_id": 203954,
       "season": 2021,
       "sourceUrl": "https://www.nba.com/game/0022000450/box-score",
-      "fantasy": 65.0,
-      "rank": 15
+      "fantasy": 65,
+      "rank": 16
     },
     {
       "points": 55,
@@ -360,7 +381,7 @@
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022500445/box-score",
       "fantasy": 64.75,
-      "rank": 17
+      "rank": 18
     },
     {
       "points": 52,
@@ -381,7 +402,7 @@
       "season": 2019,
       "sourceUrl": "https://www.nba.com/game/0021801043/box-score",
       "fantasy": 64.75,
-      "rank": 17
+      "rank": 18
     },
     {
       "points": 58,
@@ -402,7 +423,7 @@
       "season": 2019,
       "sourceUrl": "https://www.nba.com/game/0021800925/box-score",
       "fantasy": 63.75,
-      "rank": 19
+      "rank": 20
     },
     {
       "points": 50,
@@ -423,7 +444,7 @@
       "season": 2024,
       "sourceUrl": "https://www.nba.com/game/0022300405/box-score",
       "fantasy": 63.75,
-      "rank": 19
+      "rank": 20
     },
     {
       "points": 60,
@@ -444,7 +465,7 @@
       "season": 2022,
       "sourceUrl": "https://www.nba.com/game/0022101024/box-score",
       "fantasy": 63.5,
-      "rank": 21
+      "rank": 22
     },
     {
       "points": 61,
@@ -465,7 +486,7 @@
       "season": 2019,
       "sourceUrl": "https://www.nba.com/game/0021800710/box-score",
       "fantasy": 63.25,
-      "rank": 22
+      "rank": 23
     },
     {
       "points": 61,
@@ -486,7 +507,7 @@
       "season": 2020,
       "sourceUrl": "https://www.nba.com/game/0021900652/box-score",
       "fantasy": 62.75,
-      "rank": 23
+      "rank": 24
     },
     {
       "points": 60,
@@ -507,7 +528,7 @@
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022501010/box-score",
       "fantasy": 62.5,
-      "rank": 24
+      "rank": 25
     },
     {
       "points": 52,
@@ -528,7 +549,7 @@
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022201181/box-score",
       "fantasy": 62.25,
-      "rank": 25
+      "rank": 26
     },
     {
       "points": 49,
@@ -549,7 +570,7 @@
       "season": 2020,
       "sourceUrl": "https://www.nba.com/game/0021901238/box-score",
       "fantasy": 62.25,
-      "rank": 25
+      "rank": 26
     },
     {
       "points": 35,
@@ -570,7 +591,7 @@
       "season": 2025,
       "sourceUrl": "https://www.nba.com/game/0022400626/box-score",
       "fantasy": 62.25,
-      "rank": 25
+      "rank": 26
     },
     {
       "points": 52,
@@ -590,8 +611,8 @@
       "person_id": 201939,
       "season": 2025,
       "sourceUrl": "https://www.nba.com/game/0022401100/box-score",
-      "fantasy": 62.0,
-      "rank": 28
+      "fantasy": 62,
+      "rank": 29
     },
     {
       "points": 60,
@@ -612,7 +633,7 @@
       "season": 2020,
       "sourceUrl": "https://www.nba.com/game/0021900282/box-score",
       "fantasy": 61.75,
-      "rank": 29
+      "rank": 30
     },
     {
       "points": 46,
@@ -633,7 +654,7 @@
       "season": 2022,
       "sourceUrl": "https://www.nba.com/game/0022100967/box-score",
       "fantasy": 61.75,
-      "rank": 29
+      "rank": 30
     },
     {
       "points": 50,
@@ -654,7 +675,7 @@
       "season": 2021,
       "sourceUrl": "https://www.nba.com/game/0022000352/box-score",
       "fantasy": 61.5,
-      "rank": 31
+      "rank": 32
     },
     {
       "points": 61,
@@ -675,7 +696,7 @@
       "season": 2020,
       "sourceUrl": "https://www.nba.com/game/0021901300/box-score",
       "fantasy": 61.25,
-      "rank": 32
+      "rank": 33
     },
     {
       "points": 60,
@@ -696,7 +717,7 @@
       "season": 2021,
       "sourceUrl": "https://www.nba.com/game/0022000950/box-score",
       "fantasy": 61.25,
-      "rank": 32
+      "rank": 33
     },
     {
       "points": 56,
@@ -716,8 +737,8 @@
       "person_id": 1629027,
       "season": 2022,
       "sourceUrl": "https://www.nba.com/game/0022100560/box-score",
-      "fantasy": 61.0,
-      "rank": 34
+      "fantasy": 61,
+      "rank": 35
     },
     {
       "points": 51,
@@ -738,7 +759,7 @@
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022500960/box-score",
       "fantasy": 60.75,
-      "rank": 35
+      "rank": 36
     },
     {
       "points": 51,
@@ -759,7 +780,7 @@
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022500113/box-score",
       "fantasy": 60.5,
-      "rank": 36
+      "rank": 37
     },
     {
       "points": 49,
@@ -780,7 +801,7 @@
       "season": 2022,
       "sourceUrl": "https://www.nba.com/game/0022100678/box-score",
       "fantasy": 60.5,
-      "rank": 36
+      "rank": 37
     },
     {
       "points": 45,
@@ -801,7 +822,7 @@
       "season": 2025,
       "sourceUrl": "https://www.nba.com/game/0022401228/box-score",
       "fantasy": 60.5,
-      "rank": 36
+      "rank": 37
     },
     {
       "points": 50,
@@ -822,7 +843,7 @@
       "season": 2024,
       "sourceUrl": "https://www.nba.com/game/0022300333/box-score",
       "fantasy": 60.25,
-      "rank": 39
+      "rank": 40
     },
     {
       "points": 62,
@@ -843,7 +864,7 @@
       "season": 2024,
       "sourceUrl": "https://www.nba.com/game/0022300636/box-score",
       "fantasy": 59.75,
-      "rank": 40
+      "rank": 41
     },
     {
       "points": 54,
@@ -864,7 +885,7 @@
       "season": 2021,
       "sourceUrl": "https://www.nba.com/game/0022000323/box-score",
       "fantasy": 59.75,
-      "rank": 40
+      "rank": 41
     },
     {
       "points": 56,
@@ -885,7 +906,7 @@
       "season": 2025,
       "sourceUrl": "https://www.nba.com/game/0022400341/box-score",
       "fantasy": 59.5,
-      "rank": 42
+      "rank": 43
     },
     {
       "points": 44,
@@ -906,7 +927,7 @@
       "season": 2022,
       "sourceUrl": "https://www.nba.com/game/0022100822/box-score",
       "fantasy": 59.5,
-      "rank": 42
+      "rank": 43
     },
     {
       "points": 50,
@@ -927,7 +948,7 @@
       "season": 2020,
       "sourceUrl": "https://www.nba.com/game/0021900342/box-score",
       "fantasy": 59.25,
-      "rank": 44
+      "rank": 45
     },
     {
       "points": 48,
@@ -948,7 +969,7 @@
       "season": 2019,
       "sourceUrl": "https://www.nba.com/game/0021800523/box-score",
       "fantasy": 59.25,
-      "rank": 44
+      "rank": 45
     },
     {
       "points": 45,
@@ -969,7 +990,7 @@
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022500379/box-score",
       "fantasy": 59.25,
-      "rank": 44
+      "rank": 45
     },
     {
       "points": 54,
@@ -989,8 +1010,8 @@
       "person_id": 201935,
       "season": 2020,
       "sourceUrl": "https://www.nba.com/game/0021900371/box-score",
-      "fantasy": 59.0,
-      "rank": 47
+      "fantasy": 59,
+      "rank": 48
     },
     {
       "points": 52,
@@ -1010,8 +1031,8 @@
       "person_id": 1627783,
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200471/box-score",
-      "fantasy": 59.0,
-      "rank": 47
+      "fantasy": 59,
+      "rank": 48
     },
     {
       "points": 49,
@@ -1031,29 +1052,16 @@
       "person_id": 201942,
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022201050/box-score",
-      "fantasy": 59.0,
-      "rank": 47
-    },
+      "fantasy": 59,
+      "rank": 48
+    }
+  ],
+  "manualCorrections": [
     {
-      "points": 48,
-      "rebounds_total": 6,
-      "assists": 10,
-      "steals": 5,
-      "blocks": 1,
-      "turnovers": 1,
-      "field_goals_made": 20,
-      "field_goals_attempted": 28,
-      "free_throws_made": 6,
-      "free_throws_attempted": 10,
-      "name": "Giannis Antetokounmpo",
-      "game_date": "2024-02-03",
-      "matchup": "MIL @ DAL",
-      "game_id": "0022300702",
-      "person_id": 203507,
-      "season": 2024,
-      "sourceUrl": "https://www.nba.com/game/0022300702/box-score",
-      "fantasy": 59.0,
-      "rank": 47
+      "name": "Victor Wembanyama",
+      "game_date": "2026-11-04",
+      "sourceUrl": "https://www.cbssports.com/nba/gametracker/recap/NBA_20261104_DAL%40SA/",
+      "reason": "Verified completed box score pending scheduled ingestion"
     }
   ]
 }
