@@ -53,25 +53,26 @@ function saveGpFloor(){try{localStorage.setItem(floorKey(),JSON.stringify(gpFloo
 // Player-FPPG beta: ESPN season averages + currently eligible ESPN roster.
 // Remaining-game allocation is a roster-weighted estimate until a full
 // per-player remaining-week NBA schedule feed is connected.
-let seasonPlayerStats=new Map(),seasonStatsReady=false;
+let seasonPlayerStats=new Map(),seasonStatsReady=false,scheduledProjections=null;
 function winProbability(home,away,g){
- const teams=state?.l?.teams||[];
  const project=side=>{
   const used=gameCount(side.teamId,g,state?.l),remaining=Math.max(0,weeklyCap-used);
   const score=Number(side.totalPoints)||0;
-  const roster=teams.find(t=>Number(t.teamId)===Number(side.teamId))?.candidates||[];
-  const eligible=roster.filter(p=>p.playerId!=null&&Number(p.slot)>=0&&Number(p.slot)<=12);
-  const players=eligible.map(p=>({id:p.playerId,stat:seasonPlayerStats.get(String(p.playerId))})).filter(p=>p.stat&&Number(p.stat.gp)>0&&Number.isFinite(Number(p.stat.ppg))&& !['OUT','INJURY_RESERVE','SUSPENSION'].includes(String(p.stat.injuryStatus||'').toUpperCase()));
-  // Roster averages are weighted by season games played, then limited to the
-  // remaining eligible appearances under the weekly fantasy cap.
-  const fppg=players.length?players.reduce((n,p)=>n+Number(p.stat.ppg),0)/players.length:null;
-  const observed=used>0?score/used:20;
-  const rate=fppg!=null?fppg:observed;
-  return {projected:score+remaining*rate,remaining,rate,players:players.length,source:fppg!=null?'player-fppg':'team-fallback'};
+  const roster=scheduledProjections?.teams?.find(t=>Number(t.teamId)===Number(side.teamId))?.players||[];
+  // Only count eligible scheduled appearances; select highest expected point
+  // opportunities when the schedule exceeds the remaining fantasy cap.
+  const opportunities=roster.flatMap(p=>Array.from({length:Math.min(7,Math.max(0,Number(p.scheduledGames)||0))},()=>({
+   expected:Number(p.fppg)*Number(p.availability),
+   variance:Math.pow(17,2)*Math.max(.2,Number(p.availability))
+  }))).filter(x=>Number.isFinite(x.expected)&&x.expected>=0).sort((a,b)=>b.expected-a.expected).slice(0,remaining);
+  const projected=score+opportunities.reduce((n,p)=>n+p.expected,0);
+  const variance=opportunities.reduce((n,p)=>n+p.variance,0);
+  return {projected,remaining,opportunities:opportunities.length,variance,source:'scheduled-player-fppg'};
  };
+ if(!scheduledProjections?.ok)return {home:50,pending:true};
  const h=project(home),a=project(away);
  if(!h.remaining&&!a.remaining)return {home:Number(home.totalPoints)===Number(away.totalPoints)?50:Number(home.totalPoints)>Number(away.totalPoints)?100:0,h,a,final:true};
- const sigma=17*Math.sqrt(h.remaining+a.remaining);
+ const sigma=Math.sqrt(h.variance+a.variance);
  const z=(h.projected-a.projected)/Math.max(1,sigma);
  const cdf=1/(1+Math.exp(-1.702*z));
  return {home:Math.max(1,Math.min(99,Math.round(100*cdf))),h,a,final:false};
@@ -122,6 +123,10 @@ async function load(){
    const f=await fetch('/api/espn-player-test?compact=1&season=2027',{cache:'no-store'});
    if(f.ok){const data=await f.json();if(Array.isArray(data.players)&&data.players.length){seasonPlayerStats=new Map(data.players.filter(p=>p.espnId!=null&&Number(p.gp)>0&&Number.isFinite(Number(p.ppg))).map(p=>[String(p.espnId),p]));seasonStatsReady=true;}}
   }catch(_){/* Keep last valid FPPG data or use fallback */ }
+ }
+ scheduledProjections=null;
+ if(period===currentPeriod){
+  try{const projectionResponse=await fetch('/api/scoreboard-win-projections?period='+period,{cache:'no-store'});const projections=await projectionResponse.json();if(projectionResponse.ok&&projections.ok&&Array.isArray(projections.teams))scheduledProjections=projections;}catch(_){}
  }
  state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
  }catch(e){document.getElementById('status').innerHTML='<span class="error">Unable to update scoreboard: '+safe(e.message)+'</span>';document.getElementById('refreshState').textContent='Update failed';}finally{loading=false;}
