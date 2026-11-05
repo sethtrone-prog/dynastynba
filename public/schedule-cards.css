@@ -10,3 +10,8 @@
 .period-block .period-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 @media(max-width:900px){.schedule-match-grid{grid-template-columns:1fr}}
 @media(max-width:520px){.schedule-match-grid{gap:10px}.schedule-match-card{grid-template-columns:minmax(0,1fr) 32px minmax(0,1fr);gap:5px;padding:13px 8px}.schedule-match-name{font-size:14px}.schedule-match-score{font-size:23px}.schedule-match-record{font-size:12px}.schedule-match-center{font-size:10px}.schedule-match-center small{font-size:8px}}
+
+/* Highlight only the winner of a finalized matchup; ties and upcoming games stay neutral. */
+.schedule-match-side.schedule-match-winner{background:rgba(36,155,91,.16);border:2px solid #32b978;border-radius:10px;box-shadow:inset 0 0 0 1px rgba(50,185,120,.12);padding:10px 5px}
+.schedule-match-winner .schedule-match-name,.schedule-match-winner .schedule-match-score{color:#e5ffed}
+@media(max-width:520px){.schedule-match-side.schedule-match-winner{padding:9px 3px}}
