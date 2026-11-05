@@ -2,6 +2,7 @@ name: Update Top Performances
 on:
   schedule:
     - cron: '15 13 * * *'
+    - cron: '15 18 * * *'
   workflow_dispatch:
 permissions:
   contents: write
@@ -23,6 +24,18 @@ jobs:
           /tmp/performance-updater/bin/pip install pyarrow==26.0.0
       - name: Fetch results and rebuild leaderboard
         run: /tmp/performance-updater/bin/python scripts/update_top_performances.py
+      - name: Validate updated leaderboard
+        run: |
+          /tmp/performance-updater/bin/python - <<'PY'
+          import json, datetime
+          from zoneinfo import ZoneInfo
+          data=json.load(open('public/data/top-performances.json'))
+          today=datetime.datetime.now(ZoneInfo('America/New_York')).date().isoformat()
+          assert data['checkedThrough']==today, 'Leaderboard update is stale'
+          assert len(data['games'])==50, 'Leaderboard must contain 50 games'
+          assert all(data['games'][i]['fantasy']>=data['games'][i+1]['fantasy'] for i in range(49)), 'Leaderboard ranking is unsorted'
+          print('Verified leaderboard through',today)
+          PY
       - name: Publish checked results
         run: |
           git add public/data/top-performances.json data/performance-game-cache.json
