@@ -61,13 +61,21 @@ function winProbability(home,away,g){
   const roster=scheduledProjections?.teams?.find(t=>Number(t.teamId)===Number(side.teamId))?.players||[];
   // Only count eligible scheduled appearances; select highest expected point
   // opportunities when the schedule exceeds the remaining fantasy cap.
-  const opportunities=roster.flatMap(p=>Array.from({length:Math.min(7,Math.max(0,Number(p.scheduledGames)||0))},()=>({
+  const valid=roster.filter(p=>p.fppg!=null&&Number.isFinite(Number(p.fppg))&&Number(p.availability)>0);
+  const opportunities=valid.flatMap(p=>Array.from({length:Math.min(7,Math.max(0,Number(p.scheduledGames)||0))},()=>({
    expected:Number(p.fppg)*Number(p.availability),
    variance:Math.pow(17,2)*Math.max(.2,Number(p.availability))
-  }))).filter(x=>Number.isFinite(x.expected)&&x.expected>=0).sort((a,b)=>b.expected-a.expected).slice(0,remaining);
-  const projected=score+opportunities.reduce((n,p)=>n+p.expected,0);
-  const variance=opportunities.reduce((n,p)=>n+p.variance,0);
-  return {projected,remaining,opportunities:opportunities.length,variance,source:'scheduled-player-fppg'};
+  }))).sort((a,b)=>b.expected-a.expected).slice(0,remaining);
+  // Assume every team fills the weekly cap. When the current roster/schedule
+  // does not supply enough games, use the highest-FPPG available roster player
+  // as an explicit hypothetical replacement appearance (not a scheduled game).
+  const shortfall=Math.max(0,remaining-opportunities.length);
+  const best=valid.slice().sort((a,b)=>Number(b.fppg)*Number(b.availability)-Number(a.fppg)*Number(a.availability))[0];
+  const observed=used>0?score/used:20;
+  const replacementRate=best?Number(best.fppg)*Number(best.availability):observed;
+  const projected=score+opportunities.reduce((n,p)=>n+p.expected,0)+shortfall*replacementRate;
+  const variance=opportunities.reduce((n,p)=>n+p.variance,0)+shortfall*Math.pow(22,2);
+  return {projected,remaining,opportunities:opportunities.length,assumedGames:shortfall,variance,source:'scheduled-player-fppg-plus-cap-fill'};
  };
  if(!scheduledProjections?.ok)return {home:50,pending:true};
  const h=project(home),a=project(away);
