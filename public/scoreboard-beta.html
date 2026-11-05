@@ -56,8 +56,9 @@ function saveGpFloor(){try{localStorage.setItem(floorKey(),JSON.stringify(gpFloo
 let seasonPlayerStats=new Map(),seasonStatsReady=false,scheduledProjections=null;
 function winProbability(home,away,g){
  const project=side=>{
-  const used=gameCount(side.teamId,g,state?.l),remaining=Math.max(0,weeklyCap-used);
-  const score=Number(side.totalPoints)||0;
+  const future=selectedPeriod>currentPeriod;
+  const used=future?0:gameCount(side.teamId,g,state?.l),remaining=Math.max(0,weeklyCap-used);
+  const score=future?0:(Number(side.totalPoints)||0);
   const roster=scheduledProjections?.teams?.find(t=>Number(t.teamId)===Number(side.teamId))?.players||[];
   // Only count eligible scheduled appearances; select highest expected point
   // opportunities when the schedule exceeds the remaining fantasy cap.
@@ -133,7 +134,7 @@ async function load(){
   }catch(_){/* Keep last valid FPPG data or use fallback */ }
  }
  scheduledProjections=null;
- if(period===currentPeriod){
+ if(period>=currentPeriod){
   try{const projectionResponse=await fetch('/api/scoreboard-win-projections?period='+period,{cache:'no-store'});const projections=await projectionResponse.json();if(projectionResponse.ok&&projections.ok&&Array.isArray(projections.teams))scheduledProjections=projections;}catch(_){}
  }
  state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
