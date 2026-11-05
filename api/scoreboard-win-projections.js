@@ -2,7 +2,8 @@
 const calendar=require('./_matchup-calendar');
 const LEAGUE='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288';
 const NBA='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
-const ACTIVE=new Set([5,6,8,9,10,11]);
+// ESPN eligible starting slots and bench (20); exclude IR and other reserve slots.
+const ELIGIBLE=new Set([0,1,2,3,4,5,6,7,8,9,10,11,12,20]);
 async function json(url,options){const r=await fetch(url,options);if(!r.ok)throw Error('ESPN '+r.status);return r.json();}
 function dateList(from,to){const a=[];for(let t=Date.parse(from+'T00:00:00Z');t<=Date.parse(to+'T00:00:00Z');t+=86400000)a.push(new Date(t).toISOString().slice(0,10).replace(/-/g,''));return a;}
 function availability(status){
@@ -44,14 +45,14 @@ module.exports=async function(req,res){
   }
   const teams=(league.teams||[]).map(t=>({
    teamId:t.id,
-   players:(t.roster?.entries||[]).filter(e=>ACTIVE.has(Number(e.lineupSlotId))).map(e=>{
+   players:(t.roster?.entries||[]).filter(e=>ELIGIBLE.has(Number(e.lineupSlotId))).map(e=>{
     const p=e.playerPoolEntry?.player||{},stat=playerStats.get(String(p.id))||{};
     const injuryStatus=p.injuryStatus||p.injury?.status||stat.injuryStatus||'ACTIVE';
     const games=scheduled.get(Number(p.proTeamId))||0;
     const fppg=Number.isFinite(stat.fppg)&&stat.gp>0?stat.fppg:null;
-    return {playerId:p.id,name:p.fullName,proTeamId:p.proTeamId,injuryStatus,availability:availability(injuryStatus),scheduledGames:games,fppg,projectedPoints:fppg===null?null:fppg*games*availability(injuryStatus)};
+    return {playerId:p.id,name:p.fullName,proTeamId:p.proTeamId,lineupSlotId:e.lineupSlotId,injuryStatus,availability:availability(injuryStatus),scheduledGames:games,fppg,projectedPoints:fppg===null?null:fppg*games*availability(injuryStatus)};
    })
   }));
-  return res.status(200).json({ok:true,period,throughDate:today,endDate:days.endDate,method:'ESPN current active roster, current-season FPPG, remaining NBA team schedule, injury availability',teams});
+  return res.status(200).json({ok:true,period,throughDate:today,endDate:days.endDate,method:'ESPN eligible starters and bench, current-season FPPG, remaining NBA team schedule, injury availability',teams});
  }catch(e){return res.status(502).json({ok:false,error:String(e.message).slice(0,180)});}
 };
