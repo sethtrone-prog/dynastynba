@@ -50,23 +50,27 @@ function gameCount(id,g,l){
 }
 function saveGpFloor(){try{localStorage.setItem(floorKey(),JSON.stringify(gpFloor))}catch(_){}}
 
-// Estimated fantasy win probabilities; not ESPN's proprietary model.
-// Remaining games are bounded by the league cap. Team scoring rates are
-// shrunk toward the observed league average to reduce small-sample swings.
+// Player-FPPG beta: ESPN season averages + currently eligible ESPN roster.
+// Remaining-game allocation is a roster-weighted estimate until a full
+// per-player remaining-week NBA schedule feed is connected.
+let seasonPlayerStats=new Map(),seasonStatsReady=false;
 function winProbability(home,away,g){
- const rows=(g?.teams||[]).filter(t=>Number(t.gamesUsedCandidate)>0&&Number.isFinite(Number(t.totalPoints)));
- const leagueRate=rows.length?rows.reduce((a,t)=>a+Math.max(0,Number(t.totalPoints))/Math.max(1,Number(t.gamesUsedCandidate)),0)/rows.length:20;
- const estimate=side=>{
-  const count=gameCount(side.teamId,g,state?.l),remaining=Math.max(0,weeklyCap-count);
+ const teams=state?.l?.teams||[];
+ const project=side=>{
+  const used=gameCount(side.teamId,g,state?.l),remaining=Math.max(0,weeklyCap-used);
   const score=Number(side.totalPoints)||0;
-  const observedRate=count>0?Math.max(0,score)/count:leagueRate;
-  const rate=(observedRate*Math.min(count,8)+leagueRate*8)/(Math.min(count,8)+8);
-  return {projected:score+remaining*rate,remaining};
+  const roster=teams.find(t=>Number(t.teamId)===Number(side.teamId))?.candidates||[];
+  const eligible=roster.filter(p=>p.playerId!=null&&Number(p.slot)>=0&&Number(p.slot)<=12);
+  const players=eligible.map(p=>({id:p.playerId,stat:seasonPlayerStats.get(String(p.playerId))})).filter(p=>p.stat&&Number(p.stat.gp)>0&&Number.isFinite(Number(p.stat.ppg))&& !['OUT','INJURY_RESERVE','SUSPENSION'].includes(String(p.stat.injuryStatus||'').toUpperCase()));
+  // Roster averages are weighted by season games played, then limited to the
+  // remaining eligible appearances under the weekly fantasy cap.
+  const fppg=players.length?players.reduce((n,p)=>n+Number(p.stat.ppg),0)/players.length:null;
+  const observed=used>0?score/used:20;
+  const rate=fppg!=null?fppg:observed;
+  return {projected:score+remaining*rate,remaining,rate,players:players.length,source:fppg!=null?'player-fppg':'team-fallback'};
  };
- const h=estimate(home),a=estimate(away);
- if(!h.remaining&&!a.remaining)return {home:home.totalPoints===away.totalPoints?50:Number(home.totalPoints)>Number(away.totalPoints)?100:0,h,a,final:true};
- // 17 fantasy points per remaining appearance is an initial uncertainty
- // assumption, pending calibration against completed historical matchups.
+ const h=project(home),a=project(away);
+ if(!h.remaining&&!a.remaining)return {home:Number(home.totalPoints)===Number(away.totalPoints)?50:Number(home.totalPoints)>Number(away.totalPoints)?100:0,h,a,final:true};
  const sigma=17*Math.sqrt(h.remaining+a.remaining);
  const z=(h.projected-a.projected)/Math.max(1,sigma);
  const cdf=1/(1+Math.exp(-1.702*z));
@@ -113,6 +117,12 @@ async function load(){
  if(period!==currentPeriod){activeDetails=null;detailsStale=false;}
  else if(incoming?.ok&&Array.isArray(incoming.teams)){activeDetails=incoming;detailsStale=false;try{sessionStorage.setItem(DETAILS_CACHE_KEY,JSON.stringify(incoming))}catch(_){}}
  else{detailsStale=true;}
+ if(period===currentPeriod){
+  try{
+   const f=await fetch('/api/espn-player-test?compact=1&season=2027',{cache:'no-store'});
+   if(f.ok){const data=await f.json();if(Array.isArray(data.players)&&data.players.length){seasonPlayerStats=new Map(data.players.filter(p=>p.espnId!=null&&Number(p.gp)>0&&Number.isFinite(Number(p.ppg))).map(p=>[String(p.espnId),p]));seasonStatsReady=true;}}
+  }catch(_){/* Keep last valid FPPG data or use fallback */ }
+ }
  state={g,s,l};render();document.getElementById('refreshState').textContent='↻ Updated '+new Date().toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
  }catch(e){document.getElementById('status').innerHTML='<span class="error">Unable to update scoreboard: '+safe(e.message)+'</span>';document.getElementById('refreshState').textContent='Update failed';}finally{loading=false;}
 }
