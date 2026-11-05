@@ -2,7 +2,8 @@
 const ROOT='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba/seasons/2027/segments/0/leagues/76513288';
 const NBA='https://site.api.espn.com/apis/site/v2/sports/basketball/nba/scoreboard';
 const ACTIVE=new Set([5,6,8,9,10,11]);
-const BENCH=new Set([20]);
+// ESPN basketball bench entries can use slot 12 (BE) or 20 (BN).
+const BENCH=new Set([12,20]);
 async function get(url){const r=await fetch(url,{headers:{'User-Agent':'DynastyNBA active-lineup beta'}});if(!r.ok)throw Error('Upstream '+r.status);return r.json();}
 function playerPoints(p,day){const stats=(p.stats||[]).filter(s=>Number(s.scoringPeriodId)===day&&Number(s.statSourceId)===0&&Number(s.statSplitTypeId)===5);const match=stats.find(s=>s.appliedTotal!==null&&s.appliedTotal!==undefined&&Number.isFinite(Number(s.appliedTotal)));return match?{points:Number(match.appliedTotal),verified:true}: {points:null,verified:false};}
 const {scoringDate,scoringPeriodForDate}=require('./_scoring-day');
