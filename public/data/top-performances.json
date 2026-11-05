@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-11-05T17:16:09.163Z",
-  "checkedThrough": "2026-11-04",
+  "updatedAt": "2026-11-05T20:41:41.440581+00:00",
+  "checkedThrough": "2026-11-05",
   "updateFrequency": "daily",
-  "playerBoxScoresReviewed": 248561,
+  "playerBoxScoresReviewed": 248877,
   "formula": "PTS + 0.75 × (REB + AST) + STL + BLK − TO − 0.5 × ((FGA − FGM) + (FTA − FTM))",
   "games": [
     {
@@ -65,7 +65,7 @@
       "person_id": 1628389,
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022500938/box-score",
-      "fantasy": 76,
+      "fantasy": 76.0,
       "rank": 3
     },
     {
@@ -143,12 +143,12 @@
       "free_throws_made": 19,
       "free_throws_attempted": 23,
       "name": "Victor Wembanyama",
+      "person_id": "ESPN:5104157",
+      "game_id": "ESPN:401909933",
       "game_date": "2026-11-04",
-      "matchup": "SAS vs. DAL",
-      "game_id": "2026-11-04-DAL-SAS",
-      "person_id": 1641705,
+      "matchup": "SA vs. DAL",
       "season": 2027,
-      "sourceUrl": "https://www.cbssports.com/nba/gametracker/recap/NBA_20261104_DAL%40SA/",
+      "sourceUrl": "https://www.espn.com/nba/boxscore/_/gameId/401909933",
       "fantasy": 72.5,
       "rank": 7
     },
@@ -170,7 +170,7 @@
       "person_id": 203081,
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200917/box-score",
-      "fantasy": 70,
+      "fantasy": 70.0,
       "rank": 8
     },
     {
@@ -254,7 +254,7 @@
       "person_id": 203999,
       "season": 2025,
       "sourceUrl": "https://www.nba.com/game/0022401102/box-score",
-      "fantasy": 66,
+      "fantasy": 66.0,
       "rank": 12
     },
     {
@@ -338,7 +338,7 @@
       "person_id": 203999,
       "season": 2026,
       "sourceUrl": "https://www.nba.com/game/0022500224/box-score",
-      "fantasy": 65,
+      "fantasy": 65.0,
       "rank": 16
     },
     {
@@ -359,7 +359,7 @@
       "person_id": 203954,
       "season": 2021,
       "sourceUrl": "https://www.nba.com/game/0022000450/box-score",
-      "fantasy": 65,
+      "fantasy": 65.0,
       "rank": 16
     },
     {
@@ -611,7 +611,7 @@
       "person_id": 201939,
       "season": 2025,
       "sourceUrl": "https://www.nba.com/game/0022401100/box-score",
-      "fantasy": 62,
+      "fantasy": 62.0,
       "rank": 29
     },
     {
@@ -737,7 +737,7 @@
       "person_id": 1629027,
       "season": 2022,
       "sourceUrl": "https://www.nba.com/game/0022100560/box-score",
-      "fantasy": 61,
+      "fantasy": 61.0,
       "rank": 35
     },
     {
@@ -1010,7 +1010,7 @@
       "person_id": 201935,
       "season": 2020,
       "sourceUrl": "https://www.nba.com/game/0021900371/box-score",
-      "fantasy": 59,
+      "fantasy": 59.0,
       "rank": 48
     },
     {
@@ -1031,7 +1031,7 @@
       "person_id": 1627783,
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200471/box-score",
-      "fantasy": 59,
+      "fantasy": 59.0,
       "rank": 48
     },
     {
@@ -1052,16 +1052,8 @@
       "person_id": 201942,
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022201050/box-score",
-      "fantasy": 59,
+      "fantasy": 59.0,
       "rank": 48
-    }
-  ],
-  "manualCorrections": [
-    {
-      "name": "Victor Wembanyama",
-      "game_date": "2026-11-04",
-      "sourceUrl": "https://www.cbssports.com/nba/gametracker/recap/NBA_20261104_DAL%40SA/",
-      "reason": "Verified completed box score pending scheduled ingestion"
     }
   ]
 }
