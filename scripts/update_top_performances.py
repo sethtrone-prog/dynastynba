@@ -74,7 +74,9 @@ def current_events(today,cache):
     current=fetch(BASE+'scoreboard?dates='+today.strftime('%Y%m%d')+'&limit=100')
     calendar=current.get('leagues',[{}])[0].get('calendar')
     if not isinstance(calendar,list):raise ValueError('Missing ESPN season calendar')
-    dates=sorted({str(d)[:10] for d in calendar if isinstance(d,str) and start.isoformat()<=d[:10]<=today.isoformat()})
+    # ESPN's published season calendar may lag behind completed games; always recheck recent dates.
+    recent={(today-dt.timedelta(days=n)).isoformat() for n in range(15) if today-dt.timedelta(days=n)>=start}
+    dates=sorted({str(d)[:10] for d in calendar if isinstance(d,str) and start.isoformat()<=d[:10]<=today.isoformat()} | recent)
     checked=set(cache.get('checkedDates',[]));cutoff=(today-dt.timedelta(days=14)).isoformat()
     pending=[d for d in dates if d not in checked or d>=cutoff]
     events={}
