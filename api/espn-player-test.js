@@ -16,6 +16,17 @@ export default async function handler(req, res) {
     try { data = JSON.parse(body); } catch { return res.status(502).json({ok:false,source:'ESPN Fantasy Basketball',season:Number(season),reason:'ESPN returned non-JSON data',detail:body.slice(0,200)}); }
     if (diagnostic) return res.status(200).json({ok:true,season:Number(season),leagueId:LEAGUE_ID,playerCount:Array.isArray(data.players)?data.players.length:0,teamCount:Array.isArray(data.teams)?data.teams.length:0,hasPlayers:Array.isArray(data.players),note:'ESPN player results may be capped or sorted; a successful response does not guarantee all unowned players are included.'});
     const rows=(data.players||[]).map(entry=>{const p=entry.player||{}; const stat=(p.stats||[]).find(s=>Number(s.seasonId)===Number(season)&&Number(s.statSourceId)===0&&Number(s.statSplitTypeId)===0); const seasons=(p.stats||[]).filter(s=>Number(s.statSourceId)===0&&Number(s.statSplitTypeId)===0&&Number(s.seasonId)>0).map(s=>Number(s.seasonId)); const firstSeason=seasons.length?Math.min(...seasons):null; return {player:p.fullName||null,espnId:p.id??entry.id??null,proTeamId:p.proTeamId??null,gp:stat?.stats?.['42']??null,fp:stat?.appliedTotal??null,ppg:stat?.appliedAverage??null,entryYear:firstSeason?firstSeason-1:null,draftYear:p.draftYear??null,experience:p.experience??null,rookieYear:p.rookieYear??null,defaultPositionId:p.defaultPositionId??null,position:({1:'PG',2:'SG',3:'SF',4:'PF',5:'C'})[Number(p.defaultPositionId)]||null,injuryStatus:typeof p.injuryStatus==='string'?p.injuryStatus:(typeof p.injury?.status==='string'?p.injury.status:null)};}).sort((a,b)=>(b.ppg??-999)-(a.ppg??-999));
+    const normalizeName = name => String(name||'').normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const requestedNames = String(req.query.names||'').split(',').map(s=>s.trim()).filter(Boolean).slice(0,100);
+    if (requestedNames.length) {
+      const matches = requestedNames.map(name => {
+        const key=normalizeName(name);
+        const exact=rows.filter(p=>normalizeName(p.player)===key);
+        const possible=exact.length?exact:rows.filter(p=>normalizeName(p.player).includes(key)||key.includes(normalizeName(p.player)));
+        return {name,matches:possible.slice(0,5),status:exact.length===1?'exact':exact.length>1?'ambiguous':possible.length?'possible':'not_in_response'};
+      });
+      return res.status(200).json({season:Number(season),playerCount:rows.length,complete:false,warning:'ESPN may return a limited player pool; not_in_response does not prove an athlete has no ESPN Fantasy ID.',results:matches});
+    }
     const offset=Math.max(0,Number(req.query.offset||0)), limit=Math.min(250,Math.max(1,Number(req.query.limit||200)));
     if(String(req.query.format||'')==='tsv'){const page=rows.slice(offset,offset+limit); res.setHeader('content-type','text/plain; charset=utf-8');res.setHeader('cache-control','no-store');return res.status(200).send(['COUNT\t'+rows.length,...page.map(r=>[r.player,r.espnId,r.gp,r.fp,r.ppg].join('\t'))].join('\n'));}
     if(String(req.query.compact||'')==='1') { const teams=(data.teams||[]).map(t=>({espnTeamId:t.id??null,logo:t.logo||null,name:t.name||[t.location,t.nickname].filter(Boolean).join(' ')||null})); return res.status(200).json({season:Number(season),validCount:rows.length,players:rows,teams}); }
