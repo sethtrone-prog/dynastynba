@@ -133,7 +133,7 @@ function playerPage(pid){
   let tx=DB.Transactions.filter(x=>name&&[txAsset(x),x.Details].some(v=>String(v||'').toLowerCase().includes(name))).slice().sort((a,b)=>String(txDate(b)).localeCompare(String(txDate(a))));
   let current=rs.find(x=>x.Season_ID===sid)||rs[0];
   let currentContract=cs.find(x=>x.Season_ID===sid)||cs[0];
-  let draft=(DB['Rookie Draft Picks']||[]).find(x=>String(x.Selection||'').trim().toLowerCase()===name);
+  let draft=(DB['Rookie Draft Picks']||[]).find(x=>{const normalize=v=>String(v||'').toLowerCase().normalize('NFKD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]/g,'');const selected=normalize(x.Selection),playerName=normalize(name);return selected===playerName||(pid==='P0515'&&selected==='yaxellandeborg');});
   let espn=(DB['ESPN Rosters']||[]).find(x=>x.Player_ID===pid)||{};
   let years=[...new Set(rs.map(yearOf).filter(Boolean))].sort((a,b)=>b-a);
   let currentTeam=current?franchiseLabel(current.Franchise_ID):'Free agent / no roster record';
