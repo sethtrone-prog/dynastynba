@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-11-07T21:46:59.430707+00:00",
-  "checkedThrough": "2026-11-07",
+  "updatedAt": "2026-11-08T18:23:19.289453+00:00",
+  "checkedThrough": "2026-11-08",
   "updateFrequency": "daily",
-  "playerBoxScoresReviewed": 249129,
+  "playerBoxScoresReviewed": 249281,
   "formula": "PTS + 0.75 × (REB + AST) + STL + BLK − TO − 0.5 × ((FGA − FGM) + (FTA − FTM))",
   "games": [
     {
