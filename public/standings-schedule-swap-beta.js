@@ -2,16 +2,20 @@
  const cache=new Map(),pending=new Set();
  function renderMatrix(){
   const app=document.querySelector('#app');
-  if(app?.querySelector('.page-head h1')?.textContent.trim()!=='Standings')return;
-  const year=Number(document.querySelector('#seasonSelect')?.value);
+  if(!app)return;
   const card=app.querySelector('.standings-archive-card');
+  const year=Number(document.querySelector('#seasonSelect')?.value||2027);
   if(!card||year<2027||app.querySelector('.schedule-swap-card'))return;
   // Render independently of the SOS enhancement; its API may load later or fail.
   // The schedule-swap matrix only requires the main standings card.
   if(!cache.has(year)){
    if(pending.has(year))return;
    pending.add(year);
-   fetch('/api/espn-schedule-swap?season='+year).then(r=>r.json()).then(d=>{if(d.ok){cache.set(year,d);renderMatrix();}else{cache.set(year,{error:d.error||'Unavailable'});renderMatrix();}}).catch(()=>{cache.set(year,{error:'ESPN schedule data unavailable'});renderMatrix();}).finally(()=>pending.delete(year));
+   const loading=document.createElement('section');
+   loading.className='card schedule-swap-card';
+   loading.innerHTML='<div class="card-pad section-title"><h2>WINS WITH EVERY TEAM\'S SCHEDULE</h2><span>Loading completed ESPN matchups…</span></div>';
+   card.after(loading);
+   fetch('/api/espn-schedule-swap?season='+year).then(r=>r.json()).then(d=>{if(d.ok){cache.set(year,d);loading.remove();renderMatrix();}else{cache.set(year,{error:d.error||'Unavailable'});loading.remove();renderMatrix();}}).catch(()=>{cache.set(year,{error:'ESPN schedule data unavailable'});loading.remove();renderMatrix();}).finally(()=>pending.delete(year));
    return;
   }
   const data=cache.get(year),section=document.createElement('section');
@@ -53,6 +57,6 @@
   }
   card.after(section);
  }
- const start=()=>{const app=document.querySelector('#app');if(!app)return;new MutationObserver(renderMatrix).observe(app,{childList:true,subtree:true});renderMatrix()};
+ const start=()=>{const app=document.querySelector('#app');if(!app)return;new MutationObserver(renderMatrix).observe(app,{childList:true,subtree:true});renderMatrix();window.addEventListener('hashchange',renderMatrix);setInterval(renderMatrix,1500)};
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start);else start();
 })();
