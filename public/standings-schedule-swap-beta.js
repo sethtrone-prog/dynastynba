@@ -43,7 +43,7 @@
     ids.forEach(scheduleId=>{
      const cell=document.createElement('td'),v=byId.get(id)?.get(scheduleId);
      cell.textContent=v?String(v.wins)+(v.ties?' ('+v.ties+'T)':''):'—';
-     cell.title=v?String(v.wins)+'-'+String(v.losses)+(v.ties?'-'+String(v.ties):'')+' with '+(idToName.get(scheduleId)||scheduleId)+' schedule':'Unavailable';
+     cell.title=v?String(v.wins)+'-'+String(v.losses)+(v.ties?'-'+String(v.ties):'')+' with '+(idToName.get(scheduleId)||scheduleId)+' schedule'+(v.breakdown?.length?'\\n'+v.breakdown.map(x=>'Week '+x.week+': '+x.ownPoints+' vs '+x.opponentPoints+' ('+(idToName.get(x.opponentId)||data.teams.find(t=>t.id===x.opponentId)?.name||x.opponentId)+') = '+(x.ownPoints>x.opponentPoints?'W':x.ownPoints<x.opponentPoints?'L':'T')+(x.actual?' [actual matchup]':'')).join('\\n'):''):'Unavailable';
      if(v){sum+=v.wins+v.ties*.5;n++;}
      if(id===scheduleId)cell.classList.add('schedule-swap-actual');
      tr.appendChild(cell);
@@ -52,7 +52,7 @@
    });
    table.appendChild(tbody);wrap.appendChild(table);section.appendChild(wrap);
    const note=document.createElement('p');note.className='sos-explanation';
-   note.textContent='Rows = team scoring; columns = whose opponent schedule is used. Each cell shows hypothetical wins through '+data.weeks.length+' fully completed week(s). Diagonal = actual wins. A tie counts as half a win in Avg Wins. When a swapped schedule would pit a team against itself, the schedule owner score is used as the opponent instead, so every completed week counts. Hover a cell for W-L detail.';
+   note.textContent='Rows = team scoring; columns = whose opponent schedule is used. Each cell shows hypothetical wins through '+data.weeks.length+' fully completed week(s). Diagonal = actual wins. A tie counts as half a win in Avg Wins. When a row team actually faced the schedule owner, their actual head-to-head result counts. Hover any cell to see each completed week score comparison.';
    section.appendChild(note);
   }
   card.after(section);
