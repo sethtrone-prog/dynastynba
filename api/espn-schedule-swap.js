@@ -32,11 +32,17 @@ export default async function handler(req,res){
      if(own.points>actualOpponent)wins++;else if(own.points<actualOpponent)losses++;else ties++;
      continue;
     }
-    // If the substituted schedule's opponent is the evaluated team, use the
-    // schedule owner's score instead. This preserves a valid opponent and
-    // ensures every team/schedule combination counts all completed weeks.
-    const opponentId=scheduled.opponent===teamId?scheduleTeamId:scheduled.opponent;
-    const opposingScore=w.get(opponentId)?.points;
+    // If the row team actually faced the schedule owner, retain that real
+    // head-to-head matchup. Never invent or substitute a third opponent.
+    if(scheduled.opponent===teamId){
+     const actualOpponentScore=scheduled.points;
+     if(!Number.isFinite(actualOpponentScore))continue;
+     if(own.points>actualOpponentScore)wins++;else if(own.points<actualOpponentScore)losses++;else ties++;
+     continue;
+    }
+    // Otherwise evaluate the row team's score against the schedule owner's
+    // actual opponent for the same completed week.
+    const opposingScore=w.get(scheduled.opponent)?.points;
     if(!Number.isFinite(opposingScore))continue;
     if(own.points>opposingScore)wins++;else if(own.points<opposingScore)losses++;else ties++;
    }
