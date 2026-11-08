@@ -6,8 +6,8 @@
   const year=Number(document.querySelector('#seasonSelect')?.value);
   const card=app.querySelector('.standings-archive-card');
   if(!card||year<2027||app.querySelector('.schedule-swap-card'))return;
-  const standingsTable=card.querySelector('.sos-standings-table');
-  if(!standingsTable)return;
+  // Render independently of the SOS enhancement; its API may load later or fail.
+  // The schedule-swap matrix only requires the main standings card.
   if(!cache.has(year)){
    if(pending.has(year))return;
    pending.add(year);
