@@ -25,9 +25,11 @@ export default async function handler(req,res){
    for(const [,w] of completed){
     const own=w.get(teamId),scheduled=w.get(scheduleTeamId);
     if(!own||!scheduled)continue;
-    // When the substituted team would play itself, swap the schedule owner's original score into that opponent slot.
-    if(scheduled.opponent===teamId)continue; // no self-matchup: exclude this week
-    const opposingScore=w.get(scheduled.opponent)?.points;
+    // If the substituted schedule's opponent is the evaluated team, use the
+    // schedule owner's score instead. This preserves a valid opponent and
+    // ensures every team/schedule combination counts all completed weeks.
+    const opponentId=scheduled.opponent===teamId?scheduleTeamId:scheduled.opponent;
+    const opposingScore=w.get(opponentId)?.points;
     if(!Number.isFinite(opposingScore))continue;
     if(own.points>opposingScore)wins++;else if(own.points<opposingScore)losses++;else ties++;
    }
