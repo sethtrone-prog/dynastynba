@@ -25,6 +25,13 @@ export default async function handler(req,res){
    for(const [,w] of completed){
     const own=w.get(teamId),scheduled=w.get(scheduleTeamId);
     if(!own||!scheduled)continue;
+    // The diagonal is the team's real ESPN matchup result, not a schedule swap.
+    if(teamId===scheduleTeamId){
+     const actualOpponent=w.get(own.opponent)?.points;
+     if(!Number.isFinite(actualOpponent))continue;
+     if(own.points>actualOpponent)wins++;else if(own.points<actualOpponent)losses++;else ties++;
+     continue;
+    }
     // If the substituted schedule's opponent is the evaluated team, use the
     // schedule owner's score instead. This preserves a valid opponent and
     // ensures every team/schedule combination counts all completed weeks.
