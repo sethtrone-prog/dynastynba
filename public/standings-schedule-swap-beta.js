@@ -52,7 +52,7 @@
    });
    table.appendChild(tbody);wrap.appendChild(table);section.appendChild(wrap);
    const note=document.createElement('p');note.className='sos-explanation';
-   note.textContent='Rows = team scoring; columns = whose opponent schedule is used. Each cell shows hypothetical wins through '+data.weeks.length+' fully completed week(s). Diagonal = actual wins. A tie counts as half a win in Avg Wins. When a swapped schedule would pit a team against itself, the schedule owner's score is used as the opponent instead, so every completed week counts. Hover a cell for W-L detail.';
+   note.textContent='Rows = team scoring; columns = whose opponent schedule is used. Each cell shows hypothetical wins through '+data.weeks.length+' fully completed week(s). Diagonal = actual wins. A tie counts as half a win in Avg Wins. When a swapped schedule would pit a team against itself, the schedule owner score is used as the opponent instead, so every completed week counts. Hover a cell for W-L detail.';
    section.appendChild(note);
   }
   card.after(section);
