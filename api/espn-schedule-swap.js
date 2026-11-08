@@ -22,16 +22,35 @@ export default async function handler(req,res){
   const completed=[...periods.entries()].filter(([week,w])=>ids.every(id=>w.has(id))).sort((a,b)=>a[0]-b[0]);
   const matrix=ids.map(teamId=>({teamId,against:ids.map(scheduleTeamId=>{
    let wins=0,losses=0,ties=0;
-   for(const [,w] of completed){
+   const breakdown=[];
+   for(const [week,w] of completed){
     const own=w.get(teamId),scheduled=w.get(scheduleTeamId);
     if(!own||!scheduled)continue;
-    // When the substituted team would play itself, swap the schedule owner's original score into that opponent slot.
-    if(scheduled.opponent===teamId)continue; // no self-matchup: exclude this week
+    // The diagonal is the team's real ESPN matchup result, not a schedule swap.
+    if(teamId===scheduleTeamId){
+     const actualOpponent=w.get(own.opponent)?.points;
+     if(!Number.isFinite(actualOpponent))continue;
+     if(own.points>actualOpponent)wins++;else if(own.points<actualOpponent)losses++;else ties++;
+     breakdown.push({week,ownPoints:own.points,opponentId:own.opponent,opponentPoints:actualOpponent,actual:true});
+     continue;
+    }
+    // If the row team actually faced the schedule owner, retain that real
+    // head-to-head matchup. Never invent or substitute a third opponent.
+    if(scheduled.opponent===teamId){
+     const actualOpponentScore=scheduled.points;
+     if(!Number.isFinite(actualOpponentScore))continue;
+     if(own.points>actualOpponentScore)wins++;else if(own.points<actualOpponentScore)losses++;else ties++;
+     breakdown.push({week,ownPoints:own.points,opponentId:scheduleTeamId,opponentPoints:actualOpponentScore,actual:true});
+     continue;
+    }
+    // Otherwise evaluate the row team's score against the schedule owner's
+    // actual opponent for the same completed week.
     const opposingScore=w.get(scheduled.opponent)?.points;
     if(!Number.isFinite(opposingScore))continue;
     if(own.points>opposingScore)wins++;else if(own.points<opposingScore)losses++;else ties++;
+    breakdown.push({week,ownPoints:own.points,opponentId:scheduled.opponent,opponentPoints:opposingScore,actual:false});
    }
-   return {scheduleTeamId,wins,losses,ties};
+   return {scheduleTeamId,wins,losses,ties,breakdown};
   })}));
   res.json({ok:true,season:year,weeks:completed.map(([week])=>week),teams:teams.map(t=>({id:Number(t.id),name:t.name})),matrix});
  }catch(e){res.status(502).json({ok:false,error:'Unable to verify completed ESPN matchup periods'});}
