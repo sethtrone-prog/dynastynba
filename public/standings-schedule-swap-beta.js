@@ -52,7 +52,7 @@
    });
    table.appendChild(tbody);wrap.appendChild(table);section.appendChild(wrap);
    const note=document.createElement('p');note.className='sos-explanation';
-   note.textContent='Rows = team scoring; columns = whose opponent schedule is used. Each cell shows hypothetical wins through '+data.weeks.length+' fully completed week(s). Diagonal = actual wins. A tie counts as half a win in Avg Wins. When a row team actually faced the schedule owner, their actual head-to-head result counts. Hover any cell to see each completed week score comparison.';
+   note.textContent='Rows = team scoring; columns = whose opponent schedule is used. Each cell shows hypothetical wins through '+data.weeks.length+' fully completed week(s). Diagonal = actual wins. A tie counts as half a win in Avg Wins. When a row team actually faced the schedule owner, their actual head-to-head result counts. Click any result cell to see the exact weekly opponents, scores, and outcomes.';
    section.appendChild(note);
   }
   card.after(section);
