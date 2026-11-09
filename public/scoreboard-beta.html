@@ -68,11 +68,13 @@ function liveScoringRemainder(teamId){
   // ESPN game detail often includes a clock and quarter, e.g. "11:00 - 4th".
   // When clock is unavailable, use a conservative half-game estimate.
   const clock=String(detail?.gameDetail||'');
-  const q=clock.match(/(\d{1,2}):(\d{2})\s*(?:-|,)?\s*(?:Q)?([1-4])(?:st|nd|rd|th)?/i)
-    ||clock.match(/(?:Q)?([1-4])(?:st|nd|rd|th)?\s*(?:-|,)?\s*(\d{1,2}):(\d{2})/i);
+  const forward=clock.match(/(\\d{1,2}):(\\d{2})\\s*(?:-|,)?\\s*(?:Q)?([1-4])(?:st|nd|rd|th)?/i);
+  const reverse=clock.match(/(?:Q)?([1-4])(?:st|nd|rd|th)?\\s*(?:-|,)?\\s*(\\d{1,2}):(\\d{2})/i);
   let fraction=.5;
-  if(q){
-   const quarter=Number(q[3]||q[1]),minutes=Number(q[3]?q[1]:q[2]),seconds=Number(q[3]?q[2]:q[3]);
+  if(forward||reverse){
+   const quarter=Number(forward?forward[3]:reverse[1]);
+   const minutes=Number(forward?forward[1]:reverse[2]);
+   const seconds=Number(forward?forward[2]:reverse[3]);
    if(quarter>=1&&quarter<=4&&minutes<=12&&seconds<60)fraction=Math.max(.02,Math.min(1,((4-quarter)*12+minutes+seconds/60)/48));
   }
   const player=roster.find(x=>String(x.playerId)===String(p.playerId)||String(x.espnId)===String(p.playerId));
