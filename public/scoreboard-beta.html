@@ -54,6 +54,36 @@ function saveGpFloor(){try{localStorage.setItem(floorKey(),JSON.stringify(gpFloo
 // Remaining-game allocation is a roster-weighted estimate until a full
 // per-player remaining-week NBA schedule feed is connected.
 let seasonPlayerStats=new Map(),seasonStatsReady=false,scheduledProjections=null;
+// Live appearances already consume a GP slot but can still earn points.
+function liveScoringRemainder(teamId){
+ if(selectedPeriod!==currentPeriod)return {expected:0,variance:0,count:0};
+ const candidates=state?.l?.teams?.find(t=>Number(t.teamId)===Number(teamId))?.candidates||[];
+ const events=state?.l?.events||[];
+ const roster=scheduledProjections?.teams?.find(t=>Number(t.teamId)===Number(teamId))?.players||[];
+ let expected=0,variance=0,count=0;
+ for(const p of candidates){
+  if(!p.liveAppearanceCandidate||!p.nbaGameStarted||p.nbaGameCompleted)continue;
+  if(!events.some(e=>String(e.id)===String(p.eventId)&&e.started&&!e.completed))continue;
+  const detail=(activeDetails?.teams?.find(t=>Number(t.teamId)===Number(teamId))?.players||[]).find(x=>String(x.playerId)===String(p.playerId));
+  // ESPN game detail often includes a clock and quarter, e.g. "11:00 - 4th".
+  // When clock is unavailable, use a conservative half-game estimate.
+  const clock=String(detail?.gameDetail||'');
+  const q=clock.match(/(\d{1,2}):(\d{2})\s*(?:-|,)?\s*(?:Q)?([1-4])(?:st|nd|rd|th)?/i)
+    ||clock.match(/(?:Q)?([1-4])(?:st|nd|rd|th)?\s*(?:-|,)?\s*(\d{1,2}):(\d{2})/i);
+  let fraction=.5;
+  if(q){
+   const quarter=Number(q[3]||q[1]),minutes=Number(q[3]?q[1]:q[2]),seconds=Number(q[3]?q[2]:q[3]);
+   if(quarter>=1&&quarter<=4&&minutes<=12&&seconds<60)fraction=Math.max(.02,Math.min(1,((4-quarter)*12+minutes+seconds/60)/48));
+  }
+  const player=roster.find(x=>String(x.playerId)===String(p.playerId)||String(x.espnId)===String(p.playerId));
+  const fppg=Number(player?.fppg);
+  const rate=Number.isFinite(fppg)&&fppg>0?fppg:20;
+  expected+=rate*fraction;
+  variance+=17*17*fraction;
+  count++;
+ }
+ return {expected,variance,count};
+}
 function winProbability(home,away,g){
  const project=side=>{
   const future=selectedPeriod>currentPeriod;
@@ -75,12 +105,13 @@ function winProbability(home,away,g){
   const observed=used>0?score/used:20;
   const replacementRate=best?Number(best.fppg)*Number(best.availability):observed;
   const projected=score+opportunities.reduce((n,p)=>n+p.expected,0)+shortfall*replacementRate;
-  const variance=opportunities.reduce((n,p)=>n+p.variance,0)+shortfall*Math.pow(22,2);
-  return {projected,remaining,opportunities:opportunities.length,assumedGames:shortfall,variance,source:'scheduled-player-fppg-plus-cap-fill'};
+  const live=liveScoringRemainder(side.teamId);
+  const variance=opportunities.reduce((n,p)=>n+p.variance,0)+shortfall*Math.pow(22,2)+live.variance;
+  return {projected:projected+live.expected,live,remaining,opportunities:opportunities.length,assumedGames:shortfall,variance,source:'scheduled-player-fppg-plus-cap-fill'};
  };
  if(!scheduledProjections?.ok)return {home:50,pending:true};
  const h=project(home),a=project(away);
- if(!h.remaining&&!a.remaining)return {home:Number(home.totalPoints)===Number(away.totalPoints)?50:Number(home.totalPoints)>Number(away.totalPoints)?100:0,h,a,final:true};
+ if(!h.remaining&&!a.remaining&&!h.live.count&&!a.live.count)return {home:Number(home.totalPoints)===Number(away.totalPoints)?50:Number(home.totalPoints)>Number(away.totalPoints)?100:0,h,a,final:true};
  const sigma=Math.sqrt(h.variance+a.variance);
  const z=(h.projected-a.projected)/Math.max(1,sigma);
  const cdf=1/(1+Math.exp(-1.702*z));
