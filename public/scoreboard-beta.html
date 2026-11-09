@@ -68,8 +68,8 @@ function liveScoringRemainder(teamId){
   // ESPN game detail often includes a clock and quarter, e.g. "11:00 - 4th".
   // When clock is unavailable, use a conservative half-game estimate.
   const clock=String(detail?.gameDetail||'');
-  const forward=clock.match(/(\\d{1,2}):(\\d{2})\\s*(?:-|,)?\\s*(?:Q)?([1-4])(?:st|nd|rd|th)?/i);
-  const reverse=clock.match(/(?:Q)?([1-4])(?:st|nd|rd|th)?\\s*(?:-|,)?\\s*(\\d{1,2}):(\\d{2})/i);
+  const forward=clock.match(/(\d{1,2}):(\d{2})\s*(?:-|,)?\s*(?:Q)?([1-4])(?:st|nd|rd|th)?/i);
+  const reverse=clock.match(/(?:Q)?([1-4])(?:st|nd|rd|th)?\s*(?:-|,)?\s*(\d{1,2}):(\d{2})/i);
   let fraction=.5;
   if(forward||reverse){
    const quarter=Number(forward?forward[3]:reverse[1]);
