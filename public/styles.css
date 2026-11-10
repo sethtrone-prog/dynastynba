@@ -135,3 +135,16 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
  .hero .hero-season{text-align:center}
 }
 @media(max-width:440px){.home-live-icon{width:auto}.home-live-feature{flex-wrap:wrap;justify-content:center}.home-live-copy{flex-basis:auto}}
+
+
+/* Beta: LIVE indicator aligned right, title and subtitle remain centered. */
+.home-live-feature{position:relative;justify-content:center;padding-right:88px;padding-left:88px}
+.home-live-copy{flex:1 1 auto;align-items:center;text-align:center}
+.home-live-icon{position:absolute;right:17px;top:50%;transform:translateY(-50%);width:auto;justify-content:flex-end}
+@media(max-width:440px){
+ .home-live-feature{padding-left:70px;padding-right:70px;flex-wrap:nowrap}
+ .home-live-icon{right:12px;width:auto}
+ .home-live-copy{flex:1 1 auto;min-width:0}
+ .home-live-copy strong{font-size:15px}
+ .home-live-copy small{font-size:10px}
+}
