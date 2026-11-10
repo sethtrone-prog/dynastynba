@@ -118,3 +118,20 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
 @media(max-width:800px){#mainNav .nav-live-link{justify-content:flex-start} .home-live-feature{flex-wrap:wrap;gap:10px}.home-live-cta{margin-left:auto}}
 @media(max-width:440px){.home-live-feature{padding:13px}.home-live-icon{width:100%}.home-live-cta{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.nav-live-dot,.home-live-dot{animation:none}.home-live-feature{transition:none}}
+
+
+/* Beta refinement: centered Live Scoring button and mobile homepage masthead. */
+.home-live-feature{justify-content:center;text-align:center}
+.home-live-icon{justify-content:center}
+.home-live-copy{flex:0 1 auto;align-items:center;text-align:center}
+@media(max-width:720px){
+ .hero .hero-inner{grid-template-columns:minmax(0,1fr);text-align:center;justify-items:center}
+ .hero .hero-inner>div:first-child{width:100%;min-width:0;display:flex;flex-direction:column;align-items:center}
+ .hero .hero-inner h1{width:100%;text-align:center;overflow-wrap:normal;font-size:clamp(39px,10vw,62px)}
+ .hero .hero-inner .hero-tagline{justify-content:center;text-align:center}
+ .hero .hero-inner p{margin-left:auto;margin-right:auto;text-align:center}
+ .hero .hero-inner .home-actions{justify-content:center;flex-wrap:wrap}
+ .hero .hero-inner .home-live-feature{margin-left:auto;margin-right:auto;justify-content:center}
+ .hero .hero-season{text-align:center}
+}
+@media(max-width:440px){.home-live-icon{width:auto}.home-live-feature{flex-wrap:wrap;justify-content:center}.home-live-copy{flex-basis:auto}}
