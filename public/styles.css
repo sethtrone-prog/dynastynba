@@ -100,3 +100,61 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
  .site-header nav.open{top:100%;height:auto;flex:0 0 auto;align-items:stretch;max-height:calc(100dvh - 90px - env(safe-area-inset-bottom, 0px));overflow-y:scroll;overflow-x:hidden;scrollbar-width:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:12px 18px calc(120px + env(safe-area-inset-bottom, 0px));}
  .site-header nav.open button{flex:0 0 auto;min-height:50px;width:100%;text-align:center;}
 }
+
+
+/* Beta: broadcast-inspired Live Scoring entry points. */
+#mainNav .nav-live-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;color:#f7d17a;border-bottom-color:rgba(231,184,78,.5)}
+#mainNav .nav-live-link:hover,#mainNav .nav-live-link.active{color:#fff;border-bottom-color:#e7b84e;background:rgba(231,184,78,.09)}
+.nav-live-dot,.home-live-dot{display:inline-block;width:8px;height:8px;flex:none;border-radius:50%;background:#ee4b52;box-shadow:0 0 0 3px rgba(238,75,82,.14);animation:dynasty-live-pulse 2s ease-in-out infinite}
+@keyframes dynasty-live-pulse{50%{box-shadow:0 0 0 7px rgba(238,75,82,0)}}
+.home-live-feature{width:min(100%,560px);display:flex;align-items:center;gap:15px;text-align:left;margin-top:20px;padding:14px 16px;border-radius:8px;border:1px solid #42729b;background:linear-gradient(115deg,#102b48,#0a1d33 72%);color:#fff;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.2);transition:transform .18s,border-color .18s,box-shadow .18s}
+.home-live-feature:hover{transform:translateY(-2px);border-color:#e7b84e;box-shadow:0 12px 28px rgba(0,0,0,.28)}
+.home-live-feature:focus-visible,#mainNav .nav-live-link:focus-visible{outline:2px solid #ffd477;outline-offset:3px}
+.home-live-icon{display:inline-flex;align-items:center;gap:7px;color:#ffb4b7;font:700 11px Play,sans-serif;letter-spacing:1px;white-space:nowrap}
+.home-live-copy{display:flex;flex-direction:column;gap:4px;min-width:0;flex:1}
+.home-live-copy strong{font:700 17px Play,sans-serif;letter-spacing:.08em}
+.home-live-copy small{font:400 11px Play,sans-serif;color:#b7cde0}
+.home-live-cta{font:700 11px Play,sans-serif;letter-spacing:.05em;color:#ffd477;white-space:nowrap}
+@media(max-width:800px){#mainNav .nav-live-link{justify-content:flex-start} .home-live-feature{flex-wrap:wrap;gap:10px}.home-live-cta{margin-left:auto}}
+@media(max-width:440px){.home-live-feature{padding:13px}.home-live-icon{width:100%}.home-live-cta{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.nav-live-dot,.home-live-dot{animation:none}.home-live-feature{transition:none}}
+
+
+/* Beta refinement: centered Live Scoring button and mobile homepage masthead. */
+.home-live-feature{justify-content:center;text-align:center}
+.home-live-icon{justify-content:center}
+.home-live-copy{flex:0 1 auto;align-items:center;text-align:center}
+@media(max-width:720px){
+ .hero .hero-inner{grid-template-columns:minmax(0,1fr);text-align:center;justify-items:center}
+ .hero .hero-inner>div:first-child{width:100%;min-width:0;display:flex;flex-direction:column;align-items:center}
+ .hero .hero-inner h1{width:100%;text-align:center;overflow-wrap:normal;font-size:clamp(39px,10vw,62px)}
+ .hero .hero-inner .hero-tagline{justify-content:center;text-align:center}
+ .hero .hero-inner p{margin-left:auto;margin-right:auto;text-align:center}
+ .hero .hero-inner .home-actions{justify-content:center;flex-wrap:wrap}
+ .hero .hero-inner .home-live-feature{margin-left:auto;margin-right:auto;justify-content:center}
+ .hero .hero-season{text-align:center}
+}
+@media(max-width:440px){.home-live-icon{width:auto}.home-live-feature{flex-wrap:wrap;justify-content:center}.home-live-copy{flex-basis:auto}}
+
+
+/* Beta: LIVE indicator aligned right, title and subtitle remain centered. */
+.home-live-feature{position:relative;justify-content:center;padding-right:88px;padding-left:88px}
+.home-live-copy{flex:1 1 auto;align-items:center;text-align:center}
+.home-live-icon{position:absolute;right:17px;top:50%;transform:translateY(-50%);width:auto;justify-content:flex-end}
+@media(max-width:440px){
+ .home-live-feature{padding-left:70px;padding-right:70px;flex-wrap:nowrap}
+ .home-live-icon{right:12px;width:auto}
+ .home-live-copy{flex:1 1 auto;min-width:0}
+ .home-live-copy strong{font-size:15px}
+ .home-live-copy small{font-size:10px}
+}
+
+
+/* Beta refinement: LIVE indicator on left; card title and subtitle stay centered. */
+.home-live-feature{padding-left:88px;padding-right:88px;justify-content:center}
+.home-live-icon{left:17px;right:auto;top:50%;transform:translateY(-50%);justify-content:flex-start}
+.home-live-copy{flex:1 1 auto;align-items:center;text-align:center}
+@media(max-width:440px){
+ .home-live-feature{padding-left:70px;padding-right:70px}
+ .home-live-icon{left:12px;right:auto}
+}
