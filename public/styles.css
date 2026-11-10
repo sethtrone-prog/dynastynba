@@ -148,3 +148,13 @@ body{background:radial-gradient(circle at 50% -10%,#123c66 0,#07192c 35%,#04111f
  .home-live-copy strong{font-size:15px}
  .home-live-copy small{font-size:10px}
 }
+
+
+/* Beta refinement: LIVE indicator on left; card title and subtitle stay centered. */
+.home-live-feature{padding-left:88px;padding-right:88px;justify-content:center}
+.home-live-icon{left:17px;right:auto;top:50%;transform:translateY(-50%);justify-content:flex-start}
+.home-live-copy{flex:1 1 auto;align-items:center;text-align:center}
+@media(max-width:440px){
+ .home-live-feature{padding-left:70px;padding-right:70px}
+ .home-live-icon{left:12px;right:auto}
+}
