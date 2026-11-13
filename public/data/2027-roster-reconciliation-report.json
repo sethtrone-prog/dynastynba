@@ -1,0 +1,644 @@
+{
+  "generated": "2026-11-13",
+  "sourceSpreadsheetId": "1kIcN9JdReZ4fPobfzAjd3Oyh1ojuXqeLsHBiLt3zjbc",
+  "scope": "2027 cap tabs 10 franchises, player slots and dead cap",
+  "added": [
+    {
+      "type": "added",
+      "team": "Andrew Cap",
+      "name": "Miles Bridges - NT 12/15",
+      "status": "Active",
+      "pid": "P0094"
+    },
+    {
+      "type": "added",
+      "team": "Andrew Cap",
+      "name": "Quentin Grimes - DPE NT",
+      "status": "Active",
+      "pid": "P0281"
+    },
+    {
+      "type": "added",
+      "team": "Andrew Cap",
+      "name": "Dillon Brooks - NT 12/15",
+      "status": "Active",
+      "pid": "P0217"
+    },
+    {
+      "type": "added",
+      "team": "Brandon Cap",
+      "name": "Jake Laravia - NT 12/15",
+      "status": "Active",
+      "pid": "P0493"
+    },
+    {
+      "type": "added",
+      "team": "Brandon Cap",
+      "name": "Will Riley (74 games)",
+      "status": "Two-Way",
+      "pid": "P0444"
+    },
+    {
+      "type": "added",
+      "team": "Derek Cap",
+      "name": "Keegan Murray - NT 12/15",
+      "status": "Active",
+      "pid": "P0295"
+    },
+    {
+      "type": "added",
+      "team": "Derek Cap",
+      "name": "PJ Washington - NT 12/15",
+      "status": "Active",
+      "pid": "P0204"
+    },
+    {
+      "type": "added",
+      "team": "Derek Cap",
+      "name": "Cameron Johnson - NT 12/15",
+      "status": "Active",
+      "pid": "P0192"
+    },
+    {
+      "type": "added",
+      "team": "Derek Cap",
+      "name": "Andrew Wiggins - NT 12/15",
+      "status": "Active",
+      "pid": "P0019"
+    },
+    {
+      "type": "added",
+      "team": "Derek Cap",
+      "name": "CJ McCollum - NT 12/15",
+      "status": "Active",
+      "pid": "P0036"
+    },
+    {
+      "type": "added",
+      "team": "Derek Cap",
+      "name": "Jerami Grant - NT 12/15",
+      "status": "Active",
+      "pid": "P0102"
+    },
+    {
+      "type": "added",
+      "team": "Derek Cap",
+      "name": "Tyrese Proctor  - NT 12/15",
+      "status": "Two-Way",
+      "pid": "P0445"
+    },
+    {
+      "type": "added",
+      "team": "Derek Cap",
+      "name": "Johnny Furphy  - NT 12/15",
+      "status": "G-League",
+      "pid": "P0410"
+    },
+    {
+      "type": "added",
+      "team": "Diaz Cap",
+      "name": "Josh Hart - NT 12/15",
+      "status": "Active",
+      "pid": "P0339"
+    },
+    {
+      "type": "added",
+      "team": "Diaz Cap",
+      "name": "Asa Newell",
+      "status": "G-League",
+      "pid": "P0452"
+    },
+    {
+      "type": "added",
+      "team": "Jake Cap",
+      "name": "Anthony Davis - NT 12/15",
+      "status": "Active",
+      "pid": "P0065"
+    },
+    {
+      "type": "added",
+      "team": "Jake Cap",
+      "name": "Isaiah Hartenstein - NT 12/15",
+      "status": "Active",
+      "pid": "P0345"
+    },
+    {
+      "type": "added",
+      "team": "Jake Cap",
+      "name": "Keldon Johnson - Dead Cap",
+      "status": "Dead Cap",
+      "pid": "P0224"
+    },
+    {
+      "type": "added",
+      "team": "Jake Cap",
+      "name": "Joan Beringer - NT 11/28",
+      "status": "Two-Way",
+      "pid": "P0474"
+    },
+    {
+      "type": "added",
+      "team": "Jordan F Cap",
+      "name": "Ja Morant - NT 12/15",
+      "status": "Active",
+      "pid": "P0200"
+    },
+    {
+      "type": "added",
+      "team": "Jordan F Cap",
+      "name": "RJ Barrett - NT 12/9",
+      "status": "Active",
+      "pid": "P0189"
+    },
+    {
+      "type": "added",
+      "team": "Jordan F Cap",
+      "name": "Damian Lillard - NT 12/15",
+      "status": "Active",
+      "pid": "P0032"
+    },
+    {
+      "type": "added",
+      "team": "Jordan F Cap",
+      "name": "Fred VanVleet - NT 12/15",
+      "status": "Active",
+      "pid": "P0172"
+    },
+    {
+      "type": "added",
+      "team": "J & Js Cap",
+      "name": "Jamal Murray - NT 12/15",
+      "status": "Active",
+      "pid": "P0059"
+    },
+    {
+      "type": "added",
+      "team": "J & Js Cap",
+      "name": "Domantas Sabonis - NT 12/15",
+      "status": "Active",
+      "pid": "P0140"
+    },
+    {
+      "type": "added",
+      "team": "Nate A Cap",
+      "name": "John Collins - NT 12/15",
+      "status": "Active",
+      "pid": "P0042"
+    },
+    {
+      "type": "added",
+      "team": "Nate A Cap",
+      "name": "Aaron Gordon - NT 12/15",
+      "status": "Active",
+      "pid": "P0116"
+    },
+    {
+      "type": "added",
+      "team": "Seth Cap",
+      "name": "Jaren Jackson Jr. - NT 12/15",
+      "status": "Active",
+      "pid": "P0126"
+    },
+    {
+      "type": "added",
+      "team": "Seth Cap",
+      "name": "Ayo Dosunmu - NT 12/15",
+      "status": "Active",
+      "pid": "P0385"
+    },
+    {
+      "type": "added",
+      "team": "Seth Cap",
+      "name": "Leonard Miller - NT 12/15",
+      "status": "Two-Way",
+      "pid": "P0350"
+    },
+    {
+      "type": "added",
+      "team": "Tom Cap",
+      "name": "Jaylen Brown - NT 12/15/2027",
+      "status": "Active",
+      "pid": "P0093"
+    },
+    {
+      "type": "added",
+      "team": "Tom Cap",
+      "name": "David Jones Garcia",
+      "status": "G-League",
+      "pid": "P0494"
+    }
+  ],
+  "unresolved": [
+    {
+      "team": "Andrew Cap",
+      "raw": "Chris Cenac Jr. - NT 12/15",
+      "status": "Two-Way",
+      "reason": "No exact permanent player identity; requires ESPN/player review"
+    },
+    {
+      "team": "Brandon Cap",
+      "raw": "Day'Ron Sharpe - NT 12/15",
+      "status": "Active",
+      "reason": "No exact permanent player identity; requires ESPN/player review"
+    },
+    {
+      "team": "Derek Cap",
+      "raw": "Mikel Brown Jr.",
+      "status": "Two-Way",
+      "reason": "No exact permanent player identity; requires ESPN/player review"
+    },
+    {
+      "team": "Derek Cap",
+      "raw": "Adou Thiero  - NT 12/15",
+      "status": "G-League",
+      "reason": "No exact permanent player identity; requires ESPN/player review"
+    },
+    {
+      "team": "Derek Cap",
+      "raw": "Liam McNeeley - NT 12/15",
+      "status": "G-League",
+      "reason": "No exact permanent player identity; requires ESPN/player review"
+    },
+    {
+      "team": "Diaz Cap",
+      "raw": "Ty Jerome - NT 12/15",
+      "status": "Active",
+      "reason": "No exact permanent player identity; requires ESPN/player review"
+    },
+    {
+      "team": "Tom Cap",
+      "raw": "Yanic Konan Niederhauser - NT 12/15",
+      "status": "Two-Way",
+      "reason": "No exact permanent player identity; requires ESPN/player review"
+    }
+  ],
+  "existingOther": [
+    {
+      "team": "Andrew Cap",
+      "name": "Zach Lavine - NT 11/29",
+      "other": [
+        "F03"
+      ]
+    },
+    {
+      "team": "Jake Cap",
+      "name": "Devin Vassell - NT 11/29",
+      "other": [
+        "F01"
+      ]
+    },
+    {
+      "team": "Jake Cap",
+      "name": "Kyshawn George - NT 11/28",
+      "other": [
+        "F06"
+      ]
+    },
+    {
+      "team": "Jordan F Cap",
+      "name": "Daniss Jenkins - NT 12/2",
+      "other": [
+        "F07"
+      ]
+    },
+    {
+      "team": "J & Js Cap",
+      "name": "Keyonte George PRME - NT 11/28",
+      "other": [
+        "F03"
+      ]
+    }
+  ],
+  "statusMismatches": [
+    {
+      "type": "status_mismatch_existing",
+      "team": "Andrew Cap",
+      "name": "Dylan Harper",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Andrew Cap",
+      "name": "Ace Bailey",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Andrew Cap",
+      "name": "Kingston Flemings PRME (0 games)",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Andrew Cap",
+      "name": "Sergio De Larrea PRME (0 games)",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Brandon Cap",
+      "name": "Darius Acuff Jr. PRME (0 games)",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Brandon Cap",
+      "name": "Nique Clifford PRME (75 games)",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Brandon Cap",
+      "name": "Carter Bryant PRME (25 games)",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Derek Cap",
+      "name": "Terrence Shannon Jr. PRME",
+      "stored": "Active",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Derek Cap",
+      "name": "Noah Penda",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Derek Cap",
+      "name": "AJ Johnson",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Diaz Cap",
+      "name": "Morez Johnson Jr. PRME",
+      "stored": "Active",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Diaz Cap",
+      "name": "Allen Graves PRME",
+      "stored": "Active",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Diaz Cap",
+      "name": "Maxime Raynaud PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Diaz Cap",
+      "name": "Hugo Gonzalez",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jake Cap",
+      "name": "Cam Thomas - Dead Cap",
+      "stored": "Active",
+      "sheet": "Dead Cap"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jake Cap",
+      "name": "Khaman Maluach PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jake Cap",
+      "name": "Cedric Coward",
+      "stored": "Active",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jake Cap",
+      "name": "Hannes Steinbach PRME",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jake Cap",
+      "name": "Walter Clayton Jr. PRME",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jake Cap",
+      "name": "Thomas Sorber PRME",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jordan F Cap",
+      "name": "Collin Murray-Boyles PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jordan F Cap",
+      "name": "Derik Queen PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jordan F Cap",
+      "name": "Zach Edey PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jordan F Cap",
+      "name": "Keaton Wagler",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jordan F Cap",
+      "name": "Dailyn Swain",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jordan F Cap",
+      "name": "Kasparas Jakucionis",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Jordan F Cap",
+      "name": "Nikola Topic PRME",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "J & Js Cap",
+      "name": "Egor Demin PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "J & Js Cap",
+      "name": "Brayden Burries",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "J & Js Cap",
+      "name": "Yang Hansen PRME",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "J & Js Cap",
+      "name": "Ryan Kalkbrenner",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "J & Js Cap",
+      "name": "Aday Mara",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "J & Js Cap",
+      "name": "Ebuka Okorie",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Nate A Cap",
+      "name": "Tre Johnson PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Nate A Cap",
+      "name": "Drake Powell",
+      "stored": "Active",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Nate A Cap",
+      "name": "Sion James",
+      "stored": "Active",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Nate A Cap",
+      "name": "Jase Richardson",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Seth Cap",
+      "name": "Caleb Wilson - PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Seth Cap",
+      "name": "Will Richard - NT 12/15",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Seth Cap",
+      "name": "Danny Wolf",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Seth Cap",
+      "name": "Nolan Traore",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Seth Cap",
+      "name": "Ben Saraf ",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Tom Cap",
+      "name": "Labaron Philon Jr. PRME",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Tom Cap",
+      "name": "Christian Anderson Jr.",
+      "stored": "TW",
+      "sheet": "Two-Way"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Tom Cap",
+      "name": "Rasheer Fleming",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Tom Cap",
+      "name": "DaRon Holmes III PRME",
+      "stored": "Active",
+      "sheet": "G-League"
+    },
+    {
+      "type": "status_mismatch_existing",
+      "team": "Tom Cap",
+      "name": "Zuby Ejiofor",
+      "stored": "Active",
+      "sheet": "G-League"
+    }
+  ],
+  "note": "Static discrepancy snapshot. No ESPN IDs changed. Resolve identity and cross-franchise conflicts before production."
+}
