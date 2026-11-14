@@ -1,4 +1,3 @@
-import {readFile} from 'node:fs/promises';
 const norm=s=>String(s||'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]/g,'');
 const clean=s=>String(s||'').replace(/\s*-\s*NT\b.*$/i,'').replace(/\b(?:PRME|RME)\b.*$/i,'').replace(/\([^)]*\)/g,'').replace(/\*+/g,'').trim();
 const status=slot=>/^TW$/i.test(String(slot||'').trim())?'TW':/^IR$/i.test(String(slot||'').trim())?'IR':/^DPE$/i.test(String(slot||'').trim())?'DPE':'Active';
@@ -7,8 +6,8 @@ export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('Content-Type','application/json; charset=utf-8');
  try{
   const [dbText,mapText,espn,sheet]=await Promise.all([
-   readFile(new URL('../public/data/site-data.json',import.meta.url),'utf8'),
-   readFile(new URL('../public/verified-espn-ids.js',import.meta.url),'utf8'),
+   fetch('https://www.dynastynba.com/data/site-data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Site database unavailable');return r.text()}),
+   fetch('https://www.dynastynba.com/verified-espn-ids.js',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Verified mapping unavailable');return r.text()}),
    json('https://www.dynastynba.com/api/espn-player-test?season=2027&compact=1'),
    json('https://www.dynastynba.com/api/google-sheet-live')
   ]);
