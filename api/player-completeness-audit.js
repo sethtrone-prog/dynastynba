@@ -25,7 +25,7 @@ export default async function handler(req,res){
   }
   for(const [name,list] of owners)if(list.length>1)duplicates.push({name,owners:list});
   const results=[],seen=new Set();
-  for(const p of espn.players){if(p.espnId==null||!p.player||seen.has(String(p.espnId)))continue;seen.add(String(p.espnId));
+  for(const p of espn.players){if(p.espnId==null||!p.player||Number(p.gp)<=0||seen.has(String(p.espnId)))continue;seen.add(String(p.espnId));
    const key=norm(p.player),existing=byId.get(String(p.espnId)),names=byName.get(key)||[],matches=owners.get(key)||[];
    const ownership=matches.length===1?matches[0]:null;
    let finding='linked';
