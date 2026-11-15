@@ -158,12 +158,13 @@ function render(){
  const dailySeasonFppg=p=>{const v=seasonPlayerStats.get(String(p.playerId));const n=Number(v?.ppg);return v&&Number(v.gp)>0&&Number.isFinite(n)&&n>=0?n:null};
  const dailyPointsLabel=p=>{if(p.gameStatus==='UPCOMING'){const n=dailySeasonFppg(p);return '<span class="daily-score-projected">'+(n===null?'—':fmt(n)+' FPPG')+'</span>'}return '<span class="daily-score-actual">'+(p.pointsVerified?fmt(p.fantasyPoints):'—')+'</span>'};
  const dailyProjectedFooter=p=>{
+  const started=p.some(x=>x.gameStatus==='LIVE'||x.gameStatus==='FINAL');
   const allFinal=p.length>0&&p.every(x=>x.gameStatus==='FINAL'&&x.pointsVerified&&Number.isFinite(Number(x.fantasyPoints)));
   const values=p.map(x=>x.gameStatus==='UPCOMING'?dailySeasonFppg(x):(x.pointsVerified&&Number.isFinite(Number(x.fantasyPoints))?Number(x.fantasyPoints):null));
   const known=values.filter(v=>v!==null);
   if(!known.length)return '';
   const total=known.reduce((a,b)=>a+b,0);
-  return '<div class="daily-projected-total '+(allFinal?'daily-total-started':'daily-total-pregame')+'">'+fmt(total)+(allFinal?' Daily Total':' FPPG Projected')+(known.length<p.length?' <span title="Some players have no verified points or current-season average">(partial)</span>':'')+'</div>';
+  return '<div class="daily-projected-total '+(started?'daily-total-started':'daily-total-pregame')+'">'+fmt(total)+(allFinal?' Daily Total':' FPPG Projected')+(known.length<p.length?' <span title="Some players have no verified points or current-season average">(partial)</span>':'')+'</div>';
  };
  const detailTeam=(id,role='active')=>{if(dailyLoading||activeDetails?.date!==selectedDailyDate)return '<div class="detail-team"><h3>'+name(id)+'</h3><div class="daily-unavailable">'+(dailyLoading?'Loading ESPN player results…':'Daily player details unavailable. No results inferred.')+'</div></div>';const p=(activeDetails?.teams?.find(t=>Number(t.teamId)===Number(id))?.players||[]).filter(x=>(x.rosterRole||'active')===role);return '<div class="detail-team"><h3>'+name(id)+'</h3>'+(p.length?p.map(x=>'<div class="detail-row"><div><strong>'+safe(x.name)+'</strong><div class="detail-status '+safe(x.gameStatus)+'">'+safe(x.gameStatus)+' · '+safe(x.gameDetail||'')+'</div>'+(x.statLine?'<div class="compact-stats">'+x.statLine.pts+' PTS · '+x.statLine.reb+' REB · '+x.statLine.ast+' AST</div>':'')+'</div><strong>'+dailyPointsLabel(x)+'</strong></div>').join('')+dailyProjectedFooter(p):'<p class="detail-note">'+(detailsStale?'Player details temporarily unavailable.':(role==='bench'?'No bench players scheduled today.':'No eligible active players scheduled today.'))+'</p>')+'</div>'};
  const cards=matchups.map((m,i)=>{const wp=winProbability(m.home,m.away,g),liveMatch=playing(m.home.teamId)+playing(m.away.teamId)>0;
