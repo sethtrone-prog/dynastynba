@@ -2,7 +2,7 @@ const BASE='https://lm-api-reads.fantasy.espn.com/apis/v3/games/fba';
 export default async function handler(req,res){
  res.setHeader('Cache-Control','s-maxage=300, stale-while-revalidate=120');
  const year=Number(req.query.season);
- if(!Number.isInteger(year)||year<2027||year>new Date().getUTCFullYear()+2)return res.status(400).json({ok:false,error:'Invalid season'});
+ if(!Number.isInteger(year)||year<2026||year>new Date().getUTCFullYear()+2)return res.status(400).json({ok:false,error:'Invalid season'});
  try{
   const response=await fetch(BASE+'/seasons/'+year+'/segments/0/leagues/76513288?view=mMatchupScore&view=mTeam',{headers:{'User-Agent':'DynastyNBA schedule swap'}});
   if(!response.ok)throw Error('ESPN unavailable');
@@ -11,6 +11,7 @@ export default async function handler(req,res){
   const periods=new Map();
   for(const m of schedule){
    if(!['HOME','AWAY','TIE'].includes(m.winner))continue;
+   if(year===2026 && (Number(m.matchupPeriodId)<1 || Number(m.matchupPeriodId)>18))continue;
    const week=Number(m.matchupPeriodId),h=Number(m.home?.teamId),a=Number(m.away?.teamId);
    const hp=Number(m.home?.totalPoints),ap=Number(m.away?.totalPoints);
    if(!Number.isFinite(week)||!ids.includes(h)||!ids.includes(a)||!Number.isFinite(hp)||!Number.isFinite(ap))continue;
