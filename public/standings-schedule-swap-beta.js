@@ -4,7 +4,8 @@
   const app=document.querySelector('#app');
   if(!app)return;
   const card=app.querySelector('.standings-archive-card');
-  const year=Number(document.querySelector('#seasonSelect')?.value||2027);
+  const heading=card?.querySelector('.section-title h2')?.textContent||'';
+  const year=Number(heading.match(/\b20\d{2}\b/)?.[0]||document.querySelector('#seasonSelect')?.value||2027);
   if(!card||year<2026||app.querySelector('.schedule-swap-card'))return;
   // Render independently of the SOS enhancement; its API may load later or fail.
   // The schedule-swap matrix only requires the main standings card.
