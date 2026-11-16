@@ -5,7 +5,7 @@
   if(!app)return;
   const card=app.querySelector('.standings-archive-card');
   const year=Number(document.querySelector('#seasonSelect')?.value||2027);
-  if(!card||year<2027||app.querySelector('.schedule-swap-card'))return;
+  if(!card||year<2026||app.querySelector('.schedule-swap-card'))return;
   // Render independently of the SOS enhancement; its API may load later or fail.
   // The schedule-swap matrix only requires the main standings card.
   if(!cache.has(year)){
@@ -21,13 +21,14 @@
   const data=cache.get(year),section=document.createElement('section');
   section.className='card schedule-swap-card';
   const title=document.createElement('div');title.className='card-pad section-title';
-  title.innerHTML='<h2>WINS WITH EVERY TEAM\'S SCHEDULE</h2><span>Completed matchups only</span>';
+  title.innerHTML='<h2>WINS WITH EVERY TEAM\'S SCHEDULE</h2><span>'+(year===2026?'2026 regular season · Weeks 1–18':'Completed matchups only')+'</span>';
   section.appendChild(title);
   if(data.error){const p=document.createElement('p');p.className='sos-explanation';p.textContent=data.error;section.appendChild(p);}
   else {
-   const current=typeof standings==='function'?standings():[];
+   const current=year===2026?[]:(typeof standings==='function'?standings():[]);
    const idToName=new Map(current.map(t=>[Number(t.ESPN_Team_ID),typeof franchiseLabel==='function'?franchiseLabel(t.Franchise_ID):t.ESPN_Team_Name]));
-   const ids=current.map(t=>Number(t.ESPN_Team_ID)).filter(id=>data.teams.some(t=>t.id===id));
+   const ids=year===2026?data.teams.map(t=>Number(t.id)):current.map(t=>Number(t.ESPN_Team_ID)).filter(id=>data.teams.some(t=>t.id===id));
+   if(year===2026)data.teams.forEach(t=>idToName.set(Number(t.id),t.name));
    const byId=new Map(data.matrix.map(t=>[t.teamId,new Map(t.against.map(x=>[x.scheduleTeamId,x]))]));
    const wrap=document.createElement('div');wrap.className='table-wrap';
    const table=document.createElement('table');table.className='data-table schedule-swap-table';
