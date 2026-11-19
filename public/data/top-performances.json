@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-11-19T00:19:47.762638+00:00",
-  "checkedThrough": "2026-11-18",
+  "updatedAt": "2026-11-19T21:38:32.788727+00:00",
+  "checkedThrough": "2026-11-19",
   "updateFrequency": "daily",
-  "playerBoxScoresReviewed": 250869,
+  "playerBoxScoresReviewed": 251148,
   "formula": "PTS + 0.75 × (REB + AST) + STL + BLK − TO − 0.5 × ((FGA − FGM) + (FTA − FTM))",
   "games": [
     {
@@ -132,25 +132,25 @@
       "rank": 6
     },
     {
-      "points": 52,
-      "rebounds_total": 24,
       "assists": 2,
-      "steals": 2,
       "blocks": 8,
-      "turnovers": 1,
-      "field_goals_made": 16,
+      "fantasy": 72.5,
       "field_goals_attempted": 28,
-      "free_throws_made": 19,
+      "field_goals_made": 16,
       "free_throws_attempted": 23,
+      "free_throws_made": 19,
+      "game_date": "2026-11-04",
+      "game_id": "ESPN:401909933",
+      "matchup": "SA vs. DAL",
       "name": "Victor Wembanyama",
       "person_id": "ESPN:5104157",
-      "game_id": "ESPN:401909933",
-      "game_date": "2026-11-04",
-      "matchup": "SA vs. DAL",
+      "points": 52,
+      "rank": 7,
+      "rebounds_total": 24,
       "season": 2027,
       "sourceUrl": "https://www.espn.com/nba/boxscore/_/gameId/401909933",
-      "fantasy": 72.5,
-      "rank": 7
+      "steals": 2,
+      "turnovers": 1
     },
     {
       "points": 71,
