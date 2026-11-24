@@ -1,8 +1,8 @@
 {
-  "updatedAt": "2026-11-24T03:57:09.760600+00:00",
-  "checkedThrough": "2026-11-23",
+  "updatedAt": "2026-11-24T23:03:15.070833+00:00",
+  "checkedThrough": "2026-11-24",
   "updateFrequency": "daily",
-  "playerBoxScoresReviewed": 251872,
+  "playerBoxScoresReviewed": 251920,
   "formula": "PTS + 0.75 × (REB + AST) + STL + BLK − TO − 0.5 × ((FGA − FGM) + (FTA − FTM))",
   "games": [
     {
@@ -258,27 +258,6 @@
       "rank": 12
     },
     {
-      "points": 50,
-      "rebounds_total": 19,
-      "assists": 1,
-      "steals": 4,
-      "blocks": 5,
-      "turnovers": 3,
-      "field_goals_made": 20,
-      "field_goals_attempted": 29,
-      "free_throws_made": 5,
-      "free_throws_attempted": 6,
-      "name": "Victor Wembanyama",
-      "person_id": "ESPN:5104157",
-      "game_id": "ESPN:401910027",
-      "game_date": "2026-11-21",
-      "matchup": "SA vs. NO",
-      "season": 2027,
-      "sourceUrl": "https://www.espn.com/nba/boxscore/_/gameId/401910027",
-      "fantasy": 66.0,
-      "rank": 12
-    },
-    {
       "points": 60,
       "rebounds_total": 7,
       "assists": 8,
@@ -297,7 +276,7 @@
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200727/box-score",
       "fantasy": 65.75,
-      "rank": 14
+      "rank": 13
     },
     {
       "points": 60,
@@ -318,7 +297,7 @@
       "season": 2022,
       "sourceUrl": "https://www.nba.com/game/0022101030/box-score",
       "fantasy": 65.5,
-      "rank": 15
+      "rank": 14
     },
     {
       "points": 55,
@@ -339,7 +318,28 @@
       "season": 2023,
       "sourceUrl": "https://www.nba.com/game/0022200349/box-score",
       "fantasy": 65.5,
-      "rank": 15
+      "rank": 14
+    },
+    {
+      "points": 50,
+      "rebounds_total": 18,
+      "assists": 1,
+      "steals": 4,
+      "blocks": 5,
+      "turnovers": 3,
+      "field_goals_made": 20,
+      "field_goals_attempted": 29,
+      "free_throws_made": 5,
+      "free_throws_attempted": 6,
+      "name": "Victor Wembanyama",
+      "person_id": "ESPN:5104157",
+      "game_id": "ESPN:401910027",
+      "game_date": "2026-11-21",
+      "matchup": "SA vs. NO",
+      "season": 2027,
+      "sourceUrl": "https://www.espn.com/nba/boxscore/_/gameId/401910027",
+      "fantasy": 65.25,
+      "rank": 16
     },
     {
       "points": 55,
